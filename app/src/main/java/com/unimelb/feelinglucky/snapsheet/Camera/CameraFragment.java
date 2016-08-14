@@ -242,7 +242,10 @@ public class CameraFragment extends Fragment {
 
 
     private void closeCamera() {
-
+        if (mCameraDevice != null) {
+            mCameraDevice.close();
+            mCameraDevice = null;
+        }
     }
 
     private void requestCameraPermission() {
