@@ -9,14 +9,31 @@ import android.view.ViewGroup;
 
 import com.unimelb.feelinglucky.snapsheet.R;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Created by leveyleonhardt on 8/11/16.
  */
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements ChatContract.View{
+
+    private ChatContract.Presenter mChatPresenter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         return view;
+    }
+
+
+    @Override
+    public void setPresenter(ChatContract.Presenter presenter) {
+        mChatPresenter = checkNotNull(presenter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mChatPresenter.start();
     }
 }
