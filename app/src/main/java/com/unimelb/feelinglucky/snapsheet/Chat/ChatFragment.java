@@ -34,6 +34,6 @@ public class ChatFragment extends Fragment implements ChatContract.View{
     @Override
     public void onResume() {
         super.onResume();
-        mChatPresenter.start();
+//        mChatPresenter.start();
     }
 }

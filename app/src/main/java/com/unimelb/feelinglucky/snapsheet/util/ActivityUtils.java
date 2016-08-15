@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.unimelb.feelinglucky.snapsheet.util;
+package com.unimelb.feelinglucky.snapsheet.Util;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;

@@ -8,7 +8,7 @@ public class ChatPresenter implements ChatContract.Presenter {
     private ChatContract.View mChatView;
 
     public ChatPresenter () {
-        mChatView.setPresenter(this);
+//        mChatView.setPresenter(this);
     }
 
     @Override
