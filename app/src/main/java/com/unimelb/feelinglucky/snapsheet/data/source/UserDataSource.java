@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.unimelb.feelinglucky.snapsheet.data.User;
 
 /**
- * Created by mac on 16/8/15.
+ * Modified by Team: You're feeling lucky on 16/8/16.
  */
 public interface UserDataSource {
     void changeUserName (@NonNull User user);
