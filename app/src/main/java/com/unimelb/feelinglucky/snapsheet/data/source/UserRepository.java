@@ -42,6 +42,11 @@ public class UserRepository implements UserDataSource{
 
     }
 
+    @Override
+    public User getUuser(@NonNull String id) {
+        return null;
+    }
+
     private void notifyContentObserver() {
         for (UserRepositoryObserver observer : mObservers) {
             observer.onUserChanged();

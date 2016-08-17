@@ -9,4 +9,5 @@ import com.unimelb.feelinglucky.snapsheet.data.User;
  */
 public interface UserDataSource {
     void changeUserName (@NonNull User user);
+    User getUuser(@NonNull String id);
 }

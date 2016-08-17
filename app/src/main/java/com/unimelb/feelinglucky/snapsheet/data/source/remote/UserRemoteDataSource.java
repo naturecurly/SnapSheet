@@ -13,4 +13,9 @@ public class UserRemoteDataSource implements UserDataSource {
     public void changeUserName(@NonNull User user) {
 
     }
+
+    @Override
+    public User getUuser(@NonNull String id) {
+        return null;
+    }
 }
