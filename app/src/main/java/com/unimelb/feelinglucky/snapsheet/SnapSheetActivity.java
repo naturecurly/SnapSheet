@@ -31,6 +31,7 @@ public class SnapSheetActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.activity_fragment_view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         loadFragments();
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
