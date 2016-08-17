@@ -79,6 +79,7 @@ public class SlideableItem extends FrameLayout {
             case MotionEvent.ACTION_DOWN:
                 Log.i("Event", "Down");
                 origin = current;
+                getParent().requestDisallowInterceptTouchEvent(true);
                 break;
             case MotionEvent.ACTION_MOVE:
                 Log.i("Event", "Move");
@@ -90,10 +91,14 @@ public class SlideableItem extends FrameLayout {
                         Log.i("TTT", distance + " " + pullLimit);
                         requestLayout();
                         if (pullLimit - distance < 20) {
-                            mListener.openChat();
+                            if (mListener != null) {
+                                mListener.openChat();
+                            }
                         }
                     }
                 }
+                getParent().requestDisallowInterceptTouchEvent(true);
+
                 break;
             case MotionEvent.ACTION_UP:
                 Log.i("Event", "Up");
@@ -109,6 +114,7 @@ public class SlideableItem extends FrameLayout {
                     }
                 });
                 animator.start();
+                getParent().requestDisallowInterceptTouchEvent(true);
 
 
                 break;
@@ -130,4 +136,10 @@ public class SlideableItem extends FrameLayout {
         void openChat();
     }
 
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+    }
 }

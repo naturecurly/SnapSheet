@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by leveyleonhardt on 8/11/16.
  */
-public class ChatFragment extends Fragment implements ChatContract.View{
+public class ChatFragment extends Fragment implements ChatContract.View {
 
     private ChatContract.Presenter mChatPresenter;
     private final String TAG = ChatFragment.class.getSimpleName();
@@ -37,9 +37,10 @@ public class ChatFragment extends Fragment implements ChatContract.View{
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        String[] myDataset = {"a","b","c"};
+        String[] myDataset = {"a", "b", "c"};
         // specify an adapter (see also next example)
         mAdapter = new FriendInfoAdapter(myDataset);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         return view;
     }
