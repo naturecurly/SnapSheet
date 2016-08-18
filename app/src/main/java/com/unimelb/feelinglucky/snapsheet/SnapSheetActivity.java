@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraFragment;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
+import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
 import com.unimelb.feelinglucky.snapsheet.Story.StoryFragment;
 
@@ -53,6 +54,7 @@ public class SnapSheetActivity extends AppCompatActivity {
             fragments.add(new CameraFragment());
             fragments.add(new StoryFragment());
             fragments.add(new DiscoverFragment());
+            fragments.add(new ChatRoomFragment());
         }
     }
 

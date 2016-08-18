@@ -42,6 +42,8 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         mAdapter = new FriendInfoAdapter(myDataset);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
+
+
         return view;
     }
 

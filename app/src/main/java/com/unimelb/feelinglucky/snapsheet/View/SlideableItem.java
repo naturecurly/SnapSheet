@@ -79,7 +79,7 @@ public class SlideableItem extends FrameLayout {
             case MotionEvent.ACTION_DOWN:
                 Log.i("Event", "Down");
                 origin = current;
-                getParent().requestDisallowInterceptTouchEvent(true);
+//                getParent().requestDisallowInterceptTouchEvent(true);
                 break;
             case MotionEvent.ACTION_MOVE:
                 Log.i("Event", "Move");
@@ -91,35 +91,27 @@ public class SlideableItem extends FrameLayout {
                         Log.i("TTT", distance + " " + pullLimit);
                         requestLayout();
                         if (pullLimit - distance < 20) {
+                            fingerUpEvent();
+                            getParent().requestDisallowInterceptTouchEvent(false);
                             if (mListener != null) {
                                 mListener.openChat();
                             }
+                            break;
                         }
+                        getParent().requestDisallowInterceptTouchEvent(true);
                     }
+
                 }
-                getParent().requestDisallowInterceptTouchEvent(true);
 
                 break;
             case MotionEvent.ACTION_UP:
-                Log.i("Event", "Up");
-                LayoutParams params = (LayoutParams) mLinearLayout.getLayoutParams();
-                final ValueAnimator animator = ValueAnimator.ofInt(params.leftMargin, 0);
-                animator.setDuration(100);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        LayoutParams params = (LayoutParams) mLinearLayout.getLayoutParams();
-                        params.setMargins((Integer) animator.getAnimatedValue(), 0, 0, 0);
-                        mLinearLayout.setLayoutParams(params);
-                    }
-                });
-                animator.start();
-                getParent().requestDisallowInterceptTouchEvent(true);
+                fingerUpEvent();
 
 
                 break;
             case MotionEvent.ACTION_CANCEL:
                 break;
+
         }
         return true;
     }
@@ -128,8 +120,26 @@ public class SlideableItem extends FrameLayout {
         mTextView.setText(username);
     }
 
+    public void fingerUpEvent() {
+        Log.i("Event", "Up");
+        LayoutParams params = (LayoutParams) mLinearLayout.getLayoutParams();
+        final ValueAnimator animator = ValueAnimator.ofInt(params.leftMargin, 0);
+        animator.setDuration(100);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                LayoutParams params = (LayoutParams) mLinearLayout.getLayoutParams();
+                params.setMargins((Integer) animator.getAnimatedValue(), 0, 0, 0);
+                mLinearLayout.setLayoutParams(params);
+            }
+        });
+        animator.start();
+        getParent().requestDisallowInterceptTouchEvent(true);
+    }
+
     public void setOnPullToLimitListener(PullToLimitListener listener) {
         mListener = listener;
+
     }
 
     public interface PullToLimitListener {
