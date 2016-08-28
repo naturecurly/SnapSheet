@@ -44,7 +44,7 @@ public class SnapSheetActivity extends AppCompatActivity {
                 return fragments.size();
             }
         });
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(2);
 
     }
 
