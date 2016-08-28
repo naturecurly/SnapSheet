@@ -50,11 +50,11 @@ public class SnapSheetActivity extends AppCompatActivity {
 
     private void loadFragments() {
         if (fragments.size() == 0) {
+            fragments.add(new ChatRoomFragment());
             fragments.add(new ChatFragment());
             fragments.add(new CameraFragment());
             fragments.add(new StoryFragment());
             fragments.add(new DiscoverFragment());
-            fragments.add(new ChatRoomFragment());
         }
     }
 
