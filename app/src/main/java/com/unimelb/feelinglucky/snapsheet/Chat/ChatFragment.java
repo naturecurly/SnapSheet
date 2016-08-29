@@ -1,13 +1,17 @@
 package com.unimelb.feelinglucky.snapsheet.Chat;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendInfoAdapter;
 import com.unimelb.feelinglucky.snapsheet.R;
@@ -24,7 +28,8 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
+    private TextView mTextView;
+    private PointF origin;
 
     @Nullable
     @Override
@@ -43,6 +48,29 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
 
+        mTextView = (TextView) view.findViewById(R.id.fragment_chat_textview);
+        mTextView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                PointF current = new PointF(event.getX(), event.getY());
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        origin = current;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (current.x - origin.x < 0) {
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                        }else {
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                        }
+
+                        break;
+                }
+
+                return true;
+            }
+        });
 
         return view;
     }
@@ -57,5 +85,19 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     public void onResume() {
         super.onResume();
 //        mChatPresenter.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG,"pause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG,"stop");
+
+//        mRecyclerView.notify();
     }
 }

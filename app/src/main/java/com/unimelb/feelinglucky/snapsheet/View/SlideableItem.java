@@ -23,7 +23,8 @@ import com.unimelb.feelinglucky.snapsheet.Util.DensityUtil;
 /**
  * Created by leveyleonhardt on 8/11/16.
  */
-public class SlideableItem extends FrameLayout {
+public class SlideableItem extends FrameLayout{
+    private final String TAG = this.getClass().getSimpleName();
     LinearLayout mLinearLayout;
     private PointF origin;
     private final int pullLimit = DensityUtil.dip2px(getContext(), 65);
@@ -79,7 +80,7 @@ public class SlideableItem extends FrameLayout {
             case MotionEvent.ACTION_DOWN:
                 Log.i("Event", "Down");
                 origin = current;
-//                getParent().requestDisallowInterceptTouchEvent(true);
+                getParent().requestDisallowInterceptTouchEvent(true);
                 break;
             case MotionEvent.ACTION_MOVE:
                 Log.i("Event", "Move");
@@ -88,26 +89,25 @@ public class SlideableItem extends FrameLayout {
                     LayoutParams params = (LayoutParams) mLinearLayout.getLayoutParams();
                     if (distance < pullLimit) {
                         params.setMargins((int) distance, 0, 0, 0);
-                        Log.i("TTT", distance + " " + pullLimit);
                         requestLayout();
                         if (pullLimit - distance < 20) {
-                            fingerUpEvent();
+//                            fingerUpEvent();
                             getParent().requestDisallowInterceptTouchEvent(false);
                             if (mListener != null) {
                                 mListener.openChat();
                             }
                             break;
                         }
-                        getParent().requestDisallowInterceptTouchEvent(true);
                     }
 
+                }
+                if (current.x - origin.x < 0) {
+                    getParent().requestDisallowInterceptTouchEvent(false);
                 }
 
                 break;
             case MotionEvent.ACTION_UP:
                 fingerUpEvent();
-
-
                 break;
             case MotionEvent.ACTION_CANCEL:
                 break;
@@ -115,6 +115,14 @@ public class SlideableItem extends FrameLayout {
         }
         return true;
     }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        Log.i("heelo","ad");
+        return super.onInterceptTouchEvent(ev);
+    }
+
+
 
     public void setUsername(String username) {
         mTextView.setText(username);
@@ -134,13 +142,14 @@ public class SlideableItem extends FrameLayout {
             }
         });
         animator.start();
-        getParent().requestDisallowInterceptTouchEvent(true);
+//        getParent().requestDisallowInterceptTouchEvent(true);
+        Log.i(TAG,this.toString());
     }
 
     public void setOnPullToLimitListener(PullToLimitListener listener) {
         mListener = listener;
-
     }
+
 
     public interface PullToLimitListener {
         void openChat();
@@ -153,3 +162,5 @@ public class SlideableItem extends FrameLayout {
 
     }
 }
+
+
