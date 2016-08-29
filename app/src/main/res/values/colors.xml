@@ -2,7 +2,10 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="lower_chat_entrance_blue">#42a5f5</color>
+    <color name="colorAccent">#212121</color>
+    <color name="login_button_red">#FF4081</color>
 
+    <color name="lower_chat_entrance_blue">#42a5f5</color>
+    <color name="startup_background">#fffb00</color>
+    <color name="continue_green">#43a047</color>
 </resources>

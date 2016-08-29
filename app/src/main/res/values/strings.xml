@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">SnapSheet</string>
+    <string name="signup">SIGN UP</string>
+    <string name="login">LOG IN</string>
+    <string name="continue_text">CONTINUE</string>
+    <string name="signup_email_hint">Your email address will be used to identify you.</string>
+    <string name="signup_password_hint">Your password should be at least 8 characters.</string>
+    <string name="signup_birthday_hint">The users must be 18+.</string>
+    <string name="login_title">Log In</string>
+    <string name="usernameOrEmail">USERNAME OR EMAIL</string>
+    <string name="password">PASSWORD</string>
 </resources>

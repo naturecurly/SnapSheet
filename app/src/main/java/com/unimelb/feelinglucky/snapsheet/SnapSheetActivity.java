@@ -66,6 +66,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
     public void up(viewPagerUp event) {
         event.doUp(this);
+
     }
     private void loadFragments() {
         if (fragments.size() == 0) {
