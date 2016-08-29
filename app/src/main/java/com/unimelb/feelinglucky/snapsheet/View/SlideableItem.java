@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -23,13 +24,17 @@ import com.unimelb.feelinglucky.snapsheet.Util.DensityUtil;
 /**
  * Created by leveyleonhardt on 8/11/16.
  */
-public class SlideableItem extends FrameLayout{
+public class SlideableItem extends FrameLayout {
     private final String TAG = this.getClass().getSimpleName();
     LinearLayout mLinearLayout;
     private PointF origin;
     private final int pullLimit = DensityUtil.dip2px(getContext(), 65);
     private TextView mTextView;
     private PullToLimitListener mListener;
+    private ViewPager pager;
+    private float last;
+    private PointF current;
+    private boolean flag;
 
     public SlideableItem(Context context) {
         super(context);
@@ -75,53 +80,56 @@ public class SlideableItem extends FrameLayout{
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        PointF current = new PointF(event.getX(), event.getY());
+        current = new PointF(event.getRawX(), event.getRawY());
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.i("Event", "Down");
                 origin = current;
+                last = current.x;
+                pager = (ViewPager) getRootView().findViewById(R.id.activity_fragment_view_pager);
                 getParent().requestDisallowInterceptTouchEvent(true);
+                pager.beginFakeDrag();
                 break;
             case MotionEvent.ACTION_MOVE:
                 Log.i("Event", "Move");
                 float distance = current.x - origin.x;
                 if (distance > 0) {
                     LayoutParams params = (LayoutParams) mLinearLayout.getLayoutParams();
+                    if (flag) {
+                        pager.fakeDragBy(current.x - last);
+                    }
                     if (distance < pullLimit) {
-                        params.setMargins((int) distance, 0, 0, 0);
-                        requestLayout();
-                        if (pullLimit - distance < 20) {
-//                            fingerUpEvent();
-                            getParent().requestDisallowInterceptTouchEvent(false);
-                            if (mListener != null) {
-                                mListener.openChat();
+                        if (!flag) {
+                            params.setMargins((int) distance, 0, 0, 0);
+                            requestLayout();
+                            if (pullLimit - distance < 20) {
+                                flag = true;
+                                if (mListener != null) {
+                                    mListener.openChat();
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
-
+                    if (distance > pullLimit) {
+                        flag = true;
+                    }
                 }
-                if (current.x - origin.x < 0) {
-                    getParent().requestDisallowInterceptTouchEvent(false);
-                }
+                last = current.x;
 
                 break;
             case MotionEvent.ACTION_UP:
+                pager.endFakeDrag();
+                flag = false;
                 fingerUpEvent();
                 break;
             case MotionEvent.ACTION_CANCEL:
+                fingerUpEvent();
                 break;
 
         }
         return true;
     }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        Log.i("heelo","ad");
-        return super.onInterceptTouchEvent(ev);
-    }
-
 
 
     public void setUsername(String username) {
@@ -143,7 +151,7 @@ public class SlideableItem extends FrameLayout{
         });
         animator.start();
 //        getParent().requestDisallowInterceptTouchEvent(true);
-        Log.i(TAG,this.toString());
+        Log.i(TAG, this.toString());
     }
 
     public void setOnPullToLimitListener(PullToLimitListener listener) {
