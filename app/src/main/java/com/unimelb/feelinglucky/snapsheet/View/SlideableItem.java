@@ -99,7 +99,6 @@ public class SlideableItem extends FrameLayout{
                             break;
                         }
                     }
-
                 }
                 if (current.x - origin.x < 0) {
                     getParent().requestDisallowInterceptTouchEvent(false);
@@ -110,6 +109,7 @@ public class SlideableItem extends FrameLayout{
                 fingerUpEvent();
                 break;
             case MotionEvent.ACTION_CANCEL:
+
                 break;
 
         }

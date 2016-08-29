@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
-import android.view.View;
 
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraFragment;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
@@ -49,25 +47,22 @@ public class SnapSheetActivity extends AppCompatActivity {
             }
         });
         mViewPager.setCurrentItem(2);
-        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mSlideableItem = (SlideableItem) mViewPager.findViewById(R.id.friend_item_slideable_item);
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_UP:
-                        if (mSlideableItem != null) {
-                            mSlideableItem.fingerUpEvent();
-                        }
-                        break;
-                }
-                return false;
-            }
-        });
+//        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                mSlideableItem = (SlideableItem) mViewPager.findViewById(R.id.friend_item_slideable_item);
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_UP:
+//                        if (mSlideableItem != null) {
+//                            mSlideableItem.fingerUpEvent();
+//                        }
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
     }
-    public void up(viewPagerUp event) {
-        event.doUp(this);
 
-    }
     private void loadFragments() {
         if (fragments.size() == 0) {
             fragments.add(new ChatRoomFragment());
