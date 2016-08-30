@@ -9,4 +9,13 @@
     <string name="login_title">Log In</string>
     <string name="usernameOrEmail">USERNAME OR EMAIL</string>
     <string name="password">PASSWORD</string>
+    <string name="invalid_email">The email is not valid.</string>
+    <string name="password_invalid">The password is not valid.</string>
+    <string name="signup_username_hint">Your username is how friends add you on Snapsheet.</string>
+    <string name="email_title">What\'s your email?</string>
+    <string name="password_title">What\'s your password?</string>
+    <string name="birthday_title">When\'s your birthday?</string>
+    <string name="username_title">Pick a username</string>
+    <string name="username_null">Username cannot be null.</string>
+    <string name="username_exists">This username existed.</string>
 </resources>

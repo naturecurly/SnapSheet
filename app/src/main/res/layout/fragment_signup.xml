@@ -14,25 +14,36 @@
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/signup_email_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email_title"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_above="@+id/email_edit_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp" />
+
     <EditText
         android:id="@+id/email_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="29dp"
         android:ems="10"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/email_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/signup_email_hint"
         android:layout_below="@+id/email_edit_text"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="@string/signup_email_hint" />
 
 
 </RelativeLayout>

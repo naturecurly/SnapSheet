@@ -85,6 +85,7 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
         newUser.setEmail(sharedPreferences.getString("email", ""));
         newUser.setPassword(sharedPreferences.getString("password", ""));
         newUser.setBirthday(new Date(sharedPreferences.getLong("birthday", 0)));
+        newUser.setUsername(sharedPreferences.getString("username", ""));
 
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
         RegisterService registerService = retrofit.create(RegisterService.class);
@@ -92,10 +93,13 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                Log.i(TAG, "success");
-                Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
-                getActivity().startActivity(intent);
-                getActivity().finish();
+
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "success");
+                    Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                }
             }
 
             @Override

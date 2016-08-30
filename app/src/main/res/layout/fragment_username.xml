@@ -4,44 +4,43 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/fragment_birthday_continue_button"
+        android:id="@+id/fragment_username_continue_button"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@color/continue_green"
-        android:text="@string/signup"
+        android:text="@string/continue_text"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/signup_birthday_title"
+        android:id="@+id/signup_username_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/birthday_title"
+        android:layout_above="@+id/username_edit_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp"
+        android:text="@string/username_title"
         android:textColor="@android:color/black"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_above="@+id/birthday_edit_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="45dp" />
+        android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/birthday_edit_text"
+        android:id="@+id/username_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:ems="10"
-        android:inputType="date"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:inputType="text" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/username_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/birthday_edit_text"
+        android:layout_below="@+id/username_edit_text"
         android:layout_centerHorizontal="true"
-        android:text="@string/signup_birthday_hint" />
+        android:text="@string/signup_username_hint" />
 </RelativeLayout>
