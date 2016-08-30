@@ -88,9 +88,26 @@ public class ShutterButton extends View {
                 });
                 animator_shrink.start();
                 break;
+            case MotionEvent.ACTION_CANCEL:
+                shrink();
+                break;
         }
 
         return true;
 
+    }
+
+    public void shrink() {
+        isPressed = false;
+        final ValueAnimator animator_shrink = ValueAnimator.ofFloat(CIRCLE_RADIUS + CIRCLE_EXPAND_WIDTH, CIRCLE_RADIUS);
+        animator_shrink.setDuration(100);
+        animator_shrink.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                radius = DensityUtil.dip2px(mContext, (float) animator_shrink.getAnimatedValue());
+                invalidate();
+            }
+        });
+        animator_shrink.start();
     }
 }
