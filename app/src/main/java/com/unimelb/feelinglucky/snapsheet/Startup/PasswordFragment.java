@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.Md5Crypto;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,7 +52,7 @@ public class PasswordFragment extends Fragment {
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("password", passwordText.getText().toString());
+                editor.putString("password", Md5Crypto.encrypt(passwordText.getText().toString()));
                 editor.commit();
                 FragmentManager fm = getFragmentManager();
                 fm.beginTransaction().replace(R.id.activity_startup_container, new UsernameFragment()).addToBackStack("password").commit();

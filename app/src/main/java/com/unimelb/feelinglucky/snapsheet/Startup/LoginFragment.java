@@ -40,7 +40,7 @@ public class LoginFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         usernameEditText = (EditText) view.findViewById(R.id.fragment_login_username_edit_text);
         passwordEditText = (EditText) view.findViewById(R.id.fragment_login_password_edit_text);
@@ -103,6 +103,14 @@ public class LoginFragment extends Fragment {
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {
                             User loginUser = response.body();
+                            SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("email", loginUser.getEmail());
+                            editor.putString("password", loginUser.getPassword());
+                            editor.putString("username", loginUser.getUsername());
+                            editor.putLong("birthday", loginUser.getBirthday().getTime());
+                            editor.commit();
+
                             Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
                             getActivity().startActivity(intent);
                             getActivity().finish();

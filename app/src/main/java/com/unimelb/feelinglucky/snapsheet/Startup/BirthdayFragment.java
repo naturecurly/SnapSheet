@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.Dialog.DatePickerFragment;
@@ -22,6 +25,9 @@ import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.RegisterService;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
+import com.unimelb.feelinglucky.snapsheet.Util.CalculateAge;
+
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -40,7 +46,9 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
     private static final String TAG = "BirthdayFragment";
     private Button signupButton;
     private EditText birthdayText;
+    private TextView birthdayHint;
     private SharedPreferences sharedPreferences;
+    private ColorStateList defaultColor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,7 +60,10 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_birthday, container, false);
+        birthdayHint = (TextView) view.findViewById(R.id.signup_birthday_hint);
+        defaultColor = birthdayHint.getTextColors();
         signupButton = (Button) view.findViewById(R.id.fragment_birthday_continue_button);
+        signupButton.setVisibility(View.GONE);
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +71,7 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
                 String a = sharedPreferences.getString("email", "email");
                 String b = sharedPreferences.getString("password", "password");
                 Log.i("TTT", a + " " + b);
+
                 signup();
             }
         });
@@ -99,12 +111,16 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
                     Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
                     getActivity().startActivity(intent);
                     getActivity().finish();
+                } else {
+                    sharedPreferences.edit().clear().commit();
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.i(TAG, t.getMessage());
+                sharedPreferences.edit().clear().commit();
+
             }
         });
     }
@@ -113,9 +129,17 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong("birthday", calendar.getTimeInMillis());
-        editor.commit();
-        birthdayText.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+        if (CalculateAge.isOver18(calendar)) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong("birthday", calendar.getTimeInMillis());
+            editor.commit();
+            birthdayText.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+            birthdayHint.setTextColor(defaultColor);
+            signupButton.setVisibility(View.VISIBLE);
+
+        } else {
+            birthdayHint.setTextColor(Color.RED);
+            signupButton.setVisibility(View.GONE);
+        }
     }
 }
