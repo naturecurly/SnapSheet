@@ -13,7 +13,6 @@ import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
 import com.unimelb.feelinglucky.snapsheet.Story.StoryFragment;
-import com.unimelb.feelinglucky.snapsheet.View.SlideableItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,6 @@ public class SnapSheetActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private List<Fragment> fragments = new ArrayList<>();
-    private SlideableItem mSlideableItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,20 +45,6 @@ public class SnapSheetActivity extends AppCompatActivity {
             }
         });
         mViewPager.setCurrentItem(2);
-//        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                mSlideableItem = (SlideableItem) mViewPager.findViewById(R.id.friend_item_slideable_item);
-//                switch (event.getAction()) {
-//                    case MotionEvent.ACTION_UP:
-//                        if (mSlideableItem != null) {
-//                            mSlideableItem.fingerUpEvent();
-//                        }
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
     }
 
     private void loadFragments() {
@@ -72,7 +56,6 @@ public class SnapSheetActivity extends AppCompatActivity {
             fragments.add(new DiscoverFragment());
         }
     }
-
 
 
 }
