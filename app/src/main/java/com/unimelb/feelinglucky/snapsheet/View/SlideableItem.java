@@ -32,7 +32,7 @@ public class SlideableItem extends FrameLayout {
     private final int pullLimit = DensityUtil.dip2px(getContext(), 65);
     private TextView mTextView;
     private PullToLimitListener mListener;
-    private ViewPager pager;
+    private CustomizedViewPager pager;
     private PointF last;
     private PointF current;
     private boolean flag;
@@ -88,7 +88,7 @@ public class SlideableItem extends FrameLayout {
 //                Log.i("Event", "Down");
                 origin = current;
                 last = current;
-                pager = (ViewPager) getRootView().findViewById(R.id.activity_fragment_view_pager);
+                pager = (CustomizedViewPager) getRootView().findViewById(R.id.activity_fragment_view_pager);
                 pager.requestDisallowInterceptTouchEvent(true);
                 pager.beginFakeDrag();
                 skip = false;
