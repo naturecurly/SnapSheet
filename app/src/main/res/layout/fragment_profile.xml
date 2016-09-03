@@ -1,13 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#424242">
+
+    <Button
+
+        android:id="@+id/button"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="420dp"
+        android:background="@drawable/added_me_button_style" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="175dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@+id/button"
+        android:layout_below="@id/button"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/add_friends_button_style" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="160dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@+id/button2"
+        android:layout_below="@+id/button2"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/my_friends_button_style" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/fragment_profile_username_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Profile" />
+        android:text="Leon Wu"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_settings"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/imageView"
+        android:src="@drawable/snapchat_profile"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/fragment_profile_username_textview"
+        android:layout_below="@+id/button4" />
 </RelativeLayout>
