@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.unimelb.feelinglucky.snapsheet.Startup.StartupFragment;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 /**
  * Created by leveyleonhardt on 8/27/16.
@@ -20,7 +21,7 @@ public class StartupActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(this);
         if (sharedPreferences.contains("username") && sharedPreferences.contains("email") && sharedPreferences.contains("password") && sharedPreferences.contains("birthday")) {
             Intent intent = new Intent(this, SnapSheetActivity.class);
             startActivity(intent);

@@ -22,6 +22,7 @@ import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.CheckEmailService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -115,7 +116,7 @@ public class SignupFragment extends Fragment {
                         if (response.isSuccessful()) {
                             //The server does not have this email
                             if (message.isSuccess() == false) {
-                                SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                                SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(getActivity());
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("email", emailText.getText().toString());
                                 editor.commit();

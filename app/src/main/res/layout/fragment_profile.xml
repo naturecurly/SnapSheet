@@ -2,21 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#424242">
+    android:backgroundTint="#af000000"
+    android:background="#000000">
 
     <Button
 
         android:id="@+id/button"
-        android:layout_width="150dp"
+        android:layout_width="180dp"
         android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="420dp"
-        android:background="@drawable/added_me_button_style" />
+        android:layout_marginTop="78dp"
+        android:background="@drawable/added_me_button_style"
+        android:layout_below="@+id/fragment_profile_username_textview"
+        android:layout_alignStart="@+id/imageView" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="175dp"
+        android:layout_width="180dp"
         android:layout_height="30dp"
         android:layout_alignStart="@+id/button"
         android:layout_below="@id/button"
@@ -25,7 +26,7 @@
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="160dp"
+        android:layout_width="180dp"
         android:layout_height="30dp"
         android:layout_alignStart="@+id/button2"
         android:layout_below="@+id/button2"
@@ -46,18 +47,18 @@
         android:id="@+id/button4"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="@drawable/ic_settings"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp" />
+        android:background="@drawable/ic_settings" />
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
         android:id="@+id/imageView"
-        android:src="@drawable/snapchat_profile"
-        android:layout_centerHorizontal="true"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_alignBottom="@+id/fragment_profile_username_textview"
-        android:layout_below="@+id/button4" />
+        android:layout_below="@+id/button4"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/snapchat_profile" />
 </RelativeLayout>

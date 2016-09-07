@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.Util.Md5Crypto;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,7 +52,7 @@ public class PasswordFragment extends Fragment {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("password", Md5Crypto.encrypt(passwordText.getText().toString()));
                 editor.commit();
