@@ -2,6 +2,8 @@ package com.unimelb.feelinglucky.snapsheet.Startup;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,19 +19,33 @@ import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.R;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by leveyleonhardt on 8/27/16.
  */
 public class SignupFragment extends Fragment {
     private Button continueButton;
     private EditText emailText;
-    private boolean hasInput = false;
+    private Pattern checkEmail;
+    private TextView emailHint;
+    private ColorStateList defaultColor;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        checkEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
         emailText = (EditText) view.findViewById(R.id.email_edit_text);
+        emailHint = (TextView) view.findViewById(R.id.email_hint);
+        defaultColor = emailHint.getTextColors();
         continueButton = (Button) view.findViewById(R.id.fragment_signup_continue_button);
         continueButton.setVisibility(View.GONE);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -49,12 +65,23 @@ public class SignupFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 0) {
-                    hasInput = false;
                     continueButton.setVisibility(View.GONE);
+                    emailHint.setText(R.string.signup_email_hint);
+                    emailHint.setTextColor(defaultColor);
 
                 } else {
-                    hasInput = true;
-                    continueButton.setVisibility(View.VISIBLE);
+                    Matcher matcher = checkEmail.matcher(s);
+                    if (matcher.matches()) {
+                        emailHint.setText(R.string.signup_email_hint);
+                        continueButton.setVisibility(View.VISIBLE);
+                        emailHint.setTextColor(defaultColor);
+
+
+                    } else {
+                        emailHint.setText(R.string.invalid_email);
+                        emailHint.setTextColor(Color.RED);
+                        continueButton.setVisibility(View.GONE);
+                    }
                 }
             }
 

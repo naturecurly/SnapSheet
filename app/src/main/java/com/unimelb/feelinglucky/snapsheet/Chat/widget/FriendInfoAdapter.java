@@ -23,7 +23,7 @@ public class FriendInfoAdapter extends RecyclerView.Adapter<FriendInfoAdapter.Vi
 
         public ViewHolder(View v) {
             super(v);
-            mItem = (SlideableItem) v.findViewById(R.id.friend_item_slideable_item);
+            mItem = (SlideableItem) v;
         }
     }
 
@@ -37,10 +37,10 @@ public class FriendInfoAdapter extends RecyclerView.Adapter<FriendInfoAdapter.Vi
     public FriendInfoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                            int viewType) {
 //         create a new view
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.friend_item, parent, false);
-            // set the view's size, margins, paddings and layout parameters
-            ViewHolder vh = new ViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.friend_item, parent, false);
+        // set the view's size, margins, paddings and layout parameters
+        ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 

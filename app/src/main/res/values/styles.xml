@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:searchViewStyle">@android:drawable/ic_lock_idle_alarm</item>
+    </style>
+
 </resources>

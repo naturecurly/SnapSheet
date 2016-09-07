@@ -57,5 +57,4 @@ public class SnapSheetActivity extends AppCompatActivity {
         }
     }
 
-
 }
