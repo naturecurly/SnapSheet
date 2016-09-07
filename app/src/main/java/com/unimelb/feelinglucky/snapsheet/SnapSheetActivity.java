@@ -5,14 +5,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
+//import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraFragment;
+import com.unimelb.feelinglucky.snapsheet.Camera.CameraPageViewerFragment;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
 import com.unimelb.feelinglucky.snapsheet.Story.StoryFragment;
+import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +24,14 @@ import java.util.List;
  */
 public class SnapSheetActivity extends AppCompatActivity {
 
-    private ViewPager mViewPager;
+    private CustomizedViewPager mViewPager;
     private List<Fragment> fragments = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
-        mViewPager = (ViewPager) findViewById(R.id.activity_fragment_view_pager);
+        mViewPager = (CustomizedViewPager) findViewById(R.id.activity_fragment_view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         loadFragments();
         mViewPager.setOffscreenPageLimit(2);
@@ -51,7 +53,7 @@ public class SnapSheetActivity extends AppCompatActivity {
         if (fragments.size() == 0) {
             fragments.add(new ChatRoomFragment());
             fragments.add(new ChatFragment());
-            fragments.add(new CameraFragment());
+            fragments.add(new CameraPageViewerFragment());
             fragments.add(new StoryFragment());
             fragments.add(new DiscoverFragment());
         }

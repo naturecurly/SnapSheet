@@ -13,14 +13,24 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.CheckEmailService;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by leveyleonhardt on 8/27/16.
@@ -94,12 +104,36 @@ public class SignupFragment extends Fragment {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("email", emailText.getText().toString());
-                editor.commit();
-                FragmentManager fm = getFragmentManager();
-                fm.beginTransaction().replace(R.id.activity_startup_container, new PasswordFragment()).addToBackStack("email").commit();
+
+                Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
+                CheckEmailService checkEmailService = retrofit.create(CheckEmailService.class);
+                Call call = checkEmailService.checkEmail(emailText.getText().toString());
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) {
+                        ReturnMessage message = (ReturnMessage) response.body();
+                        if (response.isSuccessful()) {
+                            //The server does not have this email
+                            if (message.isSuccess() == false) {
+                                SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("email", emailText.getText().toString());
+                                editor.commit();
+                                FragmentManager fm = getFragmentManager();
+                                fm.beginTransaction().replace(R.id.activity_startup_container, new PasswordFragment()).addToBackStack("email").commit();
+                            } else {
+                                emailHint.setText("This email existed.");
+                                emailHint.setTextColor(Color.RED);
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+
+                    }
+                });
             }
         });
         return view;
