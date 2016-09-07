@@ -3,9 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <TextureView
+        android:id="@+id/activity_camera_texture_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager
         android:id="@+id/activity_fragment_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager>
+        android:layout_height="match_parent"
+        android:background="#00ffffff"></com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager>
 
 </FrameLayout>

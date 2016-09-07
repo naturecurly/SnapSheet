@@ -31,7 +31,7 @@ public class CameraPageViewerFragment extends Fragment {
         customizedviewPager = (CustomizedViewPager) getActivity().findViewById(R.id.activity_fragment_view_pager);
 
         fragmentList.add(new ProfileFragment());
-        fragmentList.add(new CameraFragment());
+        fragmentList.add(new CameraMaskFragment());
         fragmentList.add(new MemoryFragment());
     }
 

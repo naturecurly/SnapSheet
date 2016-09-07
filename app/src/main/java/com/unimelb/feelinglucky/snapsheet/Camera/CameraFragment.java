@@ -177,7 +177,6 @@ public class CameraFragment extends Fragment {
     }
 
     private CameraCaptureSession.CaptureCallback mCaptureCallback = new CameraCaptureSession.CaptureCallback() {
-
         private void process(CaptureResult captureResult) {
             switch (mCaptureState) {
                 case STATE_PREVIEW:
@@ -328,13 +327,13 @@ public class CameraFragment extends Fragment {
         return view;
     }
 
-    private void takePicture() {
-        try {
-            mCaptureSession.capture(mCaptureRequestBuilder.build(), mCaptureCallback, mHandler);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void takePicture() {
+//        try {
+//            mCaptureSession.capture(mCaptureRequestBuilder.build(), mCaptureCallback, mHandler);
+//        } catch (CameraAccessException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void onResume() {

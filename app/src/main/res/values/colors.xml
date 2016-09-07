@@ -8,4 +8,6 @@
     <color name="lower_chat_entrance_blue">#42a5f5</color>
     <color name="startup_background">#fffb00</color>
     <color name="continue_green">#43a047</color>
+    <color name="status_bar_color">#7a000000</color>
+
 </resources>
