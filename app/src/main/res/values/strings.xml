@@ -18,4 +18,6 @@
     <string name="username_title">Pick a username</string>
     <string name="username_null">Username cannot be null.</string>
     <string name="username_exists">This username existed.</string>
+    <string name="chat_actionbar_title">Chat</string>
+    <string name="fragment_chat_search_hint">Search</string>
 </resources>

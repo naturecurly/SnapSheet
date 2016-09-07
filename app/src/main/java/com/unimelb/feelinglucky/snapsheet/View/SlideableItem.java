@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -142,6 +141,8 @@ public class SlideableItem extends FrameLayout {
                 fingerUpEvent();
                 break;
             case MotionEvent.ACTION_CANCEL:
+                pager.endFakeDrag();
+
                 fingerUpEvent();
                 break;
 
@@ -156,7 +157,6 @@ public class SlideableItem extends FrameLayout {
     }
 
     public void fingerUpEvent() {
-        Log.i("Event", "Up");
         LayoutParams params = (LayoutParams) mLinearLayout.getLayoutParams();
         final ValueAnimator animator = ValueAnimator.ofInt(params.leftMargin, 0);
         animator.setDuration(200);

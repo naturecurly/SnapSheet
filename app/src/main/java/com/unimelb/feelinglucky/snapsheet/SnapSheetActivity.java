@@ -411,7 +411,6 @@ public class SnapSheetActivity extends AppCompatActivity {
         if (fragments.size() == 0) {
             fragments.add(new ChatRoomFragment());
             fragments.add(new ChatFragment());
-//            fragments.add(new CameraPageViewerFragment());
             fragments.add(new CameraPageViewerFragment());
             fragments.add(new StoryFragment());
             fragments.add(new DiscoverFragment());
