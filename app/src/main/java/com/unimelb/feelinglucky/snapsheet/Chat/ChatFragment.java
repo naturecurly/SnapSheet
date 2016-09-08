@@ -1,10 +1,13 @@
 package com.unimelb.feelinglucky.snapsheet.Chat;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -16,11 +19,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.unimelb.feelinglucky.snapsheet.Chat.Search.SearchFriendActivity;
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendInfoAdapter;
 import com.unimelb.feelinglucky.snapsheet.R;
 
@@ -39,15 +43,19 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     private TextView mTextView;
     private PointF origin;
     private SearchView mSearchView;
-    private ImageButton mImageButton;
+    private Button mImageButton;
     private TextView mTitle;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
+
     private String[] myDataset = {"a", "b", "c","a", "b", "c"};
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
-
+        fragmentManager = getFragmentManager();
+        transaction = fragmentManager.beginTransaction();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recyclerview);
         mRecyclerView.setHasFixedSize(true);
 
@@ -86,7 +94,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
             }
         });
 
-        mImageButton = (ImageButton) view.findViewById(R.id.fragment_chat_with_friend);
+        mImageButton = (Button) view.findViewById(R.id.fragment_chat_with_friend);
         mSearchView = (SearchView) view.findViewById(R.id.fragment_chat_searchview);
         mTitle = (TextView) view.findViewById(R.id.fragment_chat_title);
         int searchID = android.support.v7.appcompat.R.id.search_button;
@@ -99,7 +107,14 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         searchEditText.setTextColor(Color.WHITE);
         searchEditText.setHintTextColor(Color.LTGRAY);
 
-
+        mImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("a","asdasd");
+                Intent intent = new Intent(getActivity(),SearchFriendActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
