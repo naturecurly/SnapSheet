@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
 import java.util.ArrayList;
@@ -28,11 +29,8 @@ public class CameraPageViewerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        customizedviewPager = (CustomizedViewPager) getActivity().findViewById(R.id.activity_fragment_view_pager);
 
-        fragmentList.add(new ProfileFragment());
-        fragmentList.add(new CameraFragment());
-        fragmentList.add(new MemoryFragment());
+
     }
 
     @Nullable
@@ -40,6 +38,11 @@ public class CameraPageViewerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera_pageviewer, container, false);
         viewPager = (VerticalViewPager) view.findViewById(R.id.fragment_camera_vertical_viewpager);
+        customizedviewPager = (CustomizedViewPager) getActivity().findViewById(R.id.activity_fragment_view_pager);
+
+        fragmentList.add(new ProfileContainerFragment());
+        fragmentList.add(new CameraMaskFragment());
+        fragmentList.add(new MemoryFragment());
         viewPager.setAdapter(new FragmentStatePagerAdapter(getFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -52,6 +55,7 @@ public class CameraPageViewerFragment extends Fragment {
             }
         });
         viewPager.setCurrentItem(1);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -61,9 +65,11 @@ public class CameraPageViewerFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 if (position == 1) {
-                    customizedviewPager.setCanScroll(true);
+                    StatusBarUtils.setStatusBarInvisable(getActivity());
+                        customizedviewPager.setCanScroll(true);
                 } else {
-                    customizedviewPager.setCanScroll(false);
+                    StatusBarUtils.setStatusBarVisable(getActivity());
+                        customizedviewPager.setCanScroll(false);
                 }
             }
 

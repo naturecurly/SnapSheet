@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.CheckUsernameService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,7 +75,7 @@ public class UsernameFragment extends Fragment {
                                     usernameHint.setText(R.string.signup_username_hint);
                                     usernameHint.setTextColor(defaultColor);
 
-                                    SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                                    SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(getActivity());
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("username", usernameText.getText().toString()).commit();
                                     getFragmentManager().beginTransaction().replace(R.id.activity_startup_container, new BirthdayFragment()).addToBackStack("username").commit();

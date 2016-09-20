@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,7 @@ import com.unimelb.feelinglucky.snapsheet.NetworkService.RegisterService;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 import com.unimelb.feelinglucky.snapsheet.Util.CalculateAge;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import org.w3c.dom.Text;
 
@@ -53,7 +55,7 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        sharedPreferences = SharedPreferencesUtils.getSharedPreferences(getActivity());
     }
 
     @Nullable
@@ -67,7 +69,7 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+//                SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
                 String a = sharedPreferences.getString("email", "email");
                 String b = sharedPreferences.getString("password", "password");
                 Log.i("TTT", a + " " + b);

@@ -3,13 +3,6 @@
     android:id="@+id/activity_startup_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/startup_background"
     >
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_marginTop="59dp"
-        android:src="@drawable/startup_logo" />
 </FrameLayout>

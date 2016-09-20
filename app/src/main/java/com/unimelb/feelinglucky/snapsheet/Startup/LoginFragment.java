@@ -22,6 +22,7 @@ import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 import com.unimelb.feelinglucky.snapsheet.Util.Md5Crypto;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -103,7 +104,7 @@ public class LoginFragment extends Fragment {
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {
                             User loginUser = response.body();
-                            SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                            SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(getActivity());
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("email", loginUser.getEmail());
                             editor.putString("password", loginUser.getPassword());
@@ -114,7 +115,6 @@ public class LoginFragment extends Fragment {
                             Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
                             getActivity().startActivity(intent);
                             getActivity().finish();
-                            Log.i(TAG, loginUser.getPassword());
                         } else {
                             Toast.makeText(getActivity(), "Log in failed", Toast.LENGTH_SHORT).show();
                         }
