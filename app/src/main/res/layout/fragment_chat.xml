@@ -50,7 +50,13 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_chat_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
+        android:scrollbarThumbVertical="@drawable/scroll_bar"
+        android:scrollbarSize="3dp"
+        >
 
     </android.support.v7.widget.RecyclerView>
 

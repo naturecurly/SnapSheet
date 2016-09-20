@@ -48,7 +48,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
 
-    private String[] myDataset = {"a", "b", "c","a", "b", "c"};
+    private String[] myDataset = {"a", "b", "c","a", "b", "c","a", "b", "c","a", "b", "c","a", "b", "c","a", "b", "c"};
 
     @Nullable
     @Override
@@ -133,7 +133,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     }
 
     private void searchFriend(String name) {
-        String[] myDataset = {"a", "b", "c","a"};
+        myDataset = new String[]{"a", "b", "c", "a"};
         mAdapter = new FriendInfoAdapter(myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }

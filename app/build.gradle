@@ -30,5 +30,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
+    compile 'com.bigkoo:quicksidebar:1.0.3'
 
 }
