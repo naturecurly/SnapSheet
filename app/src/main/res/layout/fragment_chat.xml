@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:background="#ffffff"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,28 +34,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                >
-            </android.support.v7.widget.SearchView>
-            <Button
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:queryHint="@string/fragment_chat_search_hint"
+                app:defaultQueryHint="@string/fragment_chat_search_hint"></android.support.v7.widget.SearchView>
+
+            <ImageButton
                 android:id="@+id/fragment_chat_with_friend"
-                android:background="@drawable/ic_mode_comment_black_24dp" />
-
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#00000000"
+                android:src="@drawable/ic_mode_comment_black_24dp" />
         </LinearLayout>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_chat_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:scrollbars="vertical"
-        android:fadeScrollbars="false"
-        android:scrollbarThumbVertical="@drawable/scroll_bar"
-        android:scrollbarSize="3dp"
-        >
+        android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
 
