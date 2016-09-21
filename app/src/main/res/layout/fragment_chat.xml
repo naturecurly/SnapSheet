@@ -37,13 +37,14 @@
                 android:queryHint="@string/fragment_chat_search_hint"
                 app:defaultQueryHint="@string/fragment_chat_search_hint"></android.support.v7.widget.SearchView>
 
-            <ImageButton
+            <Button
                 android:id="@+id/fragment_chat_with_friend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="#00000000"
-                android:src="@drawable/ic_mode_comment_black_24dp" />
+                android:background="@drawable/ic_mode_comment_black_24dp"
+
+                />
         </LinearLayout>
     </LinearLayout>
 
