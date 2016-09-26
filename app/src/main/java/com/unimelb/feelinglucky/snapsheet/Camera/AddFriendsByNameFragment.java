@@ -46,8 +46,11 @@ public class AddFriendsByNameFragment extends Fragment {
         userLayout = (LinearLayout) view.findViewById(R.id.add_friend_by_name_layout);
         userLayout.setVisibility(View.GONE);
         searchView = (SearchView) view.findViewById(R.id.fragment_add_friends_search_name);
-        searchView.setIconifiedByDefault(false);
+        searchView.setIconifiedByDefault(true);
+        searchView.setFocusable(true);
+        searchView.setIconified(false);
         searchView.requestFocusFromTouch();
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

@@ -1,6 +1,7 @@
 package com.unimelb.feelinglucky.snapsheet.Chat.Search;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,7 @@ public class SearchFriendActivity extends AppCompatActivity {
     private ArrayList<String> myDataset;
     private SearchView mSearchView;
 
-    private String[] test = {"aasd", "b", "cdds asd","a", "b", "c","A", "b", "c","a", "b", "c","a", "B", "c","a", "b" ,"c","a", "b", "2","c","a","1" ,"b", "c"};
+    private String[] test = {"aasd", "b", "cdds asd", "a", "b", "c", "A", "b", "c", "a", "b", "c", "a", "B", "c", "a", "b", "c", "a", "b", "2", "c", "a", "1", "b", "c"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,10 +34,10 @@ public class SearchFriendActivity extends AppCompatActivity {
         mSearchView = (SearchView) findViewById(R.id.search_friend_search);
         mSearchView.setIconifiedByDefault(false);
         ((EditText) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).
-                setHintTextColor(getResources().getColor(R.color.lower_chat_entrance_blue));
+                setHintTextColor(ContextCompat.getColor(this, R.color.lower_chat_entrance_blue));
 
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new FriendNameAdapter(myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }
