@@ -68,7 +68,7 @@ public class StartupActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     User info = (User) response.body();
 
-                    Log.i(TAG, info.getFriend()[0]);
+//                    Log.i(TAG, info.getFriend()[0]);
                     DatabaseUtils.refreshUserDb(mDatabase, info);
                     DatabaseUtils.refreshFriendDb(mDatabase, info.getFriend());
                     Intent intent = new Intent(context, SnapSheetActivity.class);
