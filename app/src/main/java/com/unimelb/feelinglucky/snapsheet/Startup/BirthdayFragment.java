@@ -1,10 +1,12 @@
 package com.unimelb.feelinglucky.snapsheet.Startup;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Looper;
@@ -21,12 +23,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
+import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
+import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema;
+import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 import com.unimelb.feelinglucky.snapsheet.Dialog.DatePickerFragment;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.RegisterService;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 import com.unimelb.feelinglucky.snapsheet.Util.CalculateAge;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import org.w3c.dom.Text;
@@ -51,11 +57,14 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
     private TextView birthdayHint;
     private SharedPreferences sharedPreferences;
     private ColorStateList defaultColor;
+    private SQLiteDatabase mDatabase;
 
     @Override
+
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = SharedPreferencesUtils.getSharedPreferences(getActivity());
+        mDatabase = new UserDataOpenHelper(getActivity()).getWritableDatabase();
     }
 
     @Nullable
@@ -110,6 +119,9 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
 
                 if (response.isSuccessful()) {
                     Log.i(TAG, "success");
+                    User user = response.body();
+                    Log.i(TAG, user.getUsername());
+                    DatabaseUtils.refreshUserDb(mDatabase, user);
                     Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
                     getActivity().startActivity(intent);
                     getActivity().finish();
@@ -144,4 +156,5 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
             signupButton.setVisibility(View.GONE);
         }
     }
+
 }

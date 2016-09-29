@@ -34,7 +34,7 @@ public class SearchFriendActivity extends AppCompatActivity implements SearchVie
         mSearchView = (SearchView) findViewById(R.id.search_friend_search);
         mSearchView.setIconifiedByDefault(false);
         ((EditText) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).
-                setHintTextColor(getResources().getColor(R.color.lower_chat_entrance_blue));
+                setHintTextColor(ContextCompat.getColor(this, R.color.lower_chat_entrance_blue));
 
         mSearchView.setOnQueryTextListener(this);
 
