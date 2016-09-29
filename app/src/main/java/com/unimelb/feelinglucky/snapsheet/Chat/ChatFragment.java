@@ -35,6 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ChatFragment extends Fragment implements ChatContract.View {
 
+    private static final int RESULTID = 1;
     private ChatContract.Presenter mChatPresenter;
     private final String TAG = ChatFragment.class.getSimpleName();
     private RecyclerView mRecyclerView;
@@ -110,9 +111,14 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("a","asdasd");
                 Intent intent = new Intent(getActivity(),SearchFriendActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, RESULTID);
+//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//
+//                transaction.replace(R.id.fragment_container, new SearchFriendFragment());
+//                transaction.addToBackStack(null);
+//
+//                transaction.commit();
             }
         });
 
@@ -138,6 +144,16 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULTID) {
+            // Make sure the request was successful
+            if (resultCode == getActivity().RESULT_OK) {
+                Log.i("qqqqqq",data.getStringExtra("id"));
+            }
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

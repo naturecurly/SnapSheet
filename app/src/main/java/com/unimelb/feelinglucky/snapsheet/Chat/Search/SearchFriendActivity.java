@@ -16,10 +16,11 @@ import java.util.ArrayList;
 /**
  * Created by mac on 16/9/6.
  */
-public class SearchFriendActivity extends AppCompatActivity {
+public class SearchFriendActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<String> myDataset;
+    private ArrayList<String> mDataSetForDisplay;
     private SearchView mSearchView;
 
     private String[] test = {"aasd", "b", "cdds asd","a", "b", "c","A", "b", "c","a", "b", "c","a", "B", "c","a", "b" ,"c","a", "b", "2","c","a","1" ,"b", "c"};
@@ -35,20 +36,45 @@ public class SearchFriendActivity extends AppCompatActivity {
         ((EditText) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).
                 setHintTextColor(getResources().getColor(R.color.lower_chat_entrance_blue));
 
+        mSearchView.setOnQueryTextListener(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        mAdapter = new FriendNameAdapter(myDataset);
+        mAdapter = new FriendNameAdapter(this,myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }
 
     private void init() {
-
-
         myDataset = new ArrayList();
+        mDataSetForDisplay = new ArrayList<>();
         for (String str : test) {
             myDataset.add(str);
         }
 
         myDataset = SortByName.sortByName(myDataset);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mDataSetForDisplay.clear();
+        if (newText == null || newText.equals("")){
+            mAdapter = new FriendNameAdapter(this,myDataset);
+            mRecyclerView.setAdapter(mAdapter);
+            return false;
+        }
+        for (String str : myDataset){
+            if (str.toLowerCase().startsWith(newText.toLowerCase())) {
+                mDataSetForDisplay.add(str);
+            }
+        }
+        SortByName.insertHeader(mDataSetForDisplay);
+        mAdapter = new FriendNameAdapter(this,mDataSetForDisplay);
+        mRecyclerView.setAdapter(mAdapter);
+        return false;
     }
 }
