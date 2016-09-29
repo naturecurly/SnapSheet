@@ -9,8 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.WindowManager;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
@@ -19,8 +17,6 @@ import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.Startup.StartupFragment;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
-
-import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,8 +63,6 @@ public class StartupActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
                     User info = (User) response.body();
-
-//                    Log.i(TAG, info.getFriend()[0]);
                     DatabaseUtils.refreshUserDb(mDatabase, info);
                     DatabaseUtils.refreshFriendDb(mDatabase, info.getFriend());
                     Intent intent = new Intent(context, SnapSheetActivity.class);

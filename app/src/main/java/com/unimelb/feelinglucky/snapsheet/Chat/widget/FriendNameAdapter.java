@@ -1,5 +1,7 @@
 package com.unimelb.feelinglucky.snapsheet.Chat.widget;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.SortByName;
 
 import java.util.ArrayList;
 
@@ -16,6 +19,8 @@ import java.util.ArrayList;
  */
 public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
+    private static final String HEADER = SortByName.HAEDERSYB;
+    private Activity mContext;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -31,8 +36,9 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FriendNameAdapter(ArrayList<String> myDataset) {
+    public FriendNameAdapter(Activity context,ArrayList<String> myDataset) {
         this.mDataset = myDataset;
+        mContext = context;
     }
 
     // Create new views (invoked by the layout manager)
@@ -54,7 +60,7 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
         String content = mDataset.get(position);
         TextView textView = (TextView) holder.mItem.findViewById(R.id.search_friend_textview);
         TextView header = (TextView) holder.mItem.findViewById(R.id.search_friend_header);
-        if(content.startsWith("##")){
+        if(content.startsWith(HEADER)){
             textView.setVisibility(View.GONE);
             header.setVisibility(View.VISIBLE);
             header.setText(content.substring(2));
@@ -62,7 +68,23 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
             textView.setText(mDataset.get(position));
             textView.setVisibility(View.VISIBLE);
             header.setVisibility(View.GONE);
+
+            holder.mItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent mIntent = new Intent();
+                    mIntent.putExtra("id", "666");
+
+                    mContext.setResult(Activity.RESULT_OK,mIntent);
+                    mContext.finish();
+                }
+            });
         }
+
+
+
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
