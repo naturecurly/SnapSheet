@@ -113,12 +113,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),SearchFriendActivity.class);
                 startActivityForResult(intent, RESULTID);
-//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//
-//                transaction.replace(R.id.fragment_container, new SearchFriendFragment());
-//                transaction.addToBackStack(null);
-//
-//                transaction.commit();
+
             }
         });
 

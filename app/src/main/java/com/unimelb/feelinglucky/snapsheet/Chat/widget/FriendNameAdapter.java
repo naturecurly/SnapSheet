@@ -76,7 +76,7 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
                     Intent mIntent = new Intent();
                     mIntent.putExtra("id", "666");
 
-                    mContext.setResult(1, mIntent);
+                    mContext.setResult(Activity.RESULT_OK,mIntent);
                     mContext.finish();
                 }
             });
