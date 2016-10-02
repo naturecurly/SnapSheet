@@ -3,6 +3,7 @@ package com.unimelb.feelinglucky.snapsheet.Discover;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,22 +25,31 @@ public class DiscoverFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_discover, container, false);
         mainPageView = (DiscoverMainPageView) view.findViewById(R.id.main_page_view);
         imgBrowserView = (ImgBrowserView) view.findViewById(R.id.img_browser_view);
-
         this.init();
 
         return view;
     }
 
     private void init(){
+//        imgBrowserView.setVisibility(View.VISIBLE);
         mainPageView.setOnClickImage(new DiscoverMainPageView.OnClickImage() {
             @Override
             public void onClickImage(List<String> urls) {
-                imgBrowserView.setUrls(urls);
                 imgBrowserView.setVisibility(View.VISIBLE);
+                imgBrowserView.setUrls(urls);
+                imgBrowserView.bringToFront();
+
+                if (imgBrowserView.getY() == imgBrowserView.getHeight()){
+                    imgBrowserView.animate()
+                            .translationY(0)
+                            .setDuration(200);
+                }
+
                 imgBrowserView.setOnDisappearAnimationEnd(new ImgBrowserView.OnDisappearAnimationEnd() {
                     @Override
                     public void OnDisappearAnimationEnd() {
-                        imgBrowserView.setVisibility(View.GONE);
+                        imgBrowserView.setY(imgBrowserView.getHeight());
+                        mainPageView.bringToFront();
                     }
                 });
             }

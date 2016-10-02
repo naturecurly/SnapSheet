@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 /**
@@ -15,6 +16,8 @@ public class ImgBrowserViewPager extends ViewPager {
     private int downY = 0;
     private boolean isAnimating = false;
     private OnPagerSlide onPagerSlide;
+    ImgBrowserViewPager self = this;
+
 
     public ImgBrowserViewPager(Context context) {
         this(context,null);
@@ -26,7 +29,6 @@ public class ImgBrowserViewPager extends ViewPager {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-
         switch (ev.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
@@ -43,6 +45,7 @@ public class ImgBrowserViewPager extends ViewPager {
 
                 if (offset > 200 && !isAnimating) {
                     isAnimating = true;
+
                     this.animate()
                             .translationY(this.getHeight())
                             .setDuration(300)

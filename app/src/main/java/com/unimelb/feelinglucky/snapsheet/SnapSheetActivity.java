@@ -33,16 +33,19 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraPageViewerFragment;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
-import com.unimelb.feelinglucky.snapsheet.Story.StoryFragment;
+import com.unimelb.feelinglucky.snapsheet.Story.SimulateStory;
+import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -180,6 +183,16 @@ public class SnapSheetActivity extends AppCompatActivity {
         loadFragments();
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                if (fragments.get(position) instanceof StoriesFragment){
+                    StoriesFragment storiesFragment = (StoriesFragment) fragments.get(position);
+                    storiesFragment.setStories(SimulateStory.simulateStories());
+                }
+
+                return super.instantiateItem(container, position);
+            }
+
             @Override
             public Fragment getItem(int position) {
                 return fragments.get(position);
@@ -401,7 +414,7 @@ public class SnapSheetActivity extends AppCompatActivity {
             fragments.add(new ChatRoomFragment());
             fragments.add(new ChatFragment());
             fragments.add(new CameraPageViewerFragment());
-            fragments.add(new StoryFragment());
+            fragments.add(new StoriesFragment());
             fragments.add(new DiscoverFragment());
         }
     }

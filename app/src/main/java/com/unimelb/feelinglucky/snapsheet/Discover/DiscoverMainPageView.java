@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.unimelb.feelinglucky.snapsheet.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,8 @@ public class DiscoverMainPageView extends RelativeLayout {
         }
         discoveryRecyclerView.setHasFixedSize(false);
         discoveryRecyclerView.setAdapter(discoverRecyclerViewAdapter);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
+        discoveryRecyclerView.addItemDecoration(new RecyclerDivider(spacingInPixels));
         gridLayoutManager = new GridLayoutManager(context,2);
         discoveryRecyclerView.setLayoutManager(gridLayoutManager);
 
