@@ -43,7 +43,7 @@ public class ImgBrowserViewPager extends ViewPager {
                 int moveY = (int) ev.getY();
                 int offset = moveY - downY;
 
-                if (offset > 200 && !isAnimating) {
+                if (offset > 450 && !isAnimating) {
                     isAnimating = true;
 
                     this.animate()
