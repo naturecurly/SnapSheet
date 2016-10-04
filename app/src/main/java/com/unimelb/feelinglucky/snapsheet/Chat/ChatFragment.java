@@ -26,7 +26,9 @@ import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.Chat.Search.SearchFriendActivity;
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendInfoAdapter;
+import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -63,6 +65,10 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+
+//        Map userInfo = DatabaseUtils.loadFriendsWithPriority(new UserDataOpenHelper(getContext()).getWritableDatabase());
+        myDataset = DatabaseUtils.loadFriendsWithPriority(new UserDataOpenHelper(getContext()).getWritableDatabase());
 
         // specify an adapter (see also next example)
         mAdapter = new FriendInfoAdapter(myDataset);

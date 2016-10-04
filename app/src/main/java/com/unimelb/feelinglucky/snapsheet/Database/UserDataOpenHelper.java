@@ -34,8 +34,13 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
         );
         db.execSQL("create table " + FriendTable.NAME + "(" +
                 " _id integer primary key autoincrement, " +
-                FriendTable.Cols.USERNAME + "," +
-                FriendTable.Cols.CHAT_PRIORITY + " INTEGER DEFAULT 0" +
+                FriendTable.Cols.USERNAME +
+                ")"
+        );
+        db.execSQL("create table " + FriendChatDbSchema.FriendChatTable.NAME + "(" +
+                " _id integer primary key autoincrement, " +
+                FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "," +
+                FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + " INTEGER DEFAULT 0" +
                 ")"
         );
     }

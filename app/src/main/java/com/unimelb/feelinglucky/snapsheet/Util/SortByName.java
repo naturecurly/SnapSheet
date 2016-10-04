@@ -2,7 +2,6 @@ package com.unimelb.feelinglucky.snapsheet.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * Created by mac on 16/9/20.
@@ -54,7 +53,4 @@ public class SortByName {
         }
     }
 
-    public static void sortByPriority(Map<String, Integer> users) {
-
-    }
 }
