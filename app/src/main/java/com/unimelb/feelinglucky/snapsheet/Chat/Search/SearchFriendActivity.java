@@ -9,7 +9,9 @@ import android.support.v7.widget.SearchView;
 import android.widget.EditText;
 
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendNameAdapter;
+import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SortByName;
 
 import java.util.ArrayList;
@@ -45,13 +47,11 @@ public class SearchFriendActivity extends AppCompatActivity implements SearchVie
     }
 
     private void init() {
-        myDataset = new ArrayList();
+        myDataset = (ArrayList<String>) DatabaseUtils.fetchFriends(new UserDataOpenHelper(this).getWritableDatabase());
         mDataSetForDisplay = new ArrayList<>();
-        for (String str : test) {
-            myDataset.add(str);
-        }
-
         myDataset = SortByName.sortByName(myDataset);
+
+
     }
 
     @Override

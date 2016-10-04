@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-//import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -45,12 +44,13 @@ import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+//import android.support.v4.view.ViewPager;
 
 /**
  * Created by leveyleonhardt on 8/11/16.
@@ -256,11 +256,11 @@ public class SnapSheetActivity extends AppCompatActivity {
         setupCamera(width, height, facingLens);
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
-        try {
-            cameraManager.openCamera(mCameraId, mStateCallback, mHandler);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            cameraManager.openCamera(mCameraId, mStateCallback, mHandler);
+//        } catch (CameraAccessException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void closeCamera() {

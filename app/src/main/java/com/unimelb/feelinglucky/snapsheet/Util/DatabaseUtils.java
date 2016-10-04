@@ -5,13 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
-import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by leveyleonhardt on 9/9/16.
@@ -49,6 +48,20 @@ public class DatabaseUtils {
         }
     }
 
+    public static void updateChatPriority (SQLiteDatabase database, String userName) {
+        String search = "MAX(" + FriendTable.Cols.CHAT_PRIORITY + ")";
+        Cursor cursor = database.query(FriendTable.NAME, new String [] {search}, null, null, null, null, null);
+        Integer max = 0;
+        if (cursor.moveToNext()) {
+            // Zero means the index of the column.
+            max = cursor.getInt(0);
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(FriendTable.Cols.CHAT_PRIORITY,max + 1);
+        database.update(FriendTable.NAME, values, FriendTable.Cols.USERNAME + "=?", new String[] {userName});
+    }
+
     public static List<String> fetchFriends(SQLiteDatabase database) {
         Cursor cursor = database.query(FriendTable.NAME, new String[]{FriendTable.Cols.USERNAME}, null, null, null, null, null);
         int columnIndex = cursor.getColumnIndex(FriendTable.Cols.USERNAME);
@@ -58,5 +71,13 @@ public class DatabaseUtils {
             friendList.add(cursor.getString(columnIndex));
         }
         return friendList;
+    }
+
+    public static Map<String, Integer> loadFriendsWithPriority (SQLiteDatabase database) {
+        Cursor cursor = database.query(FriendTable.NAME, new String[]{FriendTable.Cols.USERNAME,
+            FriendTable.Cols.CHAT_PRIORITY}, null, null, null, null, null);
+        int usernameIndex = cursor.getColumnIndex(FriendTable.Cols.USERNAME);
+        int priorityIndex = cursor.getColumnIndex(FriendTable.Cols.CHAT_PRIORITY);;
+        return null;
     }
 }

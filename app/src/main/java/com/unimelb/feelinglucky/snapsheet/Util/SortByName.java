@@ -2,6 +2,7 @@ package com.unimelb.feelinglucky.snapsheet.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * Created by mac on 16/9/20.
@@ -51,5 +52,9 @@ public class SortByName {
         } else {
             data.add(0, HAEDERSYB + "#");
         }
+    }
+
+    public static void sortByPriority(Map<String, Integer> users) {
+
     }
 }

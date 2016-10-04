@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SortByName;
 
 import java.util.ArrayList;
@@ -56,7 +58,7 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         String content = mDataset.get(position);
         TextView textView = (TextView) holder.mItem.findViewById(R.id.search_friend_textview);
         TextView header = (TextView) holder.mItem.findViewById(R.id.search_friend_header);
@@ -72,7 +74,8 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
             holder.mItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    DatabaseUtils.updateChatPriority(new UserDataOpenHelper(mContext).getWritableDatabase(),
+                            mDataset.get(position).toLowerCase());
                     Intent mIntent = new Intent();
                     mIntent.putExtra("id", "666");
 
@@ -81,11 +84,9 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
                 }
             });
         }
-
-
-
-
     }
+
+
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
