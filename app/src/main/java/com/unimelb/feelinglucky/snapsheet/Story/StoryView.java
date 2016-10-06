@@ -2,6 +2,7 @@ package com.unimelb.feelinglucky.snapsheet.Story;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,8 +54,6 @@ public class StoryView extends RelativeLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
         imgContainerWidth = imgContainer.getMeasuredWidth();
         imgWidth = imgContainerWidth/imgContainerImgCountPerRow;
 
@@ -72,10 +71,25 @@ public class StoryView extends RelativeLayout {
                         imageView.getLayoutParams().height = imgWidth;
                     }
                 }
-
+                imgInnerContainer.requestLayout();
             }
         }
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
+
+//    @Override
+//    protected void onAttachedToWindow() {
+//        super.onAttachedToWindow();
+//        int imgContainerCount = this.imgContainer.getChildCount();
+//
+//        for (int imgContainerChildIndex = 0; imgContainerChildIndex < imgContainerCount; imgContainerChildIndex++) {
+//            if (this.imgContainer.getChildAt(imgContainerChildIndex) instanceof LinearLayout){
+//                LinearLayout imgInnerContainer = (LinearLayout) this.imgContainer.getChildAt(imgContainerChildIndex);
+//                imgInnerContainer.requestLayout();
+//            }
+//        }
+//    }
 
     private void init(){
         //init params
@@ -176,7 +190,7 @@ public class StoryView extends RelativeLayout {
             }
             index += 1;
         }
-        this.imgContainer.requestLayout();
+        this.requestLayout();
     }
 
     private LinearLayout getNewInnerImgContainer(){
