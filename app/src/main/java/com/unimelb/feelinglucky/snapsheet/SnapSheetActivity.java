@@ -1,7 +1,9 @@
 package com.unimelb.feelinglucky.snapsheet;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
@@ -15,6 +17,7 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +39,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraPageViewerFragment;
+import com.unimelb.feelinglucky.snapsheet.Camera.WiFiDirectBroadcastReceiver;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
@@ -142,6 +146,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver(mReceiver, mIntentFilter);
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
             Log.i(TAG, "sssss" + mTextureView.getWidth() + " " + mTextureView.getHeight());
@@ -155,6 +160,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         closeCamera();
+        unregisterReceiver(mReceiver);
         stopBackgroundThread();
         super.onPause();
     }
@@ -225,6 +231,8 @@ public class SnapSheetActivity extends AppCompatActivity {
 
             }
         });
+
+        initWIFISetting();
     }
 
 
@@ -256,11 +264,11 @@ public class SnapSheetActivity extends AppCompatActivity {
         setupCamera(width, height, facingLens);
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
-//        try {
-//            cameraManager.openCamera(mCameraId, mStateCallback, mHandler);
-//        } catch (CameraAccessException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            cameraManager.openCamera(mCameraId, mStateCallback, mHandler);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     private void closeCamera() {
@@ -448,4 +456,39 @@ public class SnapSheetActivity extends AppCompatActivity {
     public boolean ismIsFlashOn() {
         return mIsFlashOn;
     }
+
+
+    private WifiP2pManager mManager;
+    private WifiP2pManager.Channel mChannel;
+    private BroadcastReceiver mReceiver;
+
+    private IntentFilter mIntentFilter;
+
+    private void initWIFISetting() {
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+        mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+    }
+
+    public void scanUser() {
+        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.i("success", "discoverPeers");
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                Log.i("failure", "discoverPeers");
+            }
+        });
+    }
+
+
 }

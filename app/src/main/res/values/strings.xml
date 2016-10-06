@@ -22,4 +22,5 @@
     <string name="fragment_chat_search_hint">Search</string>
     <string name="chat_hint">Chat With...</string>
     <string name="add_friends_actionbar_title">Add Friends</string>
+    <string name="fragment_search_nearby">Scan</string>
 </resources>
