@@ -8,13 +8,14 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,28 +27,31 @@ import java.util.List;
 public class FriendListFragment extends Fragment implements WifiP2pManager.PeerListListener {
 
     private List<WifiP2pDevice> peers;
-    private FriendLIstScanAdpter adpter;
-    private RecyclerView recyclerView;
+    private FriendListViewApter apter;
+
+    private ListView listView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_scan_friend_list, null);
         peers = new ArrayList();
-        adpter = new FriendLIstScanAdpter(getActivity(), peers);
-        recyclerView = (RecyclerView) view.findViewById(R.id.friend_list_reccycler);
-        recyclerView.setAdapter(adpter);
+        apter = new FriendListViewApter(getActivity(), peers);
+        listView = (ListView) view.findViewById(R.id.lvBluetooth);
+        listView.setAdapter(apter);
         return view;
     }
 
+
+
+
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
+        ((SnapSheetActivity)getActivity()).stopLoading();
+
         peers.clear();
         peers.addAll(peerList.getDeviceList());
-        adpter = new FriendLIstScanAdpter(getActivity(), peers);
-        recyclerView.setAdapter(adpter);
-
-//        adpter.notifyDataSetChanged();
+        apter.notifyDataSetChanged();
 
         for (WifiP2pDevice device : peers){
             device.deviceName = "username";

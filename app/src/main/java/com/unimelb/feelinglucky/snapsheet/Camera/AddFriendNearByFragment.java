@@ -17,11 +17,12 @@ import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 
 public class AddFriendNearByFragment extends Fragment {
     private Button mScan;
-
+    private View view;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search_nearby, container, false);
+        view = inflater.inflate(R.layout.fragment_search_nearby, container, false);
+
         mScan = (Button) view.findViewById(R.id.near_by_scan);
         mScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,4 +33,14 @@ public class AddFriendNearByFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        android.app.Fragment f =  getActivity().getFragmentManager().findFragmentById(R.id.near_by_list);
+        if (f != null) {
+            getActivity().getFragmentManager().beginTransaction().remove(f).commit();
+        }
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.unimelb.feelinglucky.snapsheet;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -461,6 +463,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
     private BroadcastReceiver mReceiver;
+    private ProgressDialog progressDialog;
 
     private IntentFilter mIntentFilter;
 
@@ -476,7 +479,27 @@ public class SnapSheetActivity extends AppCompatActivity {
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
     }
 
+    public void onInitiateDiscovery() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        progressDialog = ProgressDialog.show(this, "Press back to cancel", "finding peers", true,
+                true, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+    }
+
+    public void stopLoading() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     public void scanUser() {
+        onInitiateDiscovery();
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
