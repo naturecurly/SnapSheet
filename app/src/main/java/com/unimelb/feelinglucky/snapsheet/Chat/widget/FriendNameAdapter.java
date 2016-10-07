@@ -77,7 +77,8 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
                     DatabaseUtils.updateChatPriority(new UserDataOpenHelper(mContext).getWritableDatabase(),
                             mDataset.get(position).toLowerCase());
                     Intent mIntent = new Intent();
-                    mIntent.putExtra("id", "666");
+
+                    mIntent.putExtra("id", mDataset.get(position).toLowerCase());
 
                     mContext.setResult(Activity.RESULT_OK,mIntent);
                     mContext.finish();

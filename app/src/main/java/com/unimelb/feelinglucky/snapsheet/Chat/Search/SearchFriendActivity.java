@@ -26,8 +26,6 @@ public class SearchFriendActivity extends AppCompatActivity implements SearchVie
     private ArrayList<String> mDataSetForDisplay;
     private SearchView mSearchView;
 
-    private String[] test = {"aasd", "b", "cdds asd","a", "b", "c","A", "b", "c","a", "b", "c","a", "B", "c","a", "b" ,"c","a", "b", "2","c","a","1" ,"b", "c"};
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

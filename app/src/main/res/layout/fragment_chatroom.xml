@@ -4,4 +4,10 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
+   <Button
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="You are chatting with???"
+       android:id="@+id/test_bt"
+       android:layout_marginTop="20dp"/>
 </LinearLayout>

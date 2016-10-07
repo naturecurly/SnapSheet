@@ -6,9 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -84,7 +82,6 @@ public class SlideableItem extends FrameLayout {
         current = new PointF(event.getRawX(), event.getRawY());
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-//                Log.i("Event", "Down");
                 origin = current;
                 last = current;
                 pager = (CustomizedViewPager) getRootView().findViewById(R.id.activity_fragment_view_pager);
@@ -93,12 +90,10 @@ public class SlideableItem extends FrameLayout {
                 skip = false;
                 break;
             case MotionEvent.ACTION_MOVE:
-//                Log.i("Event", "Move");
                 float distance = current.x - origin.x;
                 float distanceY = current.y - origin.y;
                 if (distance - 20 > 0 && Math.abs(distance) > Math.abs(distanceY)) {
                     getParent().requestDisallowInterceptTouchEvent(true);
-                    Log.i(TAG, "Horizon");
                     LayoutParams params = (LayoutParams) mLinearLayout.getLayoutParams();
                     if (flag) {
                         pager.fakeDragBy(current.x - last.x);
@@ -124,14 +119,6 @@ public class SlideableItem extends FrameLayout {
                     getParent().requestDisallowInterceptTouchEvent(true);
 
                 }
-//                } else if (distance < Math.abs(distanceY)) {
-//                    Log.i(TAG, "verticle");
-////                    ((RecyclerView) (getRootView().findViewById(R.id.fragment_chat_recyclerview))).requestDisallowInterceptTouchEvent(false);
-////                    getParent().requestDisallowInterceptTouchEvent(false);
-//                    skip = true;
-////                    return false;
-//                    break;
-//                }
                 last = current;
 
                 break;
@@ -147,7 +134,6 @@ public class SlideableItem extends FrameLayout {
                 break;
 
         }
-        Log.i(TAG, "skip" + !skip);
         return true;
     }
 
@@ -169,8 +155,6 @@ public class SlideableItem extends FrameLayout {
             }
         });
         animator.start();
-//        getParent().requestDisallowInterceptTouchEvent(true);
-        Log.i(TAG, this.toString());
     }
 
     public void setOnPullToLimitListener(PullToLimitListener listener) {
@@ -182,35 +166,6 @@ public class SlideableItem extends FrameLayout {
         void openChat();
     }
 
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-////        return super.dispatchTouchEvent(ev);
-//
-//        return false;
-//    }
-
-
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent ev) {
-//        Log.i(TAG, "intercept");
-//        current = new PointF(ev.getRawX(), ev.getRawY());
-//        switch (ev.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                origin = current;
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                float distanceX = ev.getRawX() - origin.x;
-//                float distanceY = ev.getRawY() - origin.y;
-//                if (Math.abs(distanceX) < Math.abs(distanceY)) {
-//                    Log.i(TAG, "dispatch move");
-////                    getParent().requestDisallowInterceptTouchEvent(false);
-//                    return false;
-//                } else {
-//                    break;
-//                }
-//        }
-//        return super.onInterceptTouchEvent(ev);
-//    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

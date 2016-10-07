@@ -44,9 +44,11 @@ import com.unimelb.feelinglucky.snapsheet.Camera.CameraPageViewerFragment;
 import com.unimelb.feelinglucky.snapsheet.Camera.WiFiDirectBroadcastReceiver;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
+import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
 import com.unimelb.feelinglucky.snapsheet.Story.SimulateStory;
 import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
@@ -65,6 +67,7 @@ public class SnapSheetActivity extends AppCompatActivity {
 
     private static final String TAG = "SnapSheetActivity";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+    private String mChatWith;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -220,6 +223,14 @@ public class SnapSheetActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                if (position == 0){
+                    DatabaseUtils.updateChatPriority(new UserDataOpenHelper(getApplicationContext()).getWritableDatabase(),
+                            getmChatWith());
+                    if (mChatFragment != null) {
+                        mChatFragment.refreshFriendList();
+                    }
+                }
+
                 if (position != 2) {
                     StatusBarUtils.setStatusBarVisable(context);
                 } else if (position == 2) {
@@ -237,6 +248,18 @@ public class SnapSheetActivity extends AppCompatActivity {
         initWIFISetting();
     }
 
+
+    public void setViewPagerItem(int num) {
+        mViewPager.setCurrentItem(num);
+    }
+
+    public void setmChatWith(String id) {
+        mChatWith = id;
+    }
+
+    public String getmChatWith() {
+        return mChatWith;
+    }
 
     private void startBackgroundThread() {
         mHandlerThread = new HandlerThread("CameraBackground");
@@ -419,10 +442,12 @@ public class SnapSheetActivity extends AppCompatActivity {
 
     }
 
+    private ChatFragment mChatFragment;
     private void loadFragments() {
+        mChatFragment = new ChatFragment();
         if (fragments.size() == 0) {
             fragments.add(new ChatRoomFragment());
-            fragments.add(new ChatFragment());
+            fragments.add(mChatFragment);
             fragments.add(new CameraPageViewerFragment());
             fragments.add(new StoriesFragment());
             fragments.add(new DiscoverFragment());
