@@ -49,9 +49,12 @@ import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
 import com.unimelb.feelinglucky.snapsheet.Story.SimulateStory;
 import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -508,6 +511,28 @@ public class SnapSheetActivity extends AppCompatActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+
+        try {
+            Method m = mManager.getClass().getMethod("setDeviceName", new Class[]{
+                    mChannel.getClass(), String.class,
+                    WifiP2pManager.ActionListener.class
+            });
+            m.invoke(mManager, mChannel, SharedPreferencesUtils.getSharedPreferences(getApplicationContext()).getString("username", null), new WifiP2pManager.ActionListener() {
+                @Override
+                public void onSuccess() {
+                }
+                @Override
+                public void onFailure(int reason) {
+                }
+            });
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
         progressDialog = ProgressDialog.show(this, "Press back to cancel", "finding peers", true,
                 true, new DialogInterface.OnCancelListener() {
                     @Override
@@ -515,6 +540,8 @@ public class SnapSheetActivity extends AppCompatActivity {
 
                     }
                 });
+
+
     }
 
     public void stopLoading() {

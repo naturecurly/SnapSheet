@@ -1,8 +1,6 @@
 package com.unimelb.feelinglucky.snapsheet.Camera;
 
 import android.app.Fragment;
-import android.net.wifi.WpsInfo;
-import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -39,6 +37,7 @@ public class FriendListFragment extends Fragment implements WifiP2pManager.PeerL
         apter = new FriendListViewApter(getActivity(), peers);
         listView = (ListView) view.findViewById(R.id.lvBluetooth);
         listView.setAdapter(apter);
+
         return view;
     }
 
@@ -52,22 +51,6 @@ public class FriendListFragment extends Fragment implements WifiP2pManager.PeerL
         peers.clear();
         peers.addAll(peerList.getDeviceList());
         apter.notifyDataSetChanged();
-
-        for (WifiP2pDevice device : peers){
-            device.deviceName = "username";
-            Log.i("address",device.deviceAddress);
-            Log.i("info",device.toString());
-            Log.i("name",device.deviceName);
-
-            if ("66:bc:0c:83:b8:b7".equals(device.deviceAddress)){
-
-                WifiP2pConfig config = new WifiP2pConfig();
-                config.deviceAddress = device.deviceAddress;
-                config.wps.setup = WpsInfo.PBC;
-                Log.i("good","good");
-            }
-        }
-
         if (peers.size() == 0) {
             Log.d("None", "No devices found");
             return;
