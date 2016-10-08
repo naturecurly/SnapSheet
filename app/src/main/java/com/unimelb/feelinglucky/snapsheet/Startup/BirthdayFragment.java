@@ -26,6 +26,7 @@ import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
+import com.unimelb.feelinglucky.snapsheet.Dialog.AlertDialogFragment;
 import com.unimelb.feelinglucky.snapsheet.Dialog.DatePickerFragment;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.RegisterService;
@@ -79,9 +80,9 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
             @Override
             public void onClick(View v) {
 //                SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-                String a = sharedPreferences.getString("email", "email");
-                String b = sharedPreferences.getString("password", "password");
-                Log.i("TTT", a + " " + b);
+//                String a = sharedPreferences.getString("email", "email");
+//                String b = sharedPreferences.getString("password", "password");
+//                Log.i("TTT", a + " " + b);
 
                 signup();
             }
@@ -104,39 +105,44 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
     }
 
     private void signup() {
-        User newUser = new User();
-        newUser.setEmail(sharedPreferences.getString("email", ""));
-        newUser.setPassword(sharedPreferences.getString("password", ""));
-        newUser.setBirthday(new Date(sharedPreferences.getLong("birthday", 0)));
-        newUser.setUsername(sharedPreferences.getString("username", ""));
+        if (sharedPreferences.contains("deviceId")) {
+            User newUser = new User();
+            newUser.setEmail(sharedPreferences.getString("email", ""));
+            newUser.setPassword(sharedPreferences.getString("password", ""));
+            newUser.setBirthday(new Date(sharedPreferences.getLong("birthday", 0)));
+            newUser.setUsername(sharedPreferences.getString("username", ""));
+            newUser.setDevice_id(sharedPreferences.getString("deviceId", ""));
 
-        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
-        RegisterService registerService = retrofit.create(RegisterService.class);
-        Call<User> call = registerService.register(newUser);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
+            RegisterService registerService = retrofit.create(RegisterService.class);
+            Call<User> call = registerService.register(newUser);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
 
-                if (response.isSuccessful()) {
-                    Log.i(TAG, "success");
-                    User user = response.body();
-                    Log.i(TAG, user.getUsername());
-                    DatabaseUtils.refreshUserDb(mDatabase, user);
-                    Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
-                    getActivity().startActivity(intent);
-                    getActivity().finish();
-                } else {
-                    sharedPreferences.edit().clear().commit();
+                    if (response.isSuccessful()) {
+                        Log.i(TAG, "success");
+                        User user = response.body();
+                        Log.i(TAG, user.getUsername());
+                        DatabaseUtils.refreshUserDb(mDatabase, user);
+                        Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
+                        getActivity().startActivity(intent);
+                        getActivity().finish();
+                    } else {
+                        sharedPreferences.edit().clear().commit();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.i(TAG, t.getMessage());
-                sharedPreferences.edit().clear().commit();
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Log.i(TAG, t.getMessage());
+                    sharedPreferences.edit().clear().commit();
 
-            }
-        });
+                }
+            });
+        } else {
+            new AlertDialogFragment().show(getFragmentManager(), "cannot get deviceId");
+        }
     }
 
     @Override

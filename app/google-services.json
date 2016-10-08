@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "823049585340",
+    "firebase_url": "https://snapserver-fa608.firebaseio.com",
+    "project_id": "snapserver-fa608",
+    "storage_bucket": "snapserver-fa608.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823049585340:android:af966fbbce3eb9ed",
+        "android_client_info": {
+          "package_name": "com.unimelb.feelinglucky.snapsheet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823049585340-6p66lhbd4o0v504t4ngu3emud5ee126o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXlORKuLDq8YYgVyDTnt4CZA5T12HSKcY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

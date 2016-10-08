@@ -263,6 +263,7 @@ public class CameraFragment extends Fragment {
                     super.onCaptureStarted(session, request, timestamp, frameNumber);
 
                     try {
+
                         createImageFilename();
                     } catch (IOException e) {
                         e.printStackTrace();

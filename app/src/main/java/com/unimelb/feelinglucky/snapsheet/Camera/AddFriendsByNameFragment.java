@@ -1,10 +1,12 @@
 package com.unimelb.feelinglucky.snapsheet.Camera;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,11 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.CheckUsernameService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +42,13 @@ public class AddFriendsByNameFragment extends Fragment {
     private TextView usernameText;
     private LinearLayout userLayout;
     private String usernameToAdd;
+    private SQLiteDatabase mDatabase;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDatabase = new UserDataOpenHelper(getActivity()).getWritableDatabase();
+    }
 
     @Nullable
     @Override
@@ -69,9 +82,16 @@ public class AddFriendsByNameFragment extends Fragment {
                             if (response.isSuccessful()) {
                                 ReturnMessage message = (ReturnMessage) response.body();
                                 if (message.isSuccess()) {
-                                    usernameToAdd = newText;
-                                    userLayout.setVisibility(View.VISIBLE);
-                                    usernameText.setText(newText);
+                                    List<String> friends = DatabaseUtils.fetchFriends(mDatabase);
+                                    Log.i("test", friends.get(0));
+                                    if (friends.indexOf(newText) != -1) {
+                                        refreshFriendLayout(newText, true);
+                                    } else {
+                                        refreshFriendLayout(newText, false);
+
+                                    }
+                                } else {
+                                    userLayout.setVisibility(View.GONE);
                                 }
                             }
                         }
@@ -81,6 +101,8 @@ public class AddFriendsByNameFragment extends Fragment {
 
                         }
                     });
+                } else {
+                    userLayout.setVisibility(View.GONE);
                 }
                 return false;
             }
@@ -98,6 +120,7 @@ public class AddFriendsByNameFragment extends Fragment {
                         if (response.isSuccessful()) {
                             ReturnMessage message = (ReturnMessage) response.body();
                             if (message.isSuccess()) {
+                                DatabaseUtils.insertFriendDb(mDatabase, usernameText.getText().toString());
                                 addButton.setText("Added");
                             } else {
                                 Toast.makeText(getActivity(), "Add failed", Toast.LENGTH_SHORT).show();
@@ -115,4 +138,21 @@ public class AddFriendsByNameFragment extends Fragment {
 
         return view;
     }
+
+    private void refreshFriendLayout(String newText, boolean added) {
+        if (added) {
+            usernameToAdd = newText;
+            userLayout.setVisibility(View.VISIBLE);
+            usernameText.setText(newText);
+            addButton.setText("ADDED");
+            addButton.setEnabled(false);
+        } else {
+            usernameToAdd = newText;
+            userLayout.setVisibility(View.VISIBLE);
+            usernameText.setText(newText);
+            addButton.setText("ADD");
+            addButton.setEnabled(true);
+        }
+    }
+
 }

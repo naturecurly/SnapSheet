@@ -59,4 +59,9 @@ public class DatabaseUtils {
         }
         return friendList;
     }
+
+    public static void insertFriendDb(SQLiteDatabase database, String friend) {
+        ContentValues value = getFriendContentValues(friend);
+        database.insert(FriendTable.NAME, null, value);
+    }
 }

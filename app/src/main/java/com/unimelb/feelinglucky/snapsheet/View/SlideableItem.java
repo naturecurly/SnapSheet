@@ -142,7 +142,7 @@ public class SlideableItem extends FrameLayout {
                 break;
             case MotionEvent.ACTION_CANCEL:
                 pager.endFakeDrag();
-
+                flag = false;
                 fingerUpEvent();
                 break;
 

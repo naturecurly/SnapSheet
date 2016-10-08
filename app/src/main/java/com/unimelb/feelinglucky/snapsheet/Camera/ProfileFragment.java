@@ -25,6 +25,7 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 public class ProfileFragment extends Fragment {
     private TextView profileUsername;
     private Button addFriendsButton;
+    private Button myFriendsButton;
 
 
     @Nullable
@@ -40,6 +41,13 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, new AddFriendsFragment()).addToBackStack("profile").commit();
 
+            }
+        });
+        myFriendsButton = (Button) view.findViewById(R.id.fragment_profile_my_friend_button);
+        myFriendsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, new FriendsFragment()).addToBackStack("profile").commit();
             }
         });
         return view;
