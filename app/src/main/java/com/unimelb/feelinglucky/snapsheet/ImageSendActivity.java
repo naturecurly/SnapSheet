@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.unimelb.feelinglucky.snapsheet.Camera.FriendListFragment;
 import com.unimelb.feelinglucky.snapsheet.Camera.ImageViewFragment;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 
