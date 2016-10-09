@@ -41,9 +41,6 @@ public class FriendListWifiFragment extends Fragment implements WifiP2pManager.P
         return view;
     }
 
-
-
-
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
         ((SnapSheetActivity)getActivity()).stopLoading();

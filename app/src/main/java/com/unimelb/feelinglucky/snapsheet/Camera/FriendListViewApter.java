@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,16 +64,17 @@ public class FriendListViewApter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = inflater.inflate(R.layout.scan_friend_item, null);
             viewHolder.name = (TextView) convertView.findViewById(R.id.scan_friend_name);
-
+            viewHolder.add = (Button) convertView.findViewById(R.id.add_friend_near_by_button);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         if (mPeers != null) {
             viewHolder.name.setText(mPeers.get(position).deviceName);
-            viewHolder.name.setOnClickListener(new View.OnClickListener() {
+            viewHolder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Toast.makeText(mContext,"clicked",Toast.LENGTH_LONG).show();
                     Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
                     AddFriendService addFriendService = retrofit.create(AddFriendService.class);
                     Call call = addFriendService.addFriends(SharedPreferencesUtils.getSharedPreferences(mContext).getString("username", null), mPeers.get(position).deviceName);
@@ -84,17 +86,18 @@ public class FriendListViewApter extends BaseAdapter {
                                 if (message.isSuccess()) {
                                     Toast.makeText(mContext,"successful",Toast.LENGTH_LONG).show();
                                 } else {
+                                    Toast.makeText(mContext,"oop",Toast.LENGTH_LONG).show();
                                 }
                             }
                         }
 
                         @Override
                         public void onFailure(Call call, Throwable t) {
-
                         }
                     });
                 }
             });
+
         } else  {
             viewHolder.name.setText("hello");
         }
@@ -103,5 +106,6 @@ public class FriendListViewApter extends BaseAdapter {
 
     private class ViewHolder{
         TextView name;
+        Button add;
     }
 }
