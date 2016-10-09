@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/add_friend_by_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:weightSum="10">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="7"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/add_friend_by_contact_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="username"
+                android:textIsSelectable="false"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/add_friend_by_contact_mobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="mobile"
+                android:textIsSelectable="false"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/add_friend_by_contact_button"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="3"
+            android:background="@drawable/profile_add_friends_button_style"
+            android:text="add"
+            android:textColor="@drawable/add_friend_button_text_color" />
+    </LinearLayout>
+</LinearLayout>

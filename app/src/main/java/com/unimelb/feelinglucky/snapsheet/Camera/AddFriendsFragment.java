@@ -1,8 +1,12 @@
 package com.unimelb.feelinglucky.snapsheet.Camera;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,12 +48,14 @@ public class AddFriendsFragment extends Fragment {
                 if (position == 1) {
                     getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, new AddFriendsByNameFragment()).addToBackStack("addFriends").commit();
                 } else if (position == 2) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, new AddFriendByContactFragment()).addToBackStack("addFriends").commit();
 
                 } else if (position == 3) {
                     getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, nearByFragment).addToBackStack("addFriends").commit();
                 }
             }
         });
+        setContactPermission();
         return view;
     }
 
@@ -88,6 +94,21 @@ public class AddFriendsFragment extends Fragment {
 //                }
 //            });
             return convertView;
+        }
+    }
+
+    public void setContactPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.READ_CONTACTS)) {
+            } else {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.READ_CONTACTS},
+                        1);
+            }
         }
     }
 
