@@ -22,7 +22,7 @@ import java.util.List;
  * Created by mac on 16/10/6.
  */
 
-public class FriendListFragment extends Fragment implements WifiP2pManager.PeerListListener {
+public class FriendListWifiFragment extends Fragment implements WifiP2pManager.PeerListListener {
 
     private List<WifiP2pDevice> peers;
     private FriendListViewApter apter;
