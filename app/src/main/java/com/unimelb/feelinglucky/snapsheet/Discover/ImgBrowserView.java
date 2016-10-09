@@ -67,6 +67,13 @@ public class ImgBrowserView extends RelativeLayout {
             browserAdapter.notifyDataSetChanged();
         }
     }
+    public ImgBrowserPagerAdapter getBrowserAdapter(){
+        return browserAdapter;
+    }
+
+    public ImgBrowserViewPager getImgBrowserViewPager(){
+        return browserPager;
+    }
 
     private void setUpPager(){
         browserAdapter = new ImgBrowserPagerAdapter(context);

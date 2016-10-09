@@ -25,4 +25,5 @@
     <string name="my_friends_actionbar_title">My Friends</string>
     <string name="send_to_friend">Send to friend</string>
     <string name="fail_to_get_device_id">Failed to get a device id. Make sure the device has google play framework and the network can be accessed.</string>
+    <string name="fragment_search_nearby">Scan</string>
 </resources>

@@ -10,6 +10,7 @@ public class FriendDbSchema {
         public static final class Cols {
             public static final String ID = "_id";
             public static final String USERNAME = "username";
+//            public static final String CHAT_PRIORITY = "chat_priority";
 //            public static final String BIRTHDAY = "birthday";
 //            public static final String MOBILE = "mobile";
 //            public static final String EMAIL = "email";

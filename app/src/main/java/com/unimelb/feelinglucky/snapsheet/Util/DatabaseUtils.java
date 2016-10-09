@@ -5,9 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
-import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema;
+import com.unimelb.feelinglucky.snapsheet.Database.FriendChatDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 
 import java.util.ArrayList;
@@ -46,7 +45,34 @@ public class DatabaseUtils {
         for (int i = 0; i < friends.length; ++i) {
             ContentValues values = getFriendContentValues(friends[i]);
             database.insert(FriendTable.NAME, null, values);
+            updateFriendChatDb(database, friends[i]);
         }
+    }
+
+    private static void updateFriendChatDb(SQLiteDatabase database, String username) {
+        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME,
+                new String [] {FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
+                FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
+        if (!cursor.moveToNext()) {
+            ContentValues values = getFriendContentValues(username);
+            database.insert(FriendChatDbSchema.FriendChatTable.NAME,null,values);
+        }
+
+    }
+
+    public static void updateChatPriority (SQLiteDatabase database, String userName) {
+
+        String search = "MAX(" + FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + ")";
+        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME, new String [] {search}, null, null, null, null, null);
+        Integer max = 0;
+        if (cursor.moveToNext()) {
+            // Zero means the index of the column.
+            max = cursor.getInt(0);
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY,max + 1);
+        database.update(FriendChatDbSchema.FriendChatTable.NAME, values, FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[] {userName});
     }
 
     public static List<String> fetchFriends(SQLiteDatabase database) {
@@ -63,5 +89,22 @@ public class DatabaseUtils {
     public static void insertFriendDb(SQLiteDatabase database, String friend) {
         ContentValues value = getFriendContentValues(friend);
         database.insert(FriendTable.NAME, null, value);
+    }
+
+    public static String[] loadFriendsWithPriority (SQLiteDatabase database) {
+        String orderBy =  FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + " DESC";
+        List<String> userList = new ArrayList<>();
+
+        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME, new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME,
+                FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY}, null, null, null, null, orderBy);
+        int usernameIndex = cursor.getColumnIndex(FriendChatDbSchema.FriendChatTable.Cols.USERNAME);
+//        int priorityIndex = cursor.getColumnIndex(FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY);
+        while(cursor.moveToNext()) {
+            userList.add(cursor.getString(usernameIndex));
+        }
+
+        String[] result = new String[userList.size()];
+        result = userList.toArray(result);
+        return result;
     }
 }

@@ -37,11 +37,16 @@ public class AddFriendsFragment extends Fragment {
         listView.addFooterView(new View(getActivity()), null, true);
         listView.addHeaderView(new View(getActivity()), null, true);
         listView.setAdapter(new MyAdapter());
+        final AddFriendNearByFragment nearByFragment = new AddFriendNearByFragment();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 1) {
                     getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, new AddFriendsByNameFragment()).addToBackStack("addFriends").commit();
+                } else if (position == 2) {
+
+                } else if (position == 3) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, nearByFragment).addToBackStack("addFriends").commit();
                 }
             }
         });

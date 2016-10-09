@@ -4,15 +4,18 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
-    <com.unimelb.feelinglucky.snapsheet.Discover.DiscoverMainPageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/main_page_view"/>
-
     <com.unimelb.feelinglucky.snapsheet.Discover.ImgBrowserView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
         android:id="@+id/img_browser_view"/>
+
+    <com.unimelb.feelinglucky.snapsheet.Discover.DiscoverMainPageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:id="@+id/main_page_view"/>
+
+
 
 </RelativeLayout>

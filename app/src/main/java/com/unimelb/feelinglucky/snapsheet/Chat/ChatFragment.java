@@ -6,8 +6,6 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -26,7 +24,13 @@ import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.Chat.Search.SearchFriendActivity;
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendInfoAdapter;
+import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -46,17 +50,13 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     private SearchView mSearchView;
     private Button mImageButton;
     private TextView mTitle;
-    private FragmentManager fragmentManager;
-    private FragmentTransaction transaction;
 
-    private String[] myDataset = {"a", "b", "c","a", "b", "c","a", "b", "c","a", "b", "c","a", "b", "c","a", "b", "c"};
+    private String[] myDataset;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
-        fragmentManager = getFragmentManager();
-        transaction = fragmentManager.beginTransaction();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_chat_recyclerview);
         mRecyclerView.setHasFixedSize(true);
 
@@ -64,8 +64,10 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        myDataset = DatabaseUtils.loadFriendsWithPriority(new UserDataOpenHelper(getContext()).getWritableDatabase());
+
         // specify an adapter (see also next example)
-        mAdapter = new FriendInfoAdapter(myDataset);
+        mAdapter = new FriendInfoAdapter(getContext(),myDataset);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
 
@@ -102,7 +104,6 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         ImageView v = (ImageView) mSearchView.findViewById(searchID);
         v.setImageResource(R.drawable.ic_search_black_24dp);
 
-//        int searchSrcTextId = getResources().getIdentifier("android:id/search_src_text", null, null);
         int searchSrcTextId = android.support.v7.appcompat.R.id.search_src_text;
         EditText searchEditText = (EditText) mSearchView.findViewById(searchSrcTextId);
         searchEditText.setTextColor(Color.WHITE);
@@ -113,7 +114,6 @@ public class ChatFragment extends Fragment implements ChatContract.View {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),SearchFriendActivity.class);
                 startActivityForResult(intent, RESULTID);
-
             }
         });
 
@@ -134,8 +134,21 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     }
 
     private void searchFriend(String name) {
-        myDataset = new String[]{"a", "b", "c", "a"};
-        mAdapter = new FriendInfoAdapter(myDataset);
+        List<String> names = new ArrayList<>();
+        for (String str : myDataset){
+            if (str.startsWith(name)) {
+                names.add(str);
+            }
+        }
+        String[] search = new String[names.size()];
+
+        mAdapter = new FriendInfoAdapter(getActivity(), names.toArray(search));
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public void refreshFriendList () {
+        myDataset = DatabaseUtils.loadFriendsWithPriority(new UserDataOpenHelper(getContext()).getWritableDatabase());
+        mAdapter = new FriendInfoAdapter(getContext(),myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -145,7 +158,9 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         if (requestCode == RESULTID) {
             // Make sure the request was successful
             if (resultCode == getActivity().RESULT_OK) {
-                Log.i("qqqqqq",data.getStringExtra("id"));
+                refreshFriendList ();
+                ((SnapSheetActivity)getActivity()).setViewPagerItem(0);
+                ((SnapSheetActivity)getActivity()).setmChatWith(data.getStringExtra("id"));
             }
         }
     }
@@ -182,7 +197,6 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     @Override
     public void onResume() {
         super.onResume();
-//        mChatPresenter.start();
     }
 
     @Override
@@ -195,7 +209,5 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     public void onStop() {
         super.onStop();
         Log.i(TAG, "stop");
-
-//        mRecyclerView.notify();
     }
 }

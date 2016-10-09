@@ -2,8 +2,12 @@ package com.unimelb.feelinglucky.snapsheet;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -19,6 +23,7 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -41,14 +46,20 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraPageViewerFragment;
+import com.unimelb.feelinglucky.snapsheet.Camera.WiFiDirectBroadcastReceiver;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
+import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
 import com.unimelb.feelinglucky.snapsheet.Story.StoryFragment;
 import com.unimelb.feelinglucky.snapsheet.Thread.ImageSaver;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
+import com.unimelb.feelinglucky.snapsheet.Story.SimulateStory;
+import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
@@ -65,6 +76,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+//import android.support.v4.view.ViewPager;
+
 /**
  * Created by leveyleonhardt on 8/11/16.
  */
@@ -72,6 +85,7 @@ public class SnapSheetActivity extends AppCompatActivity {
 
     private static final String TAG = "SnapSheetActivity";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+    private String mChatWith;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -187,6 +201,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver(mReceiver, mIntentFilter);
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
             Log.i(TAG, "sssss" + mTextureView.getWidth() + " " + mTextureView.getHeight());
@@ -200,6 +215,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         closeCamera();
+        unregisterReceiver(mReceiver);
         stopBackgroundThread();
         super.onPause();
     }
@@ -235,6 +251,16 @@ public class SnapSheetActivity extends AppCompatActivity {
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                if (fragments.get(position) instanceof StoriesFragment){
+                    StoriesFragment storiesFragment = (StoriesFragment) fragments.get(position);
+                    storiesFragment.setStories(SimulateStory.simulateStories());
+                }
+
+                return super.instantiateItem(container, position);
+            }
+
+            @Override
             public Fragment getItem(int position) {
                 return fragments.get(position);
             }
@@ -253,6 +279,14 @@ public class SnapSheetActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                if (position == 0){
+                    DatabaseUtils.updateChatPriority(new UserDataOpenHelper(getApplicationContext()).getWritableDatabase(),
+                            getmChatWith());
+                    if (mChatFragment != null) {
+                        mChatFragment.refreshFriendList();
+                    }
+                }
+
                 if (position != 2) {
                     StatusBarUtils.setStatusBarVisable(context);
                 } else if (position == 2) {
@@ -266,6 +300,8 @@ public class SnapSheetActivity extends AppCompatActivity {
 
             }
         });
+
+        initWIFISetting();
     }
 
     private void requestStoragePermission() {
@@ -278,6 +314,18 @@ public class SnapSheetActivity extends AppCompatActivity {
         }
     }
 
+
+    public void setViewPagerItem(int num) {
+        mViewPager.setCurrentItem(num);
+    }
+
+    public void setmChatWith(String id) {
+        mChatWith = id;
+    }
+
+    public String getmChatWith() {
+        return mChatWith;
+    }
 
     private void startBackgroundThread() {
         mHandlerThread = new HandlerThread("CameraBackground");
@@ -469,12 +517,14 @@ public class SnapSheetActivity extends AppCompatActivity {
 
     }
 
+    private ChatFragment mChatFragment;
     private void loadFragments() {
+        mChatFragment = new ChatFragment();
         if (fragments.size() == 0) {
             fragments.add(new ChatRoomFragment());
-            fragments.add(new ChatFragment());
+            fragments.add(mChatFragment);
             fragments.add(new CameraPageViewerFragment());
-            fragments.add(new StoryFragment());
+            fragments.add(new StoriesFragment());
             fragments.add(new DiscoverFragment());
         }
     }
@@ -559,5 +609,61 @@ public class SnapSheetActivity extends AppCompatActivity {
         mImageFilename = imageFile.getAbsolutePath();
         return imageFile;
     }
+
+
+
+    private WifiP2pManager mManager;
+    private WifiP2pManager.Channel mChannel;
+    private BroadcastReceiver mReceiver;
+    private ProgressDialog progressDialog;
+
+    private IntentFilter mIntentFilter;
+
+    private void initWIFISetting() {
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+        mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+    }
+
+    public void onInitiateDiscovery() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        progressDialog = ProgressDialog.show(this, "Press back to cancel", "finding peers", true,
+                true, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+    }
+
+    public void stopLoading() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    public void scanUser() {
+        onInitiateDiscovery();
+        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.i("success", "discoverPeers");
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                Log.i("failure", "discoverPeers");
+            }
+        });
+    }
+
 
 }

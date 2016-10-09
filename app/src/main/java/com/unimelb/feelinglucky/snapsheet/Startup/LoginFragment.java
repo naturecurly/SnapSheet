@@ -1,6 +1,5 @@
 package com.unimelb.feelinglucky.snapsheet.Startup;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -48,7 +47,6 @@ public class LoginFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = new UserDataOpenHelper(getActivity()).getWritableDatabase();
-
     }
 
     @Nullable

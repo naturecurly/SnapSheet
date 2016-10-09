@@ -41,7 +41,6 @@ public class ImgBrowserPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        Log.i(TAG, "instantiateItem: ");
         ImageView imgContainer = new ImageView(context);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imgContainer.setLayoutParams(params);
