@@ -1,9 +1,12 @@
 package com.unimelb.feelinglucky.snapsheet;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -18,16 +21,22 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.Image;
 import android.media.ImageReader;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+//import android.support.v4.view.ViewPager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.os.EnvironmentCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -46,6 +55,9 @@ import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
+import com.unimelb.feelinglucky.snapsheet.Story.StoryFragment;
+import com.unimelb.feelinglucky.snapsheet.Thread.ImageSaver;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Story.SimulateStory;
 import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
@@ -55,10 +67,16 @@ import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 //import android.support.v4.view.ViewPager;
@@ -80,6 +98,8 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
 
     private static final int REQUEST_CAMERA_CODE = 0;
+    private static final int REQUEST_STORAGE_CODE = 1;
+
     private CustomizedViewPager mViewPager;
     private List<Fragment> fragments = new ArrayList<>();
     private TextureView mTextureView;
@@ -138,9 +158,26 @@ public class SnapSheetActivity extends AppCompatActivity {
     private ImageReader.OnImageAvailableListener mOnImageAvailableListener = new ImageReader.OnImageAvailableListener() {
         @Override
         public void onImageAvailable(ImageReader reader) {
+            try {
+                Image image = reader.acquireLatestImage();
+//                ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+//                byte[] imageByte = new byte[buffer.remaining()];
+//                buffer.get(imageByte);
+//
+//                jumpToImageView(mImageFilename);
+                createImageFileName();
+                mHandler.post(new ImageSaver(image, mImageFilename, context));
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             Log.i(TAG, "photo has been taken");
         }
     };
+
+
     private Size mImageSize;
 
 
@@ -149,7 +186,20 @@ public class SnapSheetActivity extends AppCompatActivity {
         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
             super.onCaptureCompleted(session, request, result);
         }
+
+        @Override
+        public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
+            super.onCaptureStarted(session, request, timestamp, frameNumber);
+//            try {
+////                createImageFileName();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
     };
+    private int mTotalOrientation;
+    private File mImageFolder;
+    private String mImageFilename;
 
     @Override
     protected void onResume() {
@@ -188,9 +238,15 @@ public class SnapSheetActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.TRANSPARENT);
 
         getWindowManager().getDefaultDisplay().getRealMetrics(mRealMetrics);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestStoragePermission();
+            }
+        }
+        createImageFolder();
+
         mTextureView = (TextureView) findViewById(R.id.activity_camera_texture_view);
         mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-
 
         mViewPager = (CustomizedViewPager) findViewById(R.id.activity_fragment_view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -249,6 +305,16 @@ public class SnapSheetActivity extends AppCompatActivity {
         });
 
         initWIFISetting();
+    }
+
+    private void requestStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(this, "This app need write data on your storage!", Toast.LENGTH_SHORT).show();
+            } else {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_CODE);
+            }
+        }
     }
 
 
@@ -330,8 +396,7 @@ public class SnapSheetActivity extends AppCompatActivity {
                     continue;
                 }
                 StreamConfigurationMap map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-                mImageReader = ImageReader.newInstance(i, i1, ImageFormat.JPEG, 1);
-                mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mHandler);
+
                 int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
                 Log.i(TAG, displayRotation + "");
                 mSensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
@@ -359,10 +424,15 @@ public class SnapSheetActivity extends AppCompatActivity {
                     rotatedWidth = i1;
                     rotatedHeight = i;
                 }
+
                 Log.i(TAG, "rotated" + rotatedWidth + " " + rotatedHeight);
                 mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class), rotatedWidth, rotatedHeight);
                 Log.i(TAG, "preview" + mPreviewSize.getWidth() + " " + mPreviewSize.getHeight());
                 mImageSize = chooseOptimalSize(map.getOutputSizes(ImageFormat.JPEG), rotatedWidth, rotatedHeight);
+                Log.i(TAG, "image" + mImageSize.getWidth() + " " + mImageSize.getHeight());
+
+                mImageReader = ImageReader.newInstance(mImageSize.getWidth(), mImageSize.getHeight(), ImageFormat.JPEG, 1);
+                mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mHandler);
                 mCameraId = cameraId;
                 return;
             }
@@ -432,11 +502,16 @@ public class SnapSheetActivity extends AppCompatActivity {
         if (mCameraDevice == null) {
             return;
         }
+        CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+
         try {
+
             mCaptureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             mCaptureRequestBuilder.addTarget(mImageReader.getSurface());
-            int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            mCaptureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
+//            int rotation = sensorToDeviceRotation(manager.getCameraCharacteristics(mCameraId), getWindowManager().getDefaultDisplay().getRotation());
+            int rotation = this.getWindowManager().getDefaultDisplay().getRotation();
+            Log.i(TAG, "rotation is " + rotation);
+            mCaptureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, getJpegOrientation(manager.getCameraCharacteristics(mCameraId), rotation));
             mCaptureSession.capture(mCaptureRequestBuilder.build(), stillCaptureCallback, mHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -486,6 +561,58 @@ public class SnapSheetActivity extends AppCompatActivity {
     public boolean ismIsFlashOn() {
         return mIsFlashOn;
     }
+
+    private void jumpToImageView(String image) {
+        Intent intent = new Intent(this, ImageSendActivity.class);
+        intent.putExtra("image", image);
+        startActivity(intent);
+    }
+
+//
+
+    private int getOrientation(int rotation) {
+        // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
+        // We have to take that into account and rotate JPEG properly.
+        // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
+        // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
+        return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;
+    }
+
+    private int getJpegOrientation(CameraCharacteristics c, int deviceOrientation) {
+        if (deviceOrientation == android.view.OrientationEventListener.ORIENTATION_UNKNOWN)
+            return 0;
+        int sensorOrientation = c.get(CameraCharacteristics.SENSOR_ORIENTATION);
+
+        // Round device orientation to a multiple of 90
+        deviceOrientation = (deviceOrientation + 45) / 90 * 90;
+
+        // Reverse device orientation for front-facing cameras
+        boolean facingFront = c.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT;
+        if (facingFront) deviceOrientation = -deviceOrientation;
+
+        // Calculate desired JPEG orientation relative to camera orientation to make
+        // the image upright relative to the device orientation
+        int jpegOrientation = (sensorOrientation + deviceOrientation + 360) % 360;
+
+        return jpegOrientation;
+    }
+
+    private void createImageFolder() {
+        File imageFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        mImageFolder = new File(imageFile, "SnapSheet");
+        if (!mImageFolder.exists()) {
+            mImageFolder.mkdirs();
+        }
+    }
+
+    private File createImageFileName() throws IOException {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String prepend = "IMAGE_" + timestamp + "_";
+        File imageFile = File.createTempFile(prepend, ".jpg", mImageFolder);
+        mImageFilename = imageFile.getAbsolutePath();
+        return imageFile;
+    }
+
 
 
     private WifiP2pManager mManager;

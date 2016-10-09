@@ -9,7 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.LoginService;
@@ -36,7 +39,6 @@ public class StartupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
         mDatabase = new UserDataOpenHelper(this).getWritableDatabase();
-
         SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(this);
         if (sharedPreferences.contains("username") && sharedPreferences.contains("email") && sharedPreferences.contains("password") && sharedPreferences.contains("birthday")) {
             User user = new User();
@@ -44,12 +46,7 @@ public class StartupActivity extends AppCompatActivity {
             user.setPassword(sharedPreferences.getString("password", null));
             login(this, user);
         } else {
-            FragmentManager fm = getSupportFragmentManager();
-            Fragment fragment = fm.findFragmentById(R.id.activity_startup_container);
-            if (fragment == null) {
-                fragment = new StartupFragment();
-                fm.beginTransaction().add(R.id.activity_startup_container, fragment).commit();
-            }
+            jumpToLoginFragment();
         }
 
     }
@@ -69,12 +66,7 @@ public class StartupActivity extends AppCompatActivity {
                     context.startActivity(intent);
                     finish();
                 } else {
-                    FragmentManager fm = getSupportFragmentManager();
-                    Fragment fragment = fm.findFragmentById(R.id.activity_startup_container);
-                    if (fragment == null) {
-                        fragment = new StartupFragment();
-                        fm.beginTransaction().add(R.id.activity_startup_container, fragment).commit();
-                    }
+                    jumpToLoginFragment();
                 }
             }
 
@@ -83,5 +75,14 @@ public class StartupActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void jumpToLoginFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.activity_startup_container);
+        if (fragment == null) {
+            fragment = new StartupFragment();
+            fm.beginTransaction().add(R.id.activity_startup_container, fragment).commit();
+        }
     }
 }
