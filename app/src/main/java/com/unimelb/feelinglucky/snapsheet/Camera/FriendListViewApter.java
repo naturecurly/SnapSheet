@@ -14,6 +14,7 @@ import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.PrecessingStringUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import java.util.List;
@@ -74,10 +75,11 @@ public class FriendListViewApter extends BaseAdapter {
             viewHolder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext,"clicked",Toast.LENGTH_LONG).show();
+                    String friendName = PrecessingStringUtils.getFriendName(mPeers.get(position).deviceName);
+                    Toast.makeText(mContext,friendName,Toast.LENGTH_LONG).show();
                     Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
                     AddFriendService addFriendService = retrofit.create(AddFriendService.class);
-                    Call call = addFriendService.addFriends(SharedPreferencesUtils.getSharedPreferences(mContext).getString("username", null), mPeers.get(position).deviceName);
+                    Call call = addFriendService.addFriends(SharedPreferencesUtils.getSharedPreferences(mContext).getString("username", null), friendName);
                     call.enqueue(new Callback() {
                         @Override
                         public void onResponse(Call call, Response response) {

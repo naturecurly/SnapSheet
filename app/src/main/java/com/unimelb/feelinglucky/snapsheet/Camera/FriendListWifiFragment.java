@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.unimelb.feelinglucky.snapsheet.R;
-import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +42,7 @@ public class FriendListWifiFragment extends Fragment implements WifiP2pManager.P
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
-        ((SnapSheetActivity)getActivity()).stopLoading();
-
+        AddFriendNearByFragment.stopLoading();
         peers.clear();
         peers.addAll(peerList.getDeviceList());
         apter.notifyDataSetChanged();

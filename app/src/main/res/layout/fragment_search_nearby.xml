@@ -4,17 +4,11 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <Button
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_search_nearby"
-        android:id="@+id/near_by_scan"/>
-
     <fragment
         class="com.unimelb.feelinglucky.snapsheet.Camera.FriendListWifiFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
         android:id="@+id/near_by_list"
         />
 </LinearLayout>
