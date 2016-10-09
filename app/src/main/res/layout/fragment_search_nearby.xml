@@ -12,7 +12,7 @@
         android:id="@+id/near_by_scan"/>
 
     <fragment
-        class="com.unimelb.feelinglucky.snapsheet.Camera.FriendListFragment"
+        class="com.unimelb.feelinglucky.snapsheet.Camera.FriendListWifiFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/near_by_list"
