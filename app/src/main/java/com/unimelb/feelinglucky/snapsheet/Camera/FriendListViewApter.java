@@ -7,10 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendService;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by mac on 16/10/6.
@@ -46,7 +57,7 @@ public class FriendListViewApter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -59,6 +70,31 @@ public class FriendListViewApter extends BaseAdapter {
         }
         if (mPeers != null) {
             viewHolder.name.setText(mPeers.get(position).deviceName);
+            viewHolder.name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
+                    AddFriendService addFriendService = retrofit.create(AddFriendService.class);
+                    Call call = addFriendService.addFriends(SharedPreferencesUtils.getSharedPreferences(mContext).getString("username", null), mPeers.get(position).deviceName);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onResponse(Call call, Response response) {
+                            if (response.isSuccessful()) {
+                                ReturnMessage message = (ReturnMessage) response.body();
+                                if (message.isSuccess()) {
+                                    Toast.makeText(mContext,"successful",Toast.LENGTH_LONG).show();
+                                } else {
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call call, Throwable t) {
+
+                        }
+                    });
+                }
+            });
         } else  {
             viewHolder.name.setText("hello");
         }
