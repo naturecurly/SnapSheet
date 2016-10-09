@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.unimelb.feelinglucky.snapsheet.ImageSendActivity;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 
@@ -49,7 +50,7 @@ public class ImageViewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.activity_image_send_container, new FriendListFragment()).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().replace(R.id.activity_image_send_container, new SendImageFriendListFragment()).addToBackStack(null).commit();
             }
         });
         try {

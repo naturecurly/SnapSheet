@@ -55,7 +55,6 @@ import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
-import com.unimelb.feelinglucky.snapsheet.Story.StoryFragment;
 import com.unimelb.feelinglucky.snapsheet.Thread.ImageSaver;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Story.SimulateStory;
@@ -255,7 +254,7 @@ public class SnapSheetActivity extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                if (fragments.get(position) instanceof StoriesFragment){
+                if (fragments.get(position) instanceof StoriesFragment) {
                     StoriesFragment storiesFragment = (StoriesFragment) fragments.get(position);
                     storiesFragment.setStories(SimulateStory.simulateStories());
                 }
@@ -282,7 +281,7 @@ public class SnapSheetActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 0){
+                if (position == 0) {
                     DatabaseUtils.updateChatPriority(new UserDataOpenHelper(getApplicationContext()).getWritableDatabase(),
                             getmChatWith());
                     if (mChatFragment != null) {
@@ -521,6 +520,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
 
     private ChatFragment mChatFragment;
+
     private void loadFragments() {
         mChatFragment = new ChatFragment();
         if (fragments.size() == 0) {
@@ -614,7 +614,6 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
 
 
-
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
     private BroadcastReceiver mReceiver;
@@ -648,6 +647,7 @@ public class SnapSheetActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess() {
                 }
+
                 @Override
                 public void onFailure(int reason) {
                 }
