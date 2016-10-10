@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 
 import java.util.ArrayList;
@@ -32,8 +32,7 @@ public class FriendsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDatabase = new UserDataOpenHelper(getActivity()).getWritableDatabase();
-        friendData = DatabaseUtils.fetchFriends(mDatabase);
+        friendData = DatabaseUtils.fetchFriends(DatabaseInstance.database);
     }
 
     @Nullable

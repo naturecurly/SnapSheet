@@ -17,10 +17,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.LoginService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.Md5Crypto;
@@ -40,13 +40,11 @@ public class LoginFragment extends Fragment {
     private EditText usernameEditText;
     private EditText passwordEditText;
     private Button loginButton;
-    private SQLiteDatabase mDatabase;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDatabase = new UserDataOpenHelper(getActivity()).getWritableDatabase();
     }
 
     @Nullable
@@ -121,8 +119,8 @@ public class LoginFragment extends Fragment {
                             editor.putString("username", loginUser.getUsername());
                             editor.putLong("birthday", loginUser.getBirthday().getTime());
                             editor.commit();
-                            DatabaseUtils.refreshUserDb(mDatabase, loginUser);
-                            DatabaseUtils.refreshFriendDb(mDatabase, loginUser.getFriend());
+                            DatabaseUtils.refreshUserDb(DatabaseInstance.database, loginUser);
+                            DatabaseUtils.refreshFriendDb(DatabaseInstance.database, loginUser.getFriend());
                             Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
                             getActivity().startActivity(intent);
                             getActivity().finish();

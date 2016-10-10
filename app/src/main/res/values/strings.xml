@@ -34,4 +34,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
+    <string name="mobile_title">What\'s your mobile number?</string>
+    <string name="signup_mobile_hint">Your mobile number should be valid.</string>
 </resources>

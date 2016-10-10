@@ -1,9 +1,11 @@
 package com.unimelb.feelinglucky.snapsheet.Chat;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,8 +26,8 @@ import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.Chat.Search.SearchFriendActivity;
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendInfoAdapter;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 
@@ -37,10 +39,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by leveyleonhardt on 8/11/16.
  */
-public class ChatFragment extends Fragment implements ChatContract.View {
+public class ChatFragment extends Fragment {
 
     private static final int RESULTID = 1;
-    private ChatContract.Presenter mChatPresenter;
     private final String TAG = ChatFragment.class.getSimpleName();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -50,7 +51,6 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     private SearchView mSearchView;
     private Button mImageButton;
     private TextView mTitle;
-
     private String[] myDataset;
 
     @Nullable
@@ -64,10 +64,11 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        myDataset = DatabaseUtils.loadFriendsWithPriority(new UserDataOpenHelper(getContext()).getWritableDatabase());
-
+        if (DatabaseInstance.database != null) {
+            myDataset = DatabaseUtils.loadFriendsWithPriority(DatabaseInstance.database);
+        }
         // specify an adapter (see also next example)
-        mAdapter = new FriendInfoAdapter(getContext(),myDataset);
+        mAdapter = new FriendInfoAdapter(getContext(), myDataset);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
 
@@ -112,7 +113,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),SearchFriendActivity.class);
+                Intent intent = new Intent(getActivity(), SearchFriendActivity.class);
                 startActivityForResult(intent, RESULTID);
             }
         });
@@ -135,7 +136,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
     private void searchFriend(String name) {
         List<String> names = new ArrayList<>();
-        for (String str : myDataset){
+        for (String str : myDataset) {
             if (str.startsWith(name)) {
                 names.add(str);
             }
@@ -161,9 +162,9 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         if (requestCode == RESULTID) {
             // Make sure the request was successful
             if (resultCode == getActivity().RESULT_OK) {
-                refreshFriendList ();
-                ((SnapSheetActivity)getActivity()).setViewPagerItem(0);
-                ((SnapSheetActivity)getActivity()).setmChatWith(data.getStringExtra("id"));
+                refreshFriendList();
+                ((SnapSheetActivity) getActivity()).setViewPagerItem(0);
+                ((SnapSheetActivity) getActivity()).setmChatWith(data.getStringExtra("id"));
             }
         }
     }
@@ -190,11 +191,6 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void setPresenter(ChatContract.Presenter presenter) {
-        mChatPresenter = checkNotNull(presenter);
     }
 
     @Override

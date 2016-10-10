@@ -41,8 +41,8 @@ import android.widget.Toast;
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraPageViewerFragment;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Story.SimulateStory;
 import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
 import com.unimelb.feelinglucky.snapsheet.Thread.ImageSaver;
@@ -266,7 +266,7 @@ public class SnapSheetActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    DatabaseUtils.updateChatPriority(new UserDataOpenHelper(getApplicationContext()).getWritableDatabase(),
+                    DatabaseUtils.updateChatPriority(DatabaseInstance.database,
                             getmChatWith());
                     if (mChatFragment != null) {
                         mChatFragment.refreshFriendList();
@@ -596,9 +596,6 @@ public class SnapSheetActivity extends AppCompatActivity {
         mImageFilename = imageFile.getAbsolutePath();
         return imageFile;
     }
-
-
-
 
 
 }

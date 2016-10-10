@@ -23,14 +23,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 import com.unimelb.feelinglucky.snapsheet.Dialog.AlertDialogFragment;
 import com.unimelb.feelinglucky.snapsheet.Dialog.DatePickerFragment;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.RegisterService;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 import com.unimelb.feelinglucky.snapsheet.Util.CalculateAge;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
@@ -58,14 +56,12 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
     private TextView birthdayHint;
     private SharedPreferences sharedPreferences;
     private ColorStateList defaultColor;
-    private SQLiteDatabase mDatabase;
 
     @Override
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = SharedPreferencesUtils.getSharedPreferences(getActivity());
-        mDatabase = new UserDataOpenHelper(getActivity()).getWritableDatabase();
     }
 
     @Nullable
@@ -112,6 +108,7 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
             newUser.setBirthday(new Date(sharedPreferences.getLong("birthday", 0)));
             newUser.setUsername(sharedPreferences.getString("username", ""));
             newUser.setDevice_id(sharedPreferences.getString("deviceId", ""));
+            newUser.setMobile(sharedPreferences.getString("mobile", ""));
 
             Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
             RegisterService registerService = retrofit.create(RegisterService.class);
@@ -124,7 +121,7 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
                         Log.i(TAG, "success");
                         User user = response.body();
                         Log.i(TAG, user.getUsername());
-                        DatabaseUtils.refreshUserDb(mDatabase, user);
+                        DatabaseUtils.refreshUserDb(DatabaseInstance.database, user);
                         Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
                         getActivity().startActivity(intent);
                         getActivity().finish();

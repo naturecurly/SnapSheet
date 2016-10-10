@@ -78,7 +78,7 @@ public class UsernameFragment extends Fragment {
                                     SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(getActivity());
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("username", usernameText.getText().toString()).commit();
-                                    getFragmentManager().beginTransaction().replace(R.id.activity_startup_container, new BirthdayFragment()).addToBackStack("username").commit();
+                                    getFragmentManager().beginTransaction().replace(R.id.activity_startup_container, new MobileNumberFragment()).addToBackStack("username").commit();
                                 }
                             }
                         }

@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SortByName;
 
@@ -38,7 +38,7 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FriendNameAdapter(Activity context,ArrayList<String> myDataset) {
+    public FriendNameAdapter(Activity context, ArrayList<String> myDataset) {
         this.mDataset = myDataset;
         mContext = context;
     }
@@ -62,11 +62,11 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
         String content = mDataset.get(position);
         TextView textView = (TextView) holder.mItem.findViewById(R.id.search_friend_textview);
         TextView header = (TextView) holder.mItem.findViewById(R.id.search_friend_header);
-        if(content.startsWith(HEADER)){
+        if (content.startsWith(HEADER)) {
             textView.setVisibility(View.GONE);
             header.setVisibility(View.VISIBLE);
             header.setText(content.substring(2));
-        }else {
+        } else {
             textView.setText(mDataset.get(position));
             textView.setVisibility(View.VISIBLE);
             header.setVisibility(View.GONE);
@@ -74,19 +74,18 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
             holder.mItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DatabaseUtils.updateChatPriority(new UserDataOpenHelper(mContext).getWritableDatabase(),
+                    DatabaseUtils.updateChatPriority(DatabaseInstance.database,
                             mDataset.get(position).toLowerCase());
                     Intent mIntent = new Intent();
 
                     mIntent.putExtra("id", mDataset.get(position).toLowerCase());
 
-                    mContext.setResult(Activity.RESULT_OK,mIntent);
+                    mContext.setResult(Activity.RESULT_OK, mIntent);
                     mContext.finish();
                 }
             });
         }
     }
-
 
 
     // Return the size of your dataset (invoked by the layout manager)
