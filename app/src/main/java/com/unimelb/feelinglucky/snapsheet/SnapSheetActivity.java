@@ -1,14 +1,8 @@
 package com.unimelb.feelinglucky.snapsheet;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.DialogInterface;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
@@ -23,20 +17,15 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-//import android.support.v4.view.ViewPager;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.os.EnvironmentCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -50,26 +39,19 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraPageViewerFragment;
-import com.unimelb.feelinglucky.snapsheet.Camera.WiFiDirectBroadcastReceiver;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.Discover.DiscoverFragment;
-import com.unimelb.feelinglucky.snapsheet.Thread.ImageSaver;
-import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Story.SimulateStory;
 import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
+import com.unimelb.feelinglucky.snapsheet.Thread.ImageSaver;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
-import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,6 +59,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+//import android.support.v4.view.ViewPager;
 
 //import android.support.v4.view.ViewPager;
 
@@ -203,7 +187,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(mReceiver, mIntentFilter);
+
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
             Log.i(TAG, "sssss" + mTextureView.getWidth() + " " + mTextureView.getHeight());
@@ -217,7 +201,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         closeCamera();
-        unregisterReceiver(mReceiver);
+
         stopBackgroundThread();
         super.onPause();
     }
@@ -303,7 +287,7 @@ public class SnapSheetActivity extends AppCompatActivity {
             }
         });
 
-        initWIFISetting();
+
     }
 
     private void requestStoragePermission() {
@@ -614,83 +598,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
 
 
-    private WifiP2pManager mManager;
-    private WifiP2pManager.Channel mChannel;
-    private BroadcastReceiver mReceiver;
-    private ProgressDialog progressDialog;
 
-    private IntentFilter mIntentFilter;
-
-    private void initWIFISetting() {
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
-        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
-        mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
-    }
-
-    public void onInitiateDiscovery() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-
-        try {
-            Method m = mManager.getClass().getMethod("setDeviceName", new Class[]{
-                    mChannel.getClass(), String.class,
-                    WifiP2pManager.ActionListener.class
-            });
-            m.invoke(mManager, mChannel, SharedPreferencesUtils.getSharedPreferences(getApplicationContext()).getString("username", null), new WifiP2pManager.ActionListener() {
-                @Override
-                public void onSuccess() {
-                }
-
-                @Override
-                public void onFailure(int reason) {
-                }
-            });
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        progressDialog = ProgressDialog.show(this, "Press back to cancel", "finding peers", true,
-                true, new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-
-                    }
-                });
-
-
-    }
-
-    public void stopLoading() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
-    public void scanUser() {
-        onInitiateDiscovery();
-        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i("success", "discoverPeers");
-            }
-
-            @Override
-            public void onFailure(int reasonCode) {
-                Log.i("failure", "discoverPeers");
-            }
-        });
-    }
 
 
 }
