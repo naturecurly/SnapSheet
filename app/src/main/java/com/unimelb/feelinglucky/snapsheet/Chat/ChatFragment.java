@@ -147,9 +147,12 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     }
 
     public void refreshFriendList () {
-        myDataset = DatabaseUtils.loadFriendsWithPriority(new UserDataOpenHelper(getContext()).getWritableDatabase());
-        mAdapter = new FriendInfoAdapter(getContext(),myDataset);
-        mRecyclerView.setAdapter(mAdapter);
+        try {
+            myDataset = DatabaseUtils.loadFriendsWithPriority(new UserDataOpenHelper(getContext()).getWritableDatabase());
+            mAdapter = new FriendInfoAdapter(getContext(),myDataset);
+            mRecyclerView.setAdapter(mAdapter);
+        } catch (Exception e){}
+
     }
 
     @Override
