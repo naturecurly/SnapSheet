@@ -7,9 +7,9 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.UpdateDeviceIdService;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
@@ -25,12 +25,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SnapInstanceIdService extends FirebaseInstanceIdService {
 
-    private SQLiteDatabase database;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        database = new UserDataOpenHelper(getApplicationContext()).getWritableDatabase();
 
     }
 
@@ -51,7 +49,7 @@ public class SnapInstanceIdService extends FirebaseInstanceIdService {
                 public void onResponse(Call call, Response response) {
                     if (response.isSuccessful()) {
                         User user = (User) response.body();
-                        DatabaseUtils.refreshUserDb(database, user);
+                        DatabaseUtils.refreshUserDb(DatabaseInstance.database, user);
                     }
                 }
 

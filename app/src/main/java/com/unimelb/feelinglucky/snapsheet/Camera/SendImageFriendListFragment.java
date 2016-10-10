@@ -14,8 +14,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Adapter.FriendAdapter;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 
 /**
@@ -25,15 +25,13 @@ import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 public class SendImageFriendListFragment extends Fragment {
 
     private ListView listView;
-    private SQLiteDatabase database;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.framgent_send_image_friend_list, container, false);
-        database = new UserDataOpenHelper(getActivity()).getReadableDatabase();
         listView = (ListView) view.findViewById(R.id.fragment_send_image_friend_listview);
-        listView.setAdapter(new FriendAdapter(getActivity(), DatabaseUtils.fetchFriends(database)));
+        listView.setAdapter(new FriendAdapter(getActivity(), DatabaseUtils.fetchFriends(DatabaseInstance.database)));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

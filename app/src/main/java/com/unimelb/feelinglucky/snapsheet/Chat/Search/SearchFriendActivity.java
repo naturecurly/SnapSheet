@@ -9,8 +9,8 @@ import android.support.v7.widget.SearchView;
 import android.widget.EditText;
 
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendNameAdapter;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SortByName;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by mac on 16/9/6.
  */
-public class SearchFriendActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
+public class SearchFriendActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<String> myDataset;
@@ -40,12 +40,12 @@ public class SearchFriendActivity extends AppCompatActivity implements SearchVie
         mSearchView.setOnQueryTextListener(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        mAdapter = new FriendNameAdapter(this,myDataset);
+        mAdapter = new FriendNameAdapter(this, myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }
 
     private void init() {
-        myDataset = (ArrayList<String>) DatabaseUtils.fetchFriends(new UserDataOpenHelper(this).getWritableDatabase());
+        myDataset = (ArrayList<String>) DatabaseUtils.fetchFriends(DatabaseInstance.database);
         mDataSetForDisplay = new ArrayList<>();
         myDataset = SortByName.sortByName(myDataset);
 
@@ -61,18 +61,18 @@ public class SearchFriendActivity extends AppCompatActivity implements SearchVie
     @Override
     public boolean onQueryTextChange(String newText) {
         mDataSetForDisplay.clear();
-        if (newText == null || newText.equals("")){
-            mAdapter = new FriendNameAdapter(this,myDataset);
+        if (newText == null || newText.equals("")) {
+            mAdapter = new FriendNameAdapter(this, myDataset);
             mRecyclerView.setAdapter(mAdapter);
             return false;
         }
-        for (String str : myDataset){
+        for (String str : myDataset) {
             if (str.toLowerCase().startsWith(newText.toLowerCase())) {
                 mDataSetForDisplay.add(str);
             }
         }
         SortByName.insertHeader(mDataSetForDisplay);
-        mAdapter = new FriendNameAdapter(this,mDataSetForDisplay);
+        mAdapter = new FriendNameAdapter(this, mDataSetForDisplay);
         mRecyclerView.setAdapter(mAdapter);
         return false;
     }

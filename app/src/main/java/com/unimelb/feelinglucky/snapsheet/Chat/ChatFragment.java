@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.Chat.Search.SearchFriendActivity;
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendInfoAdapter;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
@@ -40,10 +39,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by leveyleonhardt on 8/11/16.
  */
-public class ChatFragment extends Fragment implements ChatContract.View {
+public class ChatFragment extends Fragment {
 
     private static final int RESULTID = 1;
-    private ChatContract.Presenter mChatPresenter;
     private final String TAG = ChatFragment.class.getSimpleName();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -150,7 +148,6 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     }
 
     public void refreshFriendList() {
-        myDataset = DatabaseUtils.loadFriendsWithPriority(new UserDataOpenHelper(getContext()).getWritableDatabase());
         mAdapter = new FriendInfoAdapter(getContext(), myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -190,11 +187,6 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void setPresenter(ChatContract.Presenter presenter) {
-        mChatPresenter = checkNotNull(presenter);
     }
 
     @Override

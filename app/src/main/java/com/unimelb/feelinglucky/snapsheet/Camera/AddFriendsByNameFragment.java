@@ -17,11 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
-import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.CheckUsernameService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
@@ -47,7 +47,6 @@ public class AddFriendsByNameFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDatabase = new UserDataOpenHelper(getActivity()).getWritableDatabase();
     }
 
     @Nullable
@@ -82,7 +81,7 @@ public class AddFriendsByNameFragment extends Fragment {
                             if (response.isSuccessful()) {
                                 ReturnMessage message = (ReturnMessage) response.body();
                                 if (message.isSuccess()) {
-                                    List<String> friends = DatabaseUtils.fetchFriends(mDatabase);
+                                    List<String> friends = DatabaseUtils.fetchFriends(DatabaseInstance.database);
                                     Log.i("test", friends.get(0));
                                     if (friends.indexOf(newText) != -1) {
                                         refreshFriendLayout(newText, true);
