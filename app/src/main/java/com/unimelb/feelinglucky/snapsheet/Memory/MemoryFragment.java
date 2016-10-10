@@ -15,9 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
         mDelete.setOnClickListener(this);
         mSend.setOnClickListener(this);
         mShare.setOnClickListener(this);
+
+        read();
         initDialog();
         return view;
     }
@@ -74,7 +77,9 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
     private void deleteImg () {
         mImg.setImageBitmap(null);
         mGrid.setVisibility(View.GONE);
+        DatabaseUtils.storeImg(DatabaseInstance.database, null);
     }
+
     private void shareImg() {
         if (mImgUri == null)
             return;;
@@ -87,6 +92,17 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
         startActivity(Intent.createChooser(shareIntent, "Share images to.."));
     }
 
+
+    private void read() {
+        Bitmap mBitmap = DatabaseUtils.getImg(DatabaseInstance.database);
+        if (mBitmap != null) {
+            mImg.setImageBitmap(mBitmap);
+            mGrid.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -98,6 +114,8 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
                         mBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImgUri);
                         mImg.setImageBitmap(mBitmap);
                         mGrid.setVisibility(View.VISIBLE);
+                        DatabaseUtils.storeImg(DatabaseInstance.database, mBitmap);
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -113,13 +131,11 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
         builder.setTitle("Do you want to delete the image from your memory?");
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
                 deleteImg();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
             }
         });
         mDialog = builder.create();

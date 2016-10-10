@@ -3,12 +3,16 @@ package com.unimelb.feelinglucky.snapsheet.Util;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendChatDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
+import com.unimelb.feelinglucky.snapsheet.Database.ImgDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,5 +110,31 @@ public class DatabaseUtils {
         String[] result = new String[userList.size()];
         result = userList.toArray(result);
         return result;
+    }
+
+    public static Bitmap getImg(SQLiteDatabase database) {
+        Cursor cursor = database.query(ImgDbSchema.ImgTable.NAME,
+                new String[]{ImgDbSchema.ImgTable.Cols.IMG}, null, null, null, null, null);
+        int columnIndex = cursor.getColumnIndex(ImgDbSchema.ImgTable.Cols.IMG);
+        Bitmap mBitmap = null;
+        while (cursor.moveToNext()) {
+            byte[] image = cursor.getBlob(columnIndex);
+            mBitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+        }
+        return mBitmap;
+    }
+
+    public static void storeImg(SQLiteDatabase database, Bitmap mBitmap) {
+        if (mBitmap == null){
+            database.delete(ImgDbSchema.ImgTable.NAME, null, null);
+        } else {
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+            ContentValues cv = new  ContentValues();
+            cv.put(ImgDbSchema.ImgTable.Cols.IMGRTEXT, "temp");
+            cv.put(ImgDbSchema.ImgTable.Cols.IMG, os.toByteArray());
+            database.insert(ImgDbSchema.ImgTable.NAME, null, cv );
+        }
+
     }
 }
