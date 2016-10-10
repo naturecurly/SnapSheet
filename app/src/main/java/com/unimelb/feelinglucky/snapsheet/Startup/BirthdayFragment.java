@@ -112,6 +112,7 @@ public class BirthdayFragment extends Fragment implements DatePickerDialog.OnDat
             newUser.setBirthday(new Date(sharedPreferences.getLong("birthday", 0)));
             newUser.setUsername(sharedPreferences.getString("username", ""));
             newUser.setDevice_id(sharedPreferences.getString("deviceId", ""));
+            newUser.setMobile(sharedPreferences.getString("mobile", ""));
 
             Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
             RegisterService registerService = retrofit.create(RegisterService.class);

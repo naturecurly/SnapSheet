@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDataOpenHelper;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.LoginService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Startup.StartupFragment;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
@@ -38,7 +40,8 @@ public class StartupActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
-        mDatabase = new UserDataOpenHelper(this).getWritableDatabase();
+//        mDatabase = new UserDataOpenHelper(this).getWritableDatabase();
+        new getDatabaseTask().execute(this);
         SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(this);
         if (sharedPreferences.contains("username") && sharedPreferences.contains("email") && sharedPreferences.contains("password") && sharedPreferences.contains("birthday")) {
             User user = new User();
@@ -60,8 +63,8 @@ public class StartupActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
                     User info = (User) response.body();
-                    DatabaseUtils.refreshUserDb(mDatabase, info);
-                    DatabaseUtils.refreshFriendDb(mDatabase, info.getFriend());
+                    DatabaseUtils.refreshUserDb(DatabaseInstance.database, info);
+                    DatabaseUtils.refreshFriendDb(DatabaseInstance.database, info.getFriend());
                     Intent intent = new Intent(context, SnapSheetActivity.class);
                     context.startActivity(intent);
                     finish();
@@ -83,6 +86,16 @@ public class StartupActivity extends AppCompatActivity {
         if (fragment == null) {
             fragment = new StartupFragment();
             fm.beginTransaction().add(R.id.activity_startup_container, fragment).commit();
+        }
+    }
+
+    private class getDatabaseTask extends AsyncTask<Context, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Context... params) {
+            DatabaseInstance.database = new UserDataOpenHelper(params[0]).getWritableDatabase();
+            Log.i("xxx", "database created");
+            return null;
         }
     }
 }
