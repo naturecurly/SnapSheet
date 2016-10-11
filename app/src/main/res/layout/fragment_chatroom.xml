@@ -11,14 +11,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:layout_marginTop="20dp">
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:id="@+id/chat_room_fake_actionbar"/>
 
         <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:id="@+id/chat_room_navigation">
+            android:id="@+id/chat_room_navigation"
+            android:layout_below="@id/chat_room_fake_actionbar">
 
             <Button
                 android:layout_width="30dp"
@@ -44,9 +49,12 @@
                 android:background="@drawable/right_48" />
         </RelativeLayout>
 
+
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/chat_room_body"
             android:layout_below="@+id/chat_room_navigation" />
 
         <EditText

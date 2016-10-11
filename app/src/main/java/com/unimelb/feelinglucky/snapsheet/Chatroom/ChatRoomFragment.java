@@ -8,15 +8,21 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Weiwei Cai on 8/11/16.
@@ -24,6 +30,9 @@ import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 public class ChatRoomFragment extends Fragment {
     private DrawerLayout mDrawer;
     private Button mDrawerToggle;
+    private TextView mChatName;
+    private RecyclerView mChat;
+    private ChatRecyclerViewAdapter mAdapter;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
 
@@ -39,6 +48,10 @@ public class ChatRoomFragment extends Fragment {
                 Toast.makeText(getContext(), "want to get the id automatically? Do it in OnPageChangeListener", Toast.LENGTH_LONG).show();
             }
         });*/
+        Toast.makeText(getContext(), ((SnapSheetActivity)getActivity()).getmChatWith(), Toast.LENGTH_LONG).show();
+
+        mChatName = (TextView) view.findViewById(R.id.chat_name);
+        mChatName.setText(((SnapSheetActivity)getActivity()).getmChatWith());
 
         // Find our drawer view
         mDrawer = (DrawerLayout) view.findViewById(R.id.chatroom_profile_drawer_layout);
@@ -50,6 +63,15 @@ public class ChatRoomFragment extends Fragment {
                 mDrawer.openDrawer(GravityCompat.START);
             }
         });
+
+        mChat = (RecyclerView) view.findViewById(R.id.chat_room_body);
+        List<String> messageList = new ArrayList<>();
+        messageList.add("Test message");
+        mAdapter = new ChatRecyclerViewAdapter(getContext(), messageList);
+        mChat.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mChat.setAdapter(mAdapter);
+
 
         return view;
     }
