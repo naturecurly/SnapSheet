@@ -1,13 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-    <TextView
-        android:id="@+id/textView2"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="25dp"></View>
+
+        <TextView
+            android:id="@+id/fragment_chat_title"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:gravity="center"
+            android:text="@string/memory_title"
+            android:textColor="@color/action_bar_text_color"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/memory_import"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/profile_add_friends_button_style"
+        android:text="@string/memory_import"
+        android:textColor="@drawable/add_friend_button_text_color"
+        android:layout_marginBottom="10dp"/>
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Memory" />
-</RelativeLayout>
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/memory_img"
+        android:adjustViewBounds="true"
+        />
+    <GridLayout
+        android:layout_width="match_parent"
+        android:useDefaultMargins="true"
+        android:layout_height="wrap_content"
+        android:id="@+id/memory_grid"
+        android:visibility="gone"
+        >
+        <Button
+            android:layout_marginLeft="@dimen/icon_memory"
+            android:layout_width="@dimen/icon_memory"
+            android:layout_height="@dimen/icon_memory"
+            android:id="@+id/memory_delete"
+            android:background="@android:drawable/ic_menu_delete" />
+        <Button
+            android:layout_width="@dimen/icon_memory"
+            android:layout_height="@dimen/icon_memory"
+            android:id="@+id/memory_share"
+            android:background="@drawable/ic_share" />
+        <Button
+            android:layout_width="@dimen/icon_memory"
+            android:layout_height="@dimen/icon_memory"
+            android:id="@+id/memory_send"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/icon_memory"
+            android:background="@drawable/ic_send" />
+    </GridLayout>
+
+
+</LinearLayout>

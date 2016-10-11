@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.unimelb.feelinglucky.snapsheet.Database.FriendChatDbSchema.FriendChatTable;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 
@@ -58,6 +57,11 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
                 FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + " INTEGER DEFAULT 0" +
                 ")"
         );
+
+
+        db.execSQL("CREATE TABLE " + ImgDbSchema.ImgTable.NAME + "("+
+                ImgDbSchema.ImgTable.Cols.IMGRTEXT + " TEXT," +
+                ImgDbSchema.ImgTable.Cols.IMG + " BLOB);");
     }
 
 }

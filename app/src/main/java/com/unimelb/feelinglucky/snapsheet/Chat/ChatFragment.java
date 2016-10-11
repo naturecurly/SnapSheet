@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,8 +32,6 @@ import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by leveyleonhardt on 8/11/16.
@@ -147,9 +144,13 @@ public class ChatFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    public void refreshFriendList() {
-        mAdapter = new FriendInfoAdapter(getContext(), myDataset);
-        mRecyclerView.setAdapter(mAdapter);
+    public void refreshFriendList () {
+        try {
+            myDataset = DatabaseUtils.loadFriendsWithPriority(DatabaseInstance.database);
+            mAdapter = new FriendInfoAdapter(getContext(),myDataset);
+            mRecyclerView.setAdapter(mAdapter);
+        } catch (Exception e){}
+
     }
 
     @Override

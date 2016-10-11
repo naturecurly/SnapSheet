@@ -1,6 +1,7 @@
 package com.unimelb.feelinglucky.snapsheet.Camera;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 
 /**
@@ -49,9 +51,10 @@ public class AddFriendsFragment extends Fragment {
                     getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, new AddFriendsByNameFragment()).addToBackStack("addFriends").commit();
                 } else if (position == 2) {
                     getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, new AddFriendByContactFragment()).addToBackStack("addFriends").commit();
-
                 } else if (position == 3) {
                     getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, nearByFragment).addToBackStack("addFriends").commit();
+                } else if (position == 4) {
+                    share();
                 }
             }
         });
@@ -59,6 +62,14 @@ public class AddFriendsFragment extends Fragment {
         return view;
     }
 
+    private void share() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_info_with_others ,
+                SharedPreferencesUtils.getSharedPreferences(getActivity()).getString("username",null)));
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_info_with_others)));
+    }
     class MyAdapter extends BaseAdapter {
 
         @Override
@@ -111,5 +122,4 @@ public class AddFriendsFragment extends Fragment {
             }
         }
     }
-
 }

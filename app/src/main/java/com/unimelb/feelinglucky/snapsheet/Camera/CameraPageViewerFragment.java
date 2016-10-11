@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.unimelb.feelinglucky.snapsheet.Memory.MemoryFragment;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
