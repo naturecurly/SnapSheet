@@ -1,9 +1,11 @@
 package com.unimelb.feelinglucky.snapsheet.Camera;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,10 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.adobe.creativesdk.aviary.AdobeImageIntent;
 import com.unimelb.feelinglucky.snapsheet.ImageSendActivity;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -29,6 +33,7 @@ public class ImageViewFragment extends Fragment {
     private ImageView imageView;
     private Button sendButton;
     private String imagePath;
+    private Button editButton;
 
     public static ImageViewFragment newInstance(String imagePath) {
 
@@ -45,6 +50,15 @@ public class ImageViewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_image_view, container, false);
         imagePath = getArguments().getString("imagePath");
         imageView = (ImageView) view.findViewById(R.id.activity_send_imageview);
+        editButton = (Button) view.findViewById(R.id.image_edit_button);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri imageUri = Uri.fromFile(new File(imagePath));
+                Intent intent = new AdobeImageIntent.Builder(getActivity()).setData(imageUri).build();
+                getActivity().startActivityForResult(intent, 1);
+            }
+        });
         sendButton = (Button) view.findViewById(R.id.image_send_button);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,5 +103,9 @@ public class ImageViewFragment extends Fragment {
                 imageView.setImageBitmap(bitmap);
 
         }
+    }
+
+    public void refreshImage(Uri imageUri) {
+        imageView.setImageURI(imageUri);
     }
 }

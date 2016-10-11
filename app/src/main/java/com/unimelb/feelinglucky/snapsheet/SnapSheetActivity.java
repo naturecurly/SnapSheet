@@ -44,6 +44,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.adobe.creativesdk.foundation.AdobeCSDKFoundation;
+import com.adobe.creativesdk.foundation.auth.IAdobeAuthClientCredentials;
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraPageViewerFragment;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
@@ -75,6 +77,7 @@ import java.util.List;
  * Created by leveyleonhardt on 8/11/16.
  */
 public class SnapSheetActivity extends AppCompatActivity {
+
 
     private static final String TAG = "SnapSheetActivity";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -194,7 +197,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        closeCamera();
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
             Log.i(TAG, "sssss" + mTextureView.getWidth() + " " + mTextureView.getHeight());
@@ -218,6 +221,8 @@ public class SnapSheetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_fragment);
+
+
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -555,6 +560,7 @@ public class SnapSheetActivity extends AppCompatActivity {
         }
     }
 
+
     private static class CompareSizeByArea implements Comparator<Size> {
 
         @Override
@@ -621,8 +627,8 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
 
     private void createImageFolder() {
-        File imageFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        mImageFolder = new File(imageFile, "SnapSheet");
+        File imageFile = getFilesDir();
+        mImageFolder = new File(imageFile, "Images");
         if (!mImageFolder.exists()) {
             mImageFolder.mkdirs();
         }
@@ -637,4 +643,14 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DatabaseInstance.database.close();
+        DatabaseInstance.database = null;
+        File[] files = mImageFolder.listFiles();
+        for (File f : files) {
+            f.delete();
+        }
+    }
 }

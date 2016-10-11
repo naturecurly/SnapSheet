@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,9 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.adobe.creativesdk.aviary.AdobeImageIntent;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 import com.unimelb.feelinglucky.snapsheet.View.ShutterButton;
+
+import java.io.File;
 
 /**
  * Created by leveyleonhardt on 9/7/16.
@@ -82,7 +86,12 @@ public class CameraMaskFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 activity.takePicture();
+//                Uri imageUri = Uri.fromFile(new File("/sdcard/cats.jpg"));
+//                Intent intent = new AdobeImageIntent.Builder(activity).setData(imageUri).build();
+//
+//                activity.startActivity(intent);
             }
+
         });
         return view;
     }
