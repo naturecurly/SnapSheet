@@ -82,7 +82,7 @@ public class AddFriendsByNameFragment extends Fragment {
                                 ReturnMessage message = (ReturnMessage) response.body();
                                 if (message.isSuccess()) {
                                     List<String> friends = DatabaseUtils.fetchFriends(DatabaseInstance.database);
-                                    Log.i("test", friends.get(0));
+                                    //Log.i("test", friends.get(0));
                                     if (friends.indexOf(newText) != -1) {
                                         refreshFriendLayout(newText, true);
                                     } else {
@@ -119,7 +119,7 @@ public class AddFriendsByNameFragment extends Fragment {
                         if (response.isSuccessful()) {
                             ReturnMessage message = (ReturnMessage) response.body();
                             if (message.isSuccess()) {
-                                DatabaseUtils.insertFriendDb(mDatabase, usernameText.getText().toString());
+                                DatabaseUtils.insertFriendDb(DatabaseInstance.database, usernameText.getText().toString());
                                 addButton.setText("Added");
                             } else {
                                 Toast.makeText(getActivity(), "Add failed", Toast.LENGTH_SHORT).show();

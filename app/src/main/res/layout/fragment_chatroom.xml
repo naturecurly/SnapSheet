@@ -64,6 +64,9 @@
             android:id="@+id/chat_input"
             android:layout_above="@+id/chat_menu"
             android:layout_height="50dp"
+            android:lines="1"
+            android:maxLines="1"
+            android:inputType="text"
             android:hint="Send a Chat" />
 
         <GridLayout

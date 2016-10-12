@@ -8,7 +8,10 @@ public class Message {
     private String from;
     private String to;
     private String type;
-    private String message;
+    private String content;
+
+    public final static String MSG = "msg";
+    public final static String IMG = "img";
 
     public String getFrom() {
         return from;
@@ -34,11 +37,11 @@ public class Message {
         this.type = type;
     }
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setContent(String content) {
+        this.content = content;
     }
 }
