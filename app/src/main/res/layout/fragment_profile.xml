@@ -44,7 +44,7 @@
         android:textSize="20sp" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/setting_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentEnd="true"
@@ -58,7 +58,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_alignBottom="@+id/fragment_profile_username_textview"
-        android:layout_below="@+id/button4"
+        android:layout_below="@+id/setting_button"
         android:layout_centerHorizontal="true"
         android:src="@drawable/snapchat_profile" />
 </RelativeLayout>

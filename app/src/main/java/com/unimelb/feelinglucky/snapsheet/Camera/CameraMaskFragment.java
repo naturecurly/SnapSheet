@@ -46,8 +46,8 @@ public class CameraMaskFragment extends Fragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String number = intent.getExtras().getString("count");
-                if (number != null)
-                    Log.i("facecount", number);
+//                if (number != null)
+//                    Log.i("facecount", number);
                 updateFaceCount(number);
             }
         };

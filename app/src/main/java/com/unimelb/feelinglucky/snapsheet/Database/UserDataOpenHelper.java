@@ -13,7 +13,7 @@ import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 public class UserDataOpenHelper extends SQLiteOpenHelper {
 
     private static final int VERSION = 1;
-    private static final String DATABASE_NAME = "users.db";
+    public static final String DATABASE_NAME = "users.db";
 
     public UserDataOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
