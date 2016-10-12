@@ -14,4 +14,6 @@
     <color name="action_bar_text_color">#9c27b0</color>
     <color name="divider_color">#b39e9e9e</color>
 
+    <color name="chat_message_textview_left_border">#FFD90F37</color>
+
 </resources>

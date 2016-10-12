@@ -4,16 +4,21 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.params.Face;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
@@ -26,6 +31,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -38,6 +44,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.adobe.creativesdk.foundation.AdobeCSDKFoundation;
+import com.adobe.creativesdk.foundation.auth.IAdobeAuthClientCredentials;
 import com.unimelb.feelinglucky.snapsheet.Camera.CameraPageViewerFragment;
 import com.unimelb.feelinglucky.snapsheet.Chat.ChatFragment;
 import com.unimelb.feelinglucky.snapsheet.Chatroom.ChatRoomFragment;
@@ -48,6 +56,7 @@ import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
 import com.unimelb.feelinglucky.snapsheet.Thread.ImageSaver;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
+import com.unimelb.feelinglucky.snapsheet.View.AutoFitTextureView;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
 import java.io.File;
@@ -69,6 +78,7 @@ import java.util.List;
  */
 public class SnapSheetActivity extends AppCompatActivity {
 
+
     private static final String TAG = "SnapSheetActivity";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private String mChatWith;
@@ -85,7 +95,7 @@ public class SnapSheetActivity extends AppCompatActivity {
 
     private CustomizedViewPager mViewPager;
     private List<Fragment> fragments = new ArrayList<>();
-    private TextureView mTextureView;
+    private AutoFitTextureView mTextureView;
     private DisplayMetrics mRealMetrics = new DisplayMetrics();
     private AppCompatActivity context;
     private TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
@@ -187,7 +197,7 @@ public class SnapSheetActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        closeCamera();
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
             Log.i(TAG, "sssss" + mTextureView.getWidth() + " " + mTextureView.getHeight());
@@ -211,6 +221,8 @@ public class SnapSheetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_fragment);
+
+
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -228,7 +240,7 @@ public class SnapSheetActivity extends AppCompatActivity {
         }
         createImageFolder();
 
-        mTextureView = (TextureView) findViewById(R.id.activity_camera_texture_view);
+        mTextureView = (AutoFitTextureView) findViewById(R.id.activity_camera_texture_view);
         mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
 
         mViewPager = (CustomizedViewPager) findViewById(R.id.activity_fragment_view_pager);
@@ -414,6 +426,13 @@ public class SnapSheetActivity extends AppCompatActivity {
                 mImageSize = chooseOptimalSize(map.getOutputSizes(ImageFormat.JPEG), rotatedWidth, rotatedHeight);
                 Log.i(TAG, "image" + mImageSize.getWidth() + " " + mImageSize.getHeight());
 
+                int orientation = getResources().getConfiguration().orientation;
+                Log.i("textureview_orientation", "" + orientation);
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    mTextureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+                } else {
+                    mTextureView.setAspectRatio(mTextureView.getHeight(), mPreviewSize.getWidth());
+                }
                 mImageReader = ImageReader.newInstance(mImageSize.getWidth(), mImageSize.getHeight(), ImageFormat.JPEG, 1);
                 mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mHandler);
                 mCameraId = cameraId;
@@ -450,6 +469,8 @@ public class SnapSheetActivity extends AppCompatActivity {
             Surface surface = new Surface(texture);
 
             mCaptureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+            mCaptureRequestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE,
+                    CameraMetadata.STATISTICS_FACE_DETECT_MODE_FULL);
             mCaptureRequestBuilder.addTarget(surface);
 
 
@@ -463,7 +484,30 @@ public class SnapSheetActivity extends AppCompatActivity {
                     try {
                         mCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
                         mPreviewRequest = mCaptureRequestBuilder.build();
-                        mCaptureSession.setRepeatingRequest(mPreviewRequest, null, mHandler);
+                        mCaptureSession.setRepeatingRequest(mPreviewRequest, new CameraCaptureSession.CaptureCallback() {
+                            private void process(CaptureResult result) {
+                                Integer mode = result.get(CaptureResult.STATISTICS_FACE_DETECT_MODE);
+                                Face[] faces = result.get(CaptureResult.STATISTICS_FACES);
+                                if (faces != null && mode != null) {
+                                    Intent intent = new Intent("updateFaceCount");
+                                    intent.putExtra("count", faces.length + "");
+                                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+//                                    Log.e("tag", "faces : " + faces.length + " , mode : " + mode);
+                                }
+                            }
+
+                            @Override
+                            public void onCaptureProgressed(CameraCaptureSession session, CaptureRequest request, CaptureResult partialResult) {
+                                super.onCaptureProgressed(session, request, partialResult);
+                                process(partialResult);
+                            }
+
+                            @Override
+                            public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                                super.onCaptureCompleted(session, request, result);
+                                process(result);
+                            }
+                        }, null);
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }
@@ -515,6 +559,7 @@ public class SnapSheetActivity extends AppCompatActivity {
             fragments.add(new DiscoverFragment());
         }
     }
+
 
     private static class CompareSizeByArea implements Comparator<Size> {
 
@@ -582,8 +627,8 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
 
     private void createImageFolder() {
-        File imageFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        mImageFolder = new File(imageFile, "SnapSheet");
+        File imageFile = getFilesDir();
+        mImageFolder = new File(imageFile, "Images");
         if (!mImageFolder.exists()) {
             mImageFolder.mkdirs();
         }
@@ -598,4 +643,14 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DatabaseInstance.database.close();
+        DatabaseInstance.database = null;
+        File[] files = mImageFolder.listFiles();
+        for (File f : files) {
+            f.delete();
+        }
+    }
 }

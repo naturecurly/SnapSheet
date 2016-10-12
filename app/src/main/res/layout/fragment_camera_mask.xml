@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="#00ffffff">
@@ -26,9 +27,27 @@
         android:id="@+id/fragment_switch_flash_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="@drawable/ic_flash_off"
-        android:layout_marginLeft="16dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="16dp" />
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/ic_flash_off" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fragment_switch_lens_button"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/ic_face_detection" />
+
+    <TextView
+        android:id="@+id/face_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:text="test"
+        android:textColor="@color/white" />
 </RelativeLayout>

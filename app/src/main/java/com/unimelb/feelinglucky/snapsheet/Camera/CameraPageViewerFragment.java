@@ -67,10 +67,10 @@ public class CameraPageViewerFragment extends Fragment {
             public void onPageSelected(int position) {
                 if (position == 1) {
                     StatusBarUtils.setStatusBarInvisable(getActivity());
-                        customizedviewPager.setCanScroll(true);
+                    customizedviewPager.setCanScroll(true);
                 } else {
                     StatusBarUtils.setStatusBarVisable(getActivity());
-                        customizedviewPager.setCanScroll(false);
+                    customizedviewPager.setCanScroll(false);
                 }
             }
 
