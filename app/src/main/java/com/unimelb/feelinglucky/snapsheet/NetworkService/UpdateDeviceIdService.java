@@ -4,6 +4,8 @@ import com.unimelb.feelinglucky.snapsheet.Bean.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 /**
@@ -11,6 +13,7 @@ import retrofit2.http.POST;
  */
 
 public interface UpdateDeviceIdService {
+    @FormUrlEncoded
     @POST("/users/updateid")
-    Call<User> updateDeviceId(@Body String username, @Body String deviceId);
+    Call<User> updateDeviceId(@Field("username") String username, @Field("deviceId") String deviceId);
 }

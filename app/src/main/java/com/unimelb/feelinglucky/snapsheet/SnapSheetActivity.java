@@ -30,6 +30,7 @@ import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
@@ -55,7 +56,9 @@ import com.unimelb.feelinglucky.snapsheet.Story.SimulateStory;
 import com.unimelb.feelinglucky.snapsheet.Story.StoriesFragment;
 import com.unimelb.feelinglucky.snapsheet.Thread.ImageSaver;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.UpdateDeviceIdUtils;
 import com.unimelb.feelinglucky.snapsheet.View.AutoFitTextureView;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
 
@@ -221,8 +224,6 @@ public class SnapSheetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_fragment);
-
-
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -247,17 +248,7 @@ public class SnapSheetActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         loadFragments();
         mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                if (fragments.get(position) instanceof StoriesFragment) {
-                    StoriesFragment storiesFragment = (StoriesFragment) fragments.get(position);
-                    storiesFragment.setStories(SimulateStory.simulateStories());
-                }
-
-                return super.instantiateItem(container, position);
-            }
-
+        mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 return fragments.get(position);
@@ -268,6 +259,27 @@ public class SnapSheetActivity extends AppCompatActivity {
                 return fragments.size();
             }
         });
+//        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
+//            @Override
+//            public Object instantiateItem(ViewGroup container, int position) {
+//                if (fragments.get(position) instanceof StoriesFragment) {
+//                    StoriesFragment storiesFragment = (StoriesFragment) fragments.get(position);
+//                    storiesFragment.setStories(SimulateStory.simulateStories());
+//                }
+//
+//                return super.instantiateItem(container, position);
+//            }
+//
+//            @Override
+//            public Fragment getItem(int position) {
+//                return fragments.get(position);
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return fragments.size();
+//            }
+//        });
         mViewPager.setCurrentItem(2);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

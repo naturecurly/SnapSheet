@@ -16,15 +16,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.LoginService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.UpdateDeviceIdService;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
+import com.unimelb.feelinglucky.snapsheet.Thread.UpdateDeviceIdThread;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.Md5Crypto;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.UpdateDeviceIdUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -118,7 +122,17 @@ public class LoginFragment extends Fragment {
                             editor.putString("password", loginUser.getPassword());
                             editor.putString("username", loginUser.getUsername());
                             editor.putLong("birthday", loginUser.getBirthday().getTime());
+                            String remoteDeviceId = loginUser.getDevice_id();
+                            String localDeviceId = sharedPreferences.getString("deviceId", "");
+                            editor.putString("deviceId", localDeviceId);
                             editor.commit();
+
+
+                            Log.i("deviceId_login", localDeviceId);
+//                            UpdateDeviceIdUtils.updateDeviceId(getActivity(), "testid");
+//                            String localDeviceId = sharedPreferences.getString("deviceId", "");
+                            UpdateDeviceIdUtils.updateDeviceId(getActivity(), localDeviceId);
+
                             DatabaseUtils.refreshUserDb(DatabaseInstance.database, loginUser);
                             DatabaseUtils.refreshFriendDb(DatabaseInstance.database, loginUser.getFriend());
                             Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
