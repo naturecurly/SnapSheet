@@ -7,23 +7,24 @@ import java.util.List;
  * Created by yuhaoliu on 1/10/16.
  */
 public class SimulateStory {
+    public static int num = 0;
     public static List<Story> simulateStories(){
         List<Story> stories = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             Story story = new Story();
-            story.setText("" + i);
+            story.setText("" + num);
+            num+=1;
             List<String> urls = new ArrayList<>();
-
             urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
-            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
-            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
-            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
-            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
-            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
-            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
-            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
-            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
-            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
+//            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
+//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+//            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
+//            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
+//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+//            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
+//            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
 //            for (int j = 0; j < 4; j++) {
 //            }
             story.setImgUrls(urls);

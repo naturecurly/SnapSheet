@@ -250,10 +250,10 @@ public class SnapSheetActivity extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                if (fragments.get(position) instanceof StoriesFragment) {
-                    StoriesFragment storiesFragment = (StoriesFragment) fragments.get(position);
-                    storiesFragment.setStories(SimulateStory.simulateStories());
-                }
+//                if (fragments.get(position) instanceof StoriesFragment) {
+//                    StoriesFragment storiesFragment = (StoriesFragment) fragments.get(position);
+//                    storiesFragment.setStories(SimulateStory.simulateStories());
+//                }
 
                 return super.instantiateItem(container, position);
             }
