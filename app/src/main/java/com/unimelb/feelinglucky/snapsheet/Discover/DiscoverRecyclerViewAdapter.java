@@ -28,9 +28,12 @@ public class DiscoverRecyclerViewAdapter extends  RecyclerView.Adapter<DiscoverR
 
     int selectedPst;
 
-    public DiscoverRecyclerViewAdapter(Context context, List<DiscoverItemInterface> contentURLs) {
-        this.contentURLs = contentURLs;
+    public DiscoverRecyclerViewAdapter(Context context) {
         this.context = context;
+    }
+
+    public void setItems(List<DiscoverItemInterface> contentURLs){
+        this.contentURLs = contentURLs;
     }
 
     public void setOnClickImage(DiscoverMainPageView.OnClickImage onClickImage) {

@@ -295,6 +295,10 @@ public class SnapSheetActivity extends AppCompatActivity {
                     if (mChatFragment != null) {
                         mChatFragment.refreshFriendList();
                     }
+                    if (mChatRoomFragment != null) {
+                        mChatRoomFragment.setChatFriend(getmChatWith());
+                    }
+
                 }
 
                 if (position != 2) {
@@ -560,11 +564,13 @@ public class SnapSheetActivity extends AppCompatActivity {
     }
 
     private ChatFragment mChatFragment;
+    private ChatRoomFragment mChatRoomFragment;
 
     private void loadFragments() {
         mChatFragment = new ChatFragment();
+        mChatRoomFragment = new ChatRoomFragment();
         if (fragments.size() == 0) {
-            fragments.add(new ChatRoomFragment());
+            fragments.add(mChatRoomFragment);
             fragments.add(mChatFragment);
             fragments.add(new CameraPageViewerFragment());
             fragments.add(new StoriesFragment());

@@ -1,8 +1,8 @@
 package com.unimelb.feelinglucky.snapsheet.Story;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -22,16 +20,13 @@ import com.unimelb.feelinglucky.snapsheet.Discover.ImgBrowserView;
 import com.unimelb.feelinglucky.snapsheet.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by yuhaoliu on 1/10/16.
  */
 public class StoriesFragment extends Fragment {
     private static final String TAG = "SnapSheet";
-    private static final int REFRESH_COMPLETE = 0X110;
     private ImgBrowserView browserView;
 
     private int cellPadding;
@@ -46,24 +41,11 @@ public class StoriesFragment extends Fragment {
     private ListView mListView;
     private StoryListViewAdapter adapter;
 
+    private RefreshTask refreshTask;
 
     private Context context;
 
-    private Handler mHandler = new Handler()
-    {
-        public void handleMessage(android.os.Message msg)
-        {
-            switch (msg.what)
-            {
-                case REFRESH_COMPLETE:
-                    //start to refresh data;
-                    adapter.notifyDataSetChanged();
-                    mSwipeLayout.setRefreshing(false);
-                    break;
-
-            }
-        };
-    };
+    private OnRefreshListener onRefreshListener;
 
     @Nullable
     @Override
@@ -84,22 +66,15 @@ public class StoriesFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         cellPadding = DensityUtil.dip2px(getContext(),5);
-        setStories(stories);
         initView();
     }
 
     private void initView(){
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-//                storyViewArrayList.add(0,storyViewArrayList.get(0));
-                final StoryView newView = createStoryViewByStory(stories.get(0));
-                newView.requestLayout();
-                storyViewArrayList.add(0,newView);
-
-                mHandler.sendEmptyMessageDelayed(REFRESH_COMPLETE, 2000);
-
-            }
+        mSwipeLayout.setOnRefreshListener(() -> {
+           if(refreshTask == null){
+               refreshTask = new RefreshTask();
+               refreshTask.execute();
+           }
         });
 
 
@@ -114,13 +89,13 @@ public class StoriesFragment extends Fragment {
         this.mListView.setAdapter(adapter);
     }
 
-    public <E extends StoryInterface> void setStories(List<E> stories){
-        this.stories.addAll(stories);
+    public <E extends StoryInterface> void addStories(List<E> stories){
         if (getContext() != null){
-            for (StoryInterface story : stories
-                    ) {
+            for (int i = 0; i < stories.size(); i++) {
+                StoryInterface story = stories.get(stories.size()-1 - i);
+                this.stories.add(0,story);
                 StoryView newStoryView = createStoryViewByStory(story);
-                this.storyViewArrayList.add(newStoryView);
+                this.storyViewArrayList.add(0,newStoryView);
             }
 
             if (adapter != null){
@@ -166,5 +141,32 @@ public class StoriesFragment extends Fragment {
         return storyView;
     }
 
+    public interface OnRefreshListener{
+        void startRefresh(ArrayList<StoryInterface> nowStories);
+        void endRefresh(ArrayList<StoryInterface> nowStories);
+    }
 
+    private class RefreshTask extends AsyncTask<String, Integer, ArrayList<Story>>{
+        ArrayList<Story> newStories = new ArrayList<>();
+
+        @Override
+        protected ArrayList<Story> doInBackground(String... params) {
+            newStories = (ArrayList<Story>) SimulateStory.simulateStories();
+
+            return newStories;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Story> newStories) {
+            //insert new stories
+
+            refreshTask = null;
+            if (mSwipeLayout!=null){
+                mSwipeLayout.setRefreshing(false);
+            }
+
+            addStories(newStories);
+            super.onPostExecute(newStories);
+        }
+    }
 }
