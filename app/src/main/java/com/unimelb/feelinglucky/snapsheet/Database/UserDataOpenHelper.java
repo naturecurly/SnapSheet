@@ -8,6 +8,8 @@ import android.util.Log;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 
+import static com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore.*;
+
 /**
  * Created by leveyleonhardt on 9/8/16.
  */
@@ -38,6 +40,7 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
     }
 
     private void createDB(SQLiteDatabase db) {
+//        db.beginTransaction();
         db.execSQL("create table " + UserTable.NAME + "(" +
                 " _id integer primary key autoincrement, " +
                 UserTable.Cols.USERNAME + ", " +
@@ -67,6 +70,13 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + ImgDbSchema.ImgTable.NAME + "(" +
                 ImgDbSchema.ImgTable.Cols.IMGRTEXT + " TEXT," +
                 ImgDbSchema.ImgTable.Cols.IMG + " BLOB);");
+
+        db.execSQL(SnapSheetDataStoreUtils.createTable(
+                ChatMessage.TABLE_NAME,
+                ChatMessage.COLUMNS,
+                ChatMessage.TYPES));
+
+//        db.endTransaction();
     }
 
 }
