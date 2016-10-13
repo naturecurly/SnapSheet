@@ -12,6 +12,7 @@ import com.unimelb.feelinglucky.snapsheet.NetworkService.UpdateDeviceIdService;
 import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.UpdateDeviceIdUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,24 +41,9 @@ public class SnapInstanceIdService extends FirebaseInstanceIdService {
         SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(getApplicationContext());
 
         if (sharedPreferences.contains("username")) {
+            Log.i("deviceId", "username existed");
             sharedPreferences.edit().putString("deviceId", deviceId).commit();
-            Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
-            UpdateDeviceIdService updateDeviceIdService = retrofit.create(UpdateDeviceIdService.class);
-            Call call = updateDeviceIdService.updateDeviceId(sharedPreferences.getString("username", null), deviceId);
-            call.enqueue(new Callback() {
-                @Override
-                public void onResponse(Call call, Response response) {
-                    if (response.isSuccessful()) {
-                        User user = (User) response.body();
-                        DatabaseUtils.refreshUserDb(DatabaseInstance.database, user);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call call, Throwable t) {
-
-                }
-            });
+            UpdateDeviceIdUtils.updateDeviceId(getApplicationContext(), deviceId);
         } else {
             sharedPreferences.edit().putString("deviceId", deviceId).commit();
         }

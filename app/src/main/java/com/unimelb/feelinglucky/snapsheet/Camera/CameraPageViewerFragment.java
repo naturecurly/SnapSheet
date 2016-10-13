@@ -3,6 +3,7 @@ package com.unimelb.feelinglucky.snapsheet.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -44,7 +45,7 @@ public class CameraPageViewerFragment extends Fragment {
         fragmentList.add(new ProfileContainerFragment());
         fragmentList.add(new CameraMaskFragment());
         fragmentList.add(new MemoryFragment());
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getFragmentManager()) {
+        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 return fragmentList.get(position);

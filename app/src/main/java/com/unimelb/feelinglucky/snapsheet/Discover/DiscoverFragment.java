@@ -31,30 +31,21 @@ public class DiscoverFragment extends Fragment {
     }
 
     private void init(){
-//        imgBrowserView.setVisibility(View.VISIBLE);
-        mainPageView.setOnClickImage(new DiscoverMainPageView.OnClickImage() {
-            @Override
-            public void onClickImage(List<String> urls) {
-                imgBrowserView.setVisibility(View.VISIBLE);
-                imgBrowserView.setUrls(urls);
-                imgBrowserView.bringToFront();
+        mainPageView.setOnClickImage(urls -> {
+            imgBrowserView.setVisibility(View.VISIBLE);
+            imgBrowserView.setUrls(urls);
+            imgBrowserView.bringToFront();
 
-                if (imgBrowserView.getY() == imgBrowserView.getHeight()){
-                    imgBrowserView.animate()
-                            .translationY(0)
-                            .setDuration(200);
-                }
-
-                imgBrowserView.setOnDisappearAnimationEnd(new ImgBrowserView.OnDisappearAnimationEnd() {
-                    @Override
-                    public void OnDisappearAnimationEnd() {
-                        imgBrowserView.setY(imgBrowserView.getHeight());
-                        mainPageView.bringToFront();
-                    }
-                });
+            if (imgBrowserView.getY() == imgBrowserView.getHeight()){
+                imgBrowserView.animate()
+                        .translationY(0)
+                        .setDuration(200);
             }
+
+            imgBrowserView.setOnDisappearAnimationEnd(() -> {
+                imgBrowserView.setY(imgBrowserView.getHeight());
+                mainPageView.bringToFront();
+            });
         });
-
     }
-
 }

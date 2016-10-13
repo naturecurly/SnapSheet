@@ -26,6 +26,7 @@ public class ProfileFragment extends Fragment {
     private TextView profileUsername;
     private Button addFriendsButton;
     private Button myFriendsButton;
+    private Button settingButton;
 
 
     @Nullable
@@ -48,6 +49,13 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, new FriendsFragment()).addToBackStack("profile").commit();
+            }
+        });
+        settingButton = (Button) view.findViewById(R.id.setting_button);
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction().replace(R.id.fragment_profile_container, new CameraSettingFragment()).addToBackStack("profile").commit();
             }
         });
         return view;
