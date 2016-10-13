@@ -16,7 +16,8 @@ public class SnapMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         Map<String, String> data = remoteMessage.getData();
-        Log.i("received_message", data.get("message") + "");
+        Log.i("received_message type", data.get("type") + "");
+        Log.i("received_message", data.get("content") + "");
 
 
     }
