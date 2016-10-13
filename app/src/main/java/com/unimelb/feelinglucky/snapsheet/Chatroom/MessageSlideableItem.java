@@ -100,6 +100,14 @@ public class MessageSlideableItem extends FrameLayout {
         mChatMessageTextView.setText(message);
     }
 
+    public void setTimeStamp(String timeStamp) {
+        tvTimeStamp.setText(timeStamp);
+    }
+
+    public void setId(String id) {
+        tvId.setText(id);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         current = new PointF(event.getRawX(), event.getRawY());

@@ -53,7 +53,7 @@ public class ChatRoomFragment extends Fragment {
     private ChatRecyclerViewAdapter mAdapter;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
-    private List<String> messageList;
+    private List<Message> messageList;
 
     @Nullable
     @Override
@@ -85,7 +85,6 @@ public class ChatRoomFragment extends Fragment {
 
         mChat = (RecyclerView) view.findViewById(R.id.chat_room_body);
         messageList = new ArrayList<>();
-        messageList.add("Test message");
         mAdapter = new ChatRecyclerViewAdapter(getContext(), messageList);
         mChat.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -98,7 +97,7 @@ public class ChatRoomFragment extends Fragment {
         return view;
     }
 
-    public boolean sendMessage(String msg) {
+    private Message buildMessage(String msg) {
         Message message = new Message();
         message.setContent(msg);
         // type: msg or img
@@ -108,10 +107,13 @@ public class ChatRoomFragment extends Fragment {
         String username = SharedPreferencesUtils.getSharedPreferences(getContext()).getString(SharedPreferencesUtils.USERNAME, "");
         if (username.isEmpty()) {
             Log.e(TAG, "current user owns an empty username, weird");
-            return false;
+            return null;
         }
-        message.setFrom("xuhui");
+        message.setFrom(username);
+        return message;
+    }
 
+    public boolean sendMessage(Message message) {
 
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
         final SendMessageService sendMessageService = retrofit.create(SendMessageService.class);
@@ -140,6 +142,7 @@ public class ChatRoomFragment extends Fragment {
         mChatName.setText(chatFriend);
     }
 
+
     class getOnEditorActionListener implements TextView.OnEditorActionListener {
 
         @Override
@@ -156,10 +159,10 @@ public class ChatRoomFragment extends Fragment {
                     Toast.makeText(getContext(), "You click on send, text:"+v.getText(), Toast.LENGTH_LONG).show();
                     break;
                 case EditorInfo.IME_ACTION_DONE:
-
                     String msg = v.getText().toString();
-                    if (sendMessage(msg)) {
-                        messageList.add(msg);
+                    Message message = buildMessage(msg);
+                    if (sendMessage(message)) {
+                        messageList.add(message);
                         mAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(getContext(), "send message failed", Toast.LENGTH_LONG).show();
