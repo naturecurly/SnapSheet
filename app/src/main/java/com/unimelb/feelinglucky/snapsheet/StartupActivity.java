@@ -33,15 +33,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by leveyleonhardt on 8/27/16.
  */
 public class StartupActivity extends AppCompatActivity {
-    private SQLiteDatabase mDatabase;
     private static String TAG = "StartupActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
-//        mDatabase = new UserDataOpenHelper(this).getWritableDatabase();
-        new getDatabaseTask().execute(this);
+        new getDatabaseTask().execute(getApplicationContext());
         SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(this);
         if (sharedPreferences.contains("username") && sharedPreferences.contains("email") && sharedPreferences.contains("password") && sharedPreferences.contains("birthday")) {
             User user = new User();
@@ -94,7 +92,8 @@ public class StartupActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Context... params) {
             DatabaseInstance.database = new UserDataOpenHelper(params[0]).getWritableDatabase();
-            Log.i("xxx", "database created");
+            if (DatabaseInstance.database != null)
+                Log.i("xxx", "database created");
             return null;
         }
     }

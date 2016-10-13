@@ -664,8 +664,6 @@ public class SnapSheetActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        DatabaseInstance.database.close();
-        DatabaseInstance.database = null;
         File[] files = mImageFolder.listFiles();
         for (File f : files) {
             f.delete();

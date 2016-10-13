@@ -40,8 +40,10 @@ public class DatabaseUtils {
 
     public static void refreshUserDb(SQLiteDatabase database, User user) {
         ContentValues values = getUserContentValues(user);
-        database.delete(UserTable.NAME, null, null);
-        database.insert(UserTable.NAME, null, values);
+        if (database != null) {
+            database.delete(UserTable.NAME, null, null);
+            database.insert(UserTable.NAME, null, values);
+        }
     }
 
     public static void refreshFriendDb(SQLiteDatabase database, String[] friends) {
@@ -55,19 +57,19 @@ public class DatabaseUtils {
 
     private static void updateFriendChatDb(SQLiteDatabase database, String username) {
         Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME,
-                new String [] {FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
+                new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
                 FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
         if (!cursor.moveToNext()) {
             ContentValues values = getFriendContentValues(username);
-            database.insert(FriendChatDbSchema.FriendChatTable.NAME,null,values);
+            database.insert(FriendChatDbSchema.FriendChatTable.NAME, null, values);
         }
 
     }
 
-    public static void updateChatPriority (SQLiteDatabase database, String userName) {
+    public static void updateChatPriority(SQLiteDatabase database, String userName) {
 
         String search = "MAX(" + FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + ")";
-        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME, new String [] {search}, null, null, null, null, null);
+        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME, new String[]{search}, null, null, null, null, null);
         Integer max = 0;
         if (cursor.moveToNext()) {
             // Zero means the index of the column.
@@ -75,8 +77,8 @@ public class DatabaseUtils {
         }
 
         ContentValues values = new ContentValues();
-        values.put(FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY,max + 1);
-        database.update(FriendChatDbSchema.FriendChatTable.NAME, values, FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[] {userName});
+        values.put(FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY, max + 1);
+        database.update(FriendChatDbSchema.FriendChatTable.NAME, values, FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{userName});
     }
 
     public static List<String> fetchFriends(SQLiteDatabase database) {
@@ -95,15 +97,15 @@ public class DatabaseUtils {
         database.insert(FriendTable.NAME, null, value);
     }
 
-    public static String[] loadFriendsWithPriority (SQLiteDatabase database) {
-        String orderBy =  FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + " DESC";
+    public static String[] loadFriendsWithPriority(SQLiteDatabase database) {
+        String orderBy = FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + " DESC";
         List<String> userList = new ArrayList<>();
 
         Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME, new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME,
                 FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY}, null, null, null, null, orderBy);
         int usernameIndex = cursor.getColumnIndex(FriendChatDbSchema.FriendChatTable.Cols.USERNAME);
 //        int priorityIndex = cursor.getColumnIndex(FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY);
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             userList.add(cursor.getString(usernameIndex));
         }
 
@@ -125,15 +127,15 @@ public class DatabaseUtils {
     }
 
     public static void storeImg(SQLiteDatabase database, Bitmap mBitmap) {
-        if (mBitmap == null){
+        if (mBitmap == null) {
             database.delete(ImgDbSchema.ImgTable.NAME, null, null);
         } else {
             final ByteArrayOutputStream os = new ByteArrayOutputStream();
             mBitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-            ContentValues cv = new  ContentValues();
+            ContentValues cv = new ContentValues();
             cv.put(ImgDbSchema.ImgTable.Cols.IMGRTEXT, "temp");
             cv.put(ImgDbSchema.ImgTable.Cols.IMG, os.toByteArray());
-            database.insert(ImgDbSchema.ImgTable.NAME, null, cv );
+            database.insert(ImgDbSchema.ImgTable.NAME, null, cv);
         }
 
     }

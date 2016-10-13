@@ -21,7 +21,8 @@ public class LogoutUtils {
         SharedPreferences sharedPreferences = SharedPreferencesUtils.getSharedPreferences(context);
         sharedPreferences.edit().clear().commit();
         //clear database
-        DatabaseInstance.database.execSQL("drop table if exists " + DATABASE_NAME);
+        context.deleteDatabase(DATABASE_NAME);
+        DatabaseInstance.database = null;
         Intent intent = new Intent(context, StartupActivity.class);
         context.startActivity(intent);
         ((SnapSheetActivity) context).finish();

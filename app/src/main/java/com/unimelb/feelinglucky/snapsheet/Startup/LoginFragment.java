@@ -132,7 +132,9 @@ public class LoginFragment extends Fragment {
 //                            UpdateDeviceIdUtils.updateDeviceId(getActivity(), "testid");
 //                            String localDeviceId = sharedPreferences.getString("deviceId", "");
                             UpdateDeviceIdUtils.updateDeviceId(getActivity(), localDeviceId);
-
+                            if (DatabaseInstance.database == null) {
+                                Log.i("database", "database is null");
+                            }
                             DatabaseUtils.refreshUserDb(DatabaseInstance.database, loginUser);
                             DatabaseUtils.refreshFriendDb(DatabaseInstance.database, loginUser.getFriend());
                             Intent intent = new Intent(getActivity(), SnapSheetActivity.class);

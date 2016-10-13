@@ -3,6 +3,7 @@ package com.unimelb.feelinglucky.snapsheet.Database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
@@ -22,12 +23,14 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         createDB(db);
+        Log.i("database", "onCreate");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         dropDB(db);
         createDB(db);
+        Log.i("database", "onUpgrade");
     }
 
     private void dropDB(SQLiteDatabase db) {
@@ -59,7 +62,7 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
         );
 
 
-        db.execSQL("CREATE TABLE " + ImgDbSchema.ImgTable.NAME + "("+
+        db.execSQL("CREATE TABLE " + ImgDbSchema.ImgTable.NAME + "(" +
                 ImgDbSchema.ImgTable.Cols.IMGRTEXT + " TEXT," +
                 ImgDbSchema.ImgTable.Cols.IMG + " BLOB);");
     }
