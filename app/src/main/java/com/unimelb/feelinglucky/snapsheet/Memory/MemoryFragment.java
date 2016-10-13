@@ -105,7 +105,9 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
 
 
     private void read() {
-        mBitmap = DatabaseUtils.getImg(DatabaseInstance.database);
+        try {
+            mBitmap = DatabaseUtils.getImg(DatabaseInstance.database);
+        } catch (Exception e){}
         if (mBitmap != null) {
             mImg.setImageBitmap(mBitmap);
             mGrid.setVisibility(View.VISIBLE);

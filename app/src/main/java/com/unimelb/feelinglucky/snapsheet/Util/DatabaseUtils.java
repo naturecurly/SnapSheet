@@ -51,11 +51,12 @@ public class DatabaseUtils {
         for (int i = 0; i < friends.length; ++i) {
             ContentValues values = getFriendContentValues(friends[i]);
             database.insert(FriendTable.NAME, null, values);
-            updateFriendChatDb(database, friends[i]);
+
         }
     }
 
-    private static void updateFriendChatDb(SQLiteDatabase database, String username) {
+
+    public static void updateFriendChatDb(SQLiteDatabase database, String username) {
         Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME,
                 new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
                 FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
@@ -137,6 +138,18 @@ public class DatabaseUtils {
             cv.put(ImgDbSchema.ImgTable.Cols.IMG, os.toByteArray());
             database.insert(ImgDbSchema.ImgTable.NAME, null, cv);
         }
+
+    }
+
+    public static boolean isFriend(SQLiteDatabase database, String username) {
+        boolean result = false;
+        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME,
+                new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
+                FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
+        if (cursor.moveToNext()) {
+            result = true;
+        }
+        return result;
 
     }
 }
