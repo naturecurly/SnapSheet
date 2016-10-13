@@ -49,8 +49,8 @@
 
                 <Button
                     android:id="@+id/fragment_chat_with_friend"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center"
                     android:background="@drawable/ic_mode_comment_black_24dp"
                     />
