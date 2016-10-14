@@ -26,6 +26,7 @@ import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
 import com.unimelb.feelinglucky.snapsheet.Thread.UpdateDeviceIdThread;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.FetchFriendUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.Md5Crypto;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.UpdateDeviceIdUtils;
@@ -136,7 +137,8 @@ public class LoginFragment extends Fragment {
                                 Log.i("database", "database is null");
                             }
                             DatabaseUtils.refreshUserDb(DatabaseInstance.database, loginUser);
-                            DatabaseUtils.refreshFriendDb(DatabaseInstance.database, loginUser.getFriend());
+                            FetchFriendUtils.fetchFriends(loginUser.getUsername());
+//                            DatabaseUtils.refreshFriendDb(DatabaseInstance.database, loginUser.getFriend());
                             Intent intent = new Intent(getActivity(), SnapSheetActivity.class);
                             getActivity().startActivity(intent);
                             getActivity().finish();

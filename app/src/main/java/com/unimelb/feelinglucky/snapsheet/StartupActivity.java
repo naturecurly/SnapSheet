@@ -21,6 +21,7 @@ import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Startup.StartupFragment;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.FetchFriendUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import retrofit2.Call;
@@ -62,7 +63,8 @@ public class StartupActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     User info = (User) response.body();
                     DatabaseUtils.refreshUserDb(DatabaseInstance.database, info);
-                    DatabaseUtils.refreshFriendDb(DatabaseInstance.database, info.getFriend());
+                    FetchFriendUtils.fetchFriends(info.getUsername());
+//                    DatabaseUtils.refreshFriendDb(DatabaseInstance.database, info.getFriend());
                     Intent intent = new Intent(context, SnapSheetActivity.class);
                     context.startActivity(intent);
                     finish();
