@@ -131,6 +131,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void onResponse(Call<ReturnMessage> call, Response<ReturnMessage> response) {
                 Log.i(TAG, "success");
+//                Log.i(TAG, response.)
                 //ReturnMessage rm = response.body();
                 //Log.i(TAG, String.valueOf(rm.isSuccess()));
                 //Log.i(TAG, rm.getMessage());
@@ -171,14 +172,24 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //data.moveToPosition(-1);
+        if (!data.moveToFirst()) {
+            return;
+        }
         Log.i(TAG, "onLoadFinished");
-        messageList.clear();
+        int position = messageList.size();
+        data.moveToPosition(position-1);
         while (data.moveToNext()) {
             Message message = DatabaseUtils.buildMessageFromCursor(data);
             Log.i(TAG, message.getFrom() + " : " + message.getContent());
             messageList.add(message);
         }
-        mAdapter.notifyDataSetChanged();
+        //mAdapter.notifyItemInserted(0);
+        //mAdapter.notifyItemChanged(position);
+        int end = messageList.size();
+        mAdapter.notifyItemRangeChanged(position, end-position);
+        mChat.scrollToPosition(end-1);
+
+        //mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -191,7 +202,13 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void enterChatRoom() {
         messageList.clear();
+        mAdapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(CHATROOMFRAGMENT_LOADER, null, this);
+    }
+
+    public void leaveChatRoot() {
+        Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI.buildUpon().appendEncodedPath(mChatFriend).build();
+        getContext().getContentResolver().delete(chatMessageWithUserUri, null, null);
     }
 
 

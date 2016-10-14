@@ -77,7 +77,19 @@ public class SnapSheetProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        final int tableId = SnapSheetDataStoreUtils.getTableId(uri);
+        final String table = SnapSheetDataStoreUtils.getTableNameById(tableId);
+        switch (tableId) {
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_USERNAME:
+                String username = uri.getLastPathSegment();
+                Log.i(LOG_TAG, "delete " +username + "'messages");
+                selection = SnapSeetDataStore.ChatMessage.USERNAME + "= ?";
+                selectionArgs = new String[]{username};
+
+        }
+        if (table == null) return 0;
+        int deleted = mOpenHelper.getWritableDatabase().delete(table, selection, selectionArgs);
+        return deleted;
     }
 
     @Override

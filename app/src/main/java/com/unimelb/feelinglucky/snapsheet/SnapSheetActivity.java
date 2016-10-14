@@ -280,6 +280,12 @@ public class SnapSheetActivity extends AppCompatActivity {
 
                 }
 
+                if (position == 1) {
+                    if (mChatRoomFragment != null) {
+                        mChatRoomFragment.leaveChatRoot();
+                    }
+                }
+
                 if (position != 2) {
                     StatusBarUtils.setStatusBarVisable(context);
                 } else if (position == 2) {
