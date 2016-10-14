@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendChatDbSchema;
+import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
 import com.unimelb.feelinglucky.snapsheet.Database.ImgDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
@@ -142,14 +143,11 @@ public class DatabaseUtils {
     }
 
     public static boolean isFriend(SQLiteDatabase database, String username) {
-        boolean result = false;
-        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME,
-                new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
-                FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
-        if (cursor.moveToNext()) {
-            result = true;
-        }
-        return result;
+        Cursor cursor = database.query(FriendDbSchema.FriendTable.NAME,
+                new String[]{FriendDbSchema.FriendTable.Cols.USERNAME},
+                FriendDbSchema.FriendTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
+
+        return cursor.moveToNext();
 
     }
 }

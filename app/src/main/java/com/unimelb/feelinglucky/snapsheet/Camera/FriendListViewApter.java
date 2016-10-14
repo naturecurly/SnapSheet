@@ -14,6 +14,8 @@ import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.PrecessingStringUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
@@ -71,11 +73,18 @@ public class FriendListViewApter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         if (mPeers != null) {
+            String friendName = PrecessingStringUtils.getFriendName(mPeers.get(position).deviceName);
+            if(DatabaseUtils.isFriend(DatabaseInstance.database, friendName)){
+                viewHolder.add.setText("Added");
+            }else {
+                Toast.makeText(mContext, friendName + "-aaa", Toast.LENGTH_LONG).show();
+            }
+
             viewHolder.name.setText(mPeers.get(position).deviceName);
             viewHolder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String friendName = PrecessingStringUtils.getFriendName(mPeers.get(position).deviceName);
+
                     Toast.makeText(mContext,friendName,Toast.LENGTH_LONG).show();
                     Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
                     AddFriendService addFriendService = retrofit.create(AddFriendService.class);
@@ -86,6 +95,7 @@ public class FriendListViewApter extends BaseAdapter {
                             if (response.isSuccessful()) {
                                 ReturnMessage message = (ReturnMessage) response.body();
                                 if (message.isSuccess()) {
+                                    DatabaseUtils.insertFriendDb(DatabaseInstance.database, friendName);
                                     Toast.makeText(mContext,"successful",Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(mContext,"oop",Toast.LENGTH_LONG).show();

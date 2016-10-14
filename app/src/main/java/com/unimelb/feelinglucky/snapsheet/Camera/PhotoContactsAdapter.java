@@ -85,6 +85,7 @@ public class PhotoContactsAdapter extends BaseAdapter {
                             if (response.isSuccessful()) {
                                 ReturnMessage message = (ReturnMessage) response.body();
                                 if (message.isSuccess()) {
+//                                    DatabaseUtils.insertFriendDb(DatabaseInstance.database, friendName);
                                     Toast.makeText(mContext, "Send", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(mContext, "Add failed", Toast.LENGTH_SHORT).show();
