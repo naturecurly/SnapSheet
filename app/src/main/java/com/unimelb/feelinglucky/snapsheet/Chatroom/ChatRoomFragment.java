@@ -1,9 +1,14 @@
 package com.unimelb.feelinglucky.snapsheet.Chatroom;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,10 +27,12 @@ import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.SendMessageService;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import java.util.ArrayList;
@@ -40,8 +47,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Weiwei Cai on 8/11/16.
  */
-public class ChatRoomFragment extends Fragment {
+public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String TAG = ChatRoomFragment.class.getSimpleName();
+    public static final int CHATROOMFRAGMENT_LOADER = 0;
     private String mChatFriend; // current friend chatting with
 
     private DrawerLayout mDrawer;
@@ -140,6 +148,50 @@ public class ChatRoomFragment extends Fragment {
     public void setChatFriend(String chatFriend) {
         mChatFriend = chatFriend;
         mChatName.setText(chatFriend);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        getLoaderManager().initLoader(CHATROOMFRAGMENT_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.i(TAG, "onCreateLoader");
+        Uri chatMessageByUsername = SnapSeetDataStore.ChatMessage.CONTENT_URI.buildUpon().appendPath(mChatFriend).build();
+        return new CursorLoader(getActivity(),
+                chatMessageByUsername,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        //data.moveToPosition(-1);
+        Log.i(TAG, "onLoadFinished");
+        messageList.clear();
+        while (data.moveToNext()) {
+            Message message = DatabaseUtils.buildMessageFromCursor(data);
+            Log.i(TAG, message.getFrom() + " : " + message.getContent());
+            messageList.add(message);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // This is called when the last Cursor provided to onLoadFinished()
+        // above is about to be closed.  We need to make sure we are no
+        // longer using it.
+        // mAdapter.swapCursor(null);
+    }
+
+    public void enterChatRoom() {
+        messageList.clear();
+        getLoaderManager().restartLoader(CHATROOMFRAGMENT_LOADER, null, this);
     }
 
 

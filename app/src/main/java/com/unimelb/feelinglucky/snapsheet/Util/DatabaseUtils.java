@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendChatDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
@@ -15,6 +16,9 @@ import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore.ChatMessage;
 
 /**
  * Created by leveyleonhardt on 9/9/16.
@@ -160,5 +164,35 @@ public class DatabaseUtils {
         }
         return result;
 
+    }
+
+
+    public static ContentValues buildChatMessage(Map<String, String> data) {
+        Message message = new Message();
+        message.setFrom(data.get("fromUsername"));
+        message.setType(data.get("type"));
+        message.setContent(data.get("message"));
+
+        return buildChatMessage(message);
+    }
+    public static ContentValues buildChatMessage(Message message) {
+        ContentValues values = new ContentValues();
+        values.put(ChatMessage.USERNAME, message.getFrom());
+        values.put(ChatMessage.MESSAGE, message.getContent());
+        values.put(ChatMessage.TYPE, message.getType());
+        values.put(ChatMessage.STATUS, 0);
+        values.put(ChatMessage.EXPIRE_TIME, 5);
+
+        return values;
+    }
+
+    public static Message buildMessageFromCursor(Cursor cursor) {
+        Message message = new Message();
+        message.setFrom(cursor.getString(cursor.getColumnIndex(ChatMessage.USERNAME)));
+        message.setType(cursor.getString(cursor.getColumnIndex(ChatMessage.TYPE)));
+        message.setContent(cursor.getString(cursor.getColumnIndex(ChatMessage.MESSAGE)));
+        // status
+        // expiration time
+        return message;
     }
 }

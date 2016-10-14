@@ -15,7 +15,7 @@ import static com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore.*;
  */
 public class UserDataOpenHelper extends SQLiteOpenHelper {
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     public static final String DATABASE_NAME = "users.db";
 
     public UserDataOpenHelper(Context context) {

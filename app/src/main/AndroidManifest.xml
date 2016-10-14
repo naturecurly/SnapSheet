@@ -37,6 +37,11 @@
         <activity android:name=".Chat.Search.SearchFriendActivity" />
         <activity android:name=".ImageSendActivity" />
 
+        <provider
+            android:name=".Database.SnapSheetProvider"
+            android:authorities="snapsheet"
+            android:exported="false" />
+
         <service android:name=".Service.SnapMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

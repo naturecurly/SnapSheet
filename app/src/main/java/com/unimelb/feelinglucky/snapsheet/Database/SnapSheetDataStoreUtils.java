@@ -1,10 +1,48 @@
 package com.unimelb.feelinglucky.snapsheet.Database;
 
+import android.content.UriMatcher;
+import android.net.Uri;
+
+import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore.*;
+
 /**
  * Created by Xuhui Chen (yorkfine) on 14/10/2016.
  */
 
 public class SnapSheetDataStoreUtils {
+    static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
+
+    public static final int TABLE_ID_CHATMESSAGE = 10;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_USERNAME = 11;
+
+    static {
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH, TABLE_ID_CHATMESSAGE);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/*", TABLE_ID_CHATMESSAGE_WITH_USERNAME);
+    }
+
+    /**
+     * get the table id. Here table means a view, a select result; id means the only indicator of this view.
+     * @param uri
+     * @return
+     */
+    public static int getTableId(final Uri uri) {
+        if (uri == null) return -1;
+        return CONTENT_PROVIDER_URI_MATCHER.match(uri);
+    }
+
+    public static String getTableNameById(final int id) {
+        switch (id) {
+            case TABLE_ID_CHATMESSAGE:
+            case TABLE_ID_CHATMESSAGE_WITH_USERNAME:
+                return ChatMessage.TABLE_NAME;
+            default:
+                return null;
+        }
+    }
+
+    // We had better put some specific database query methods here.
+    // DatabaseUtils contains API that build content value
+
     public static String createTable(final String tableName, final String[] columns, final String[] types, final String... constraints) {
         if (tableName == null) {
             throw new NullPointerException("Name must not be null");

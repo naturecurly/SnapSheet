@@ -37,6 +37,6 @@ public interface SnapSeetDataStore {
         String STATUS = "status";  // read or unread
 
         String [] COLUMNS = {_ID, USERNAME, MESSAGE, TYPE, EXPIRE_TIME, STATUS};
-        String [] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT};
+        String [] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_INT};
     }
 }

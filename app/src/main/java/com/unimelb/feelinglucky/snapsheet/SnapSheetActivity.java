@@ -275,6 +275,7 @@ public class SnapSheetActivity extends AppCompatActivity {
                     }
                     if (mChatRoomFragment != null) {
                         mChatRoomFragment.setChatFriend(getmChatWith());
+                        mChatRoomFragment.enterChatRoom();
                     }
 
                 }
@@ -463,8 +464,8 @@ public class SnapSheetActivity extends AppCompatActivity {
             Surface surface = new Surface(texture);
 
             mCaptureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-            mCaptureRequestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE,
-                    CameraMetadata.STATISTICS_FACE_DETECT_MODE_FULL);
+//            mCaptureRequestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE,
+//                    CameraMetadata.STATISTICS_FACE_DETECT_MODE_FULL);
             mCaptureRequestBuilder.addTarget(surface);
 
 
