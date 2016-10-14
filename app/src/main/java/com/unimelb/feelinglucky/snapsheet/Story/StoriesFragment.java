@@ -91,6 +91,8 @@ public class StoriesFragment extends Fragment {
 
     public <E extends StoryInterface> void addStories(List<E> stories){
         if (getContext() != null){
+            this.stories.clear();
+            this.storyViewArrayList.clear();
             for (int i = 0; i < stories.size(); i++) {
                 StoryInterface story = stories.get(stories.size()-1 - i);
                 this.stories.add(0,story);

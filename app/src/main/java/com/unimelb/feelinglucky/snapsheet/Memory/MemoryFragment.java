@@ -38,6 +38,8 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
     private Button mDelete;
     private Button mSend;
     private Button mShare;
+
+    private Bitmap mBitmap;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,20 +83,31 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
     }
 
     private void shareImg() {
-        if (mImgUri == null)
-            return;;
-        ArrayList<Uri> imageUris = new ArrayList<Uri>();
-        imageUris.add(mImgUri);
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
-        shareIntent.setType("image/*");
-        startActivity(Intent.createChooser(shareIntent, "Share images to.."));
+        if (mImgUri == null){
+            String pathofBmp = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), mBitmap,"title", null);
+            Uri bmpUri = Uri.parse(pathofBmp);
+
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+            shareIntent.setType("image/jpeg");
+            startActivity(Intent.createChooser(shareIntent, "a"));
+        } else {
+            ArrayList<Uri> imageUris = new ArrayList<>();
+            imageUris.add(mImgUri);
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
+            shareIntent.setType("image/*");
+            startActivity(Intent.createChooser(shareIntent, "Share images to.."));
+        }
     }
 
 
     private void read() {
-        Bitmap mBitmap = DatabaseUtils.getImg(DatabaseInstance.database);
+        try {
+            mBitmap = DatabaseUtils.getImg(DatabaseInstance.database);
+        } catch (Exception e){}
         if (mBitmap != null) {
             mImg.setImageBitmap(mBitmap);
             mGrid.setVisibility(View.VISIBLE);
@@ -108,7 +121,7 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
         switch (requestCode) {
             case REQUEST_IMAGE_SELECT: {
                 if (data != null) {
-                    Bitmap mBitmap = null;
+                    mBitmap = null;
                     try {
                         mImgUri = data.getData();
                         mBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImgUri);

@@ -7,11 +7,24 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Contact;
+import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendMobileService;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by mac on 16/10/9.
@@ -57,7 +70,38 @@ public class PhotoContactsAdapter extends BaseAdapter {
             viewHolder = (PhotoContactsAdapter.ViewHolder) convertView.getTag();
         }
         viewHolder.name.setText(mContacts.get(position).getUsername());
+        if (DatabaseUtils.isFriend(DatabaseInstance.database, mContacts.get(position).getUsername())) {
+            viewHolder.add.setText("Added");
+        }else {
+            viewHolder.add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
+                    AddFriendMobileService addFriendService = retrofit.create(AddFriendMobileService.class);
+                    Call call = addFriendService.addFriendMobile(SharedPreferencesUtils.getSharedPreferences(mContext).getString("username", null), mContacts.get(position).getMobile());
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onResponse(Call call, Response response) {
+                            if (response.isSuccessful()) {
+                                ReturnMessage message = (ReturnMessage) response.body();
+                                if (message.isSuccess()) {
+                                    Toast.makeText(mContext, "Send", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(mContext, "Add failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call call, Throwable t) {
+
+                        }
+                    });
+                }
+            });
+        }
         viewHolder.mobile.setText(mContacts.get(position).getMobile());
+
         return convertView;
     }
 

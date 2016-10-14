@@ -64,7 +64,8 @@ public class DatabaseUtils {
         }
     }
 
-    private static void updateFriendChatDb(SQLiteDatabase database, String username) {
+
+    public static void updateFriendChatDb(SQLiteDatabase database, String username) {
         Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME,
                 new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
                 FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
@@ -146,6 +147,18 @@ public class DatabaseUtils {
             cv.put(ImgDbSchema.ImgTable.Cols.IMG, os.toByteArray());
             database.insert(ImgDbSchema.ImgTable.NAME, null, cv);
         }
+
+    }
+
+    public static boolean isFriend(SQLiteDatabase database, String username) {
+        boolean result = false;
+        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME,
+                new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
+                FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
+        if (cursor.moveToNext()) {
+            result = true;
+        }
+        return result;
 
     }
 }

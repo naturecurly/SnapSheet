@@ -1,7 +1,6 @@
 package com.unimelb.feelinglucky.snapsheet.Chat;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -160,8 +159,9 @@ public class ChatFragment extends Fragment {
             // Make sure the request was successful
             if (resultCode == getActivity().RESULT_OK) {
                 refreshFriendList();
-                ((SnapSheetActivity) getActivity()).setViewPagerItem(0);
                 ((SnapSheetActivity) getActivity()).setmChatWith(data.getStringExtra("id"));
+                ((SnapSheetActivity) getActivity()).setViewPagerItem(0);
+
             }
         }
     }

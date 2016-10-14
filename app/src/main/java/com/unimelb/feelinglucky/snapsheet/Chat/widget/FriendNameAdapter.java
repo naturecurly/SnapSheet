@@ -10,11 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.R;
-import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SortByName;
 
 import java.util.ArrayList;
+
+import static com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance.database;
 
 /**
  * Created by mac on 16/9/19.
@@ -74,11 +75,12 @@ public class FriendNameAdapter extends RecyclerView.Adapter<FriendNameAdapter.Vi
             holder.mItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DatabaseUtils.updateChatPriority(DatabaseInstance.database,
+                    DatabaseUtils.updateChatPriority(database,
                             mDataset.get(position).toLowerCase());
                     Intent mIntent = new Intent();
 
                     mIntent.putExtra("id", mDataset.get(position).toLowerCase());
+                    DatabaseUtils.updateFriendChatDb(database, mDataset.get(position).toLowerCase());
 
                     mContext.setResult(Activity.RESULT_OK, mIntent);
                     mContext.finish();
