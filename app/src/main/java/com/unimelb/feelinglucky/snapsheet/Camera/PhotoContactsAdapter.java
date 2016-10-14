@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Contact;
 import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendMobileService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
@@ -35,7 +36,7 @@ public class PhotoContactsAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context mContext;
 
-    public PhotoContactsAdapter (Context context, List<Contact> contacts) {
+    public PhotoContactsAdapter(Context context, List<Contact> contacts) {
         mContacts = contacts;
         mContext = context;
         inflater = LayoutInflater.from(mContext);
@@ -66,13 +67,13 @@ public class PhotoContactsAdapter extends BaseAdapter {
             viewHolder.mobile = (TextView) convertView.findViewById(R.id.add_friend_by_contact_mobile);
             viewHolder.add = (Button) convertView.findViewById(R.id.add_friend_by_contact_button);
             convertView.setTag(viewHolder);
-        }else {
+        } else {
             viewHolder = (PhotoContactsAdapter.ViewHolder) convertView.getTag();
         }
         viewHolder.name.setText(mContacts.get(position).getUsername());
         if (DatabaseUtils.isFriend(DatabaseInstance.database, mContacts.get(position).getUsername())) {
             viewHolder.add.setText("Added");
-        }else {
+        } else {
             viewHolder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -83,12 +84,15 @@ public class PhotoContactsAdapter extends BaseAdapter {
                         @Override
                         public void onResponse(Call call, Response response) {
                             if (response.isSuccessful()) {
-                                ReturnMessage message = (ReturnMessage) response.body();
-                                if (message.isSuccess()) {
+                                User friend = (User) response.body();
+                                if (friend != null) {
                                     Toast.makeText(mContext, "Send", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(mContext, "Add failed", Toast.LENGTH_SHORT).show();
+
                                 }
+                            } else {
+                                Toast.makeText(mContext, "Add failed", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -105,7 +109,7 @@ public class PhotoContactsAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private class ViewHolder{
+    private class ViewHolder {
         TextView name;
         TextView mobile;
         Button add;
