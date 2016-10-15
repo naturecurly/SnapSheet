@@ -32,19 +32,35 @@ public class SnapSheetProvider extends ContentProvider {
         final int tableId = SnapSheetDataStoreUtils.getTableId(uri);
         final String table = SnapSheetDataStoreUtils.getTableNameById(tableId);
         switch (tableId) {
-            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_USERNAME:
-                String username = uri.getLastPathSegment();
-                Log.i(LOG_TAG, username);
-                final Cursor c = mOpenHelper.getReadableDatabase().query(
-                        table,
-                        projection,
-                        SnapSeetDataStore.ChatMessage.USERNAME + " = ?",
-                        new String[]{username},
-                        null,
-                        null,
-                        null);
-                setNotificationUri(c, uri);
-                return c;
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_FROM_USER: {
+                    String username = uri.getLastPathSegment();
+                    Log.i(LOG_TAG, username);
+                    final Cursor c = mOpenHelper.getReadableDatabase().query(
+                            table,
+                            projection,
+                            SnapSeetDataStore.ChatMessage.FROM + " = ?",
+                            new String[]{username},
+                            null,
+                            null,
+                            null);
+                    setNotificationUri(c, uri);
+                    return c;
+                }
+
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_TO_USER: {
+                    String username = uri.getLastPathSegment();
+                    final Cursor c = mOpenHelper.getReadableDatabase().query(
+                            table,
+                            projection,
+                            SnapSeetDataStore.ChatMessage.TO + " = ?",
+                            new String[]{username},
+                            null,
+                            null,
+                            null);
+                    setNotificationUri(c, uri);
+
+                    return c;
+                }
         }
         if (table == null) return null;
         final Cursor c = mOpenHelper.getReadableDatabase().query(table, projection, selection,
@@ -80,15 +96,27 @@ public class SnapSheetProvider extends ContentProvider {
         final int tableId = SnapSheetDataStoreUtils.getTableId(uri);
         final String table = SnapSheetDataStoreUtils.getTableNameById(tableId);
         switch (tableId) {
-            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_USERNAME:
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_FROM_USER: {
                 String username = uri.getLastPathSegment();
-                Log.i(LOG_TAG, "delete " +username + "'messages");
-                selection = SnapSeetDataStore.ChatMessage.USERNAME + "= ?";
+                Log.i(LOG_TAG, "delete messages from " + username);
+                selection = SnapSeetDataStore.ChatMessage.FROM + "= ?";
                 selectionArgs = new String[]{username};
+
+                break;
+            }
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_TO_USER: {
+                String username = uri.getLastPathSegment();
+                Log.i(LOG_TAG, "delete message to " + username);
+                selection = SnapSeetDataStore.ChatMessage.TO + " = ?";
+                selectionArgs = new String[] {username};
+                break;
+            }
 
         }
         if (table == null) return 0;
         int deleted = mOpenHelper.getWritableDatabase().delete(table, selection, selectionArgs);
+
+        // do not notify change when deleted
         return deleted;
     }
 

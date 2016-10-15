@@ -1,5 +1,6 @@
 package com.unimelb.feelinglucky.snapsheet.Chatroom;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.Bean.ReturnSendMessage;
 import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.SendMessageService;
@@ -67,15 +69,6 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chatroom, container, false);
-        /*Button bt = (Button) view.findViewById(R.id.test_bt);
-        bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), ((SnapSheetActivity)getActivity()).getmChatWith(), Toast.LENGTH_LONG).show();
-                Toast.makeText(getContext(), "want to get the id automatically? Do it in OnPageChangeListener", Toast.LENGTH_LONG).show();
-            }
-        });*/
-        //Toast.makeText(getContext(), ((SnapSheetActivity)getActivity()).getmChatWith(), Toast.LENGTH_LONG).show();
 
         mChatName = (TextView) view.findViewById(R.id.chat_name);
         mChatName.setText(((SnapSheetActivity)getActivity()).getmChatWith());
@@ -105,20 +98,30 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
         return view;
     }
 
-    private Message buildMessage(String msg) {
+    private  Message buildMessage(String from, String to, String type, String msg) {
         Message message = new Message();
+        message.setFrom(from);
+        message.setTo(to);
+        // type: msg, img, read
+        message.setType(type);
         message.setContent(msg);
-        // type: msg or img
-        message.setType(Message.MSG);
-        message.setTo(mChatFriend);
+        return message;
+    }
 
+    private Message buildMessage(String type, String msg) {
         String username = SharedPreferencesUtils.getSharedPreferences(getContext()).getString(SharedPreferencesUtils.USERNAME, "");
         if (username.isEmpty()) {
             Log.e(TAG, "current user owns an empty username, weird");
             return null;
         }
-        message.setFrom(username);
-        return message;
+        String from = username;
+        String to = mChatFriend;
+        return buildMessage(from, to, type, msg);
+    }
+
+    private Message buildMessage(String msg) {
+        String type = Message.MSG;
+        return buildMessage(type, msg);
     }
 
     public boolean sendMessage(Message message) {
@@ -126,20 +129,24 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
         final SendMessageService sendMessageService = retrofit.create(SendMessageService.class);
 
-        Call<ReturnMessage> call = sendMessageService.sendMessage(message);
-        call.enqueue(new Callback<ReturnMessage>() {
+        Call<ReturnSendMessage> call = sendMessageService.sendMessage(message);
+        call.enqueue(new Callback<ReturnSendMessage>() {
             @Override
-            public void onResponse(Call<ReturnMessage> call, Response<ReturnMessage> response) {
+            public void onResponse(Call<ReturnSendMessage> call, Response<ReturnSendMessage> response) {
                 Log.i(TAG, "success");
-//                Log.i(TAG, response.)
-                //ReturnMessage rm = response.body();
-                //Log.i(TAG, String.valueOf(rm.isSuccess()));
-                //Log.i(TAG, rm.getMessage());
+                // if successfully sent message, store this message into database
+                // Note: only store 'msg' type messages, do not store 'read' type message
+                if (message.getType().equalsIgnoreCase("msg")) {
+                    Uri chatMessageUri = SnapSeetDataStore.ChatMessage.CONTENT_URI.buildUpon().build();
+                    ContentValues values = DatabaseUtils.buildChatMessage(message);
+                    getContext().getContentResolver().insert(chatMessageUri, values);
+                }
             }
 
             @Override
-            public void onFailure(Call<ReturnMessage> call, Throwable t) {
+            public void onFailure(Call<ReturnSendMessage> call, Throwable t) {
                 Log.e(TAG, "send message failed");
+                Toast.makeText(getContext(), "OnFailure: send message failed", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -160,7 +167,9 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.i(TAG, "onCreateLoader");
-        Uri chatMessageByUsername = SnapSeetDataStore.ChatMessage.CONTENT_URI.buildUpon().appendPath(mChatFriend).build();
+        // query those message that from chat friend
+        // message to the friend will be loaded in enterroom method
+        Uri chatMessageByUsername = SnapSeetDataStore.ChatMessage.CONTENT_URI_FROM_USER.buildUpon().appendPath(mChatFriend).build();
         return new CursorLoader(getActivity(),
                 chatMessageByUsername,
                 null,
@@ -171,25 +180,36 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        //data.moveToPosition(-1);
-        if (!data.moveToFirst()) {
+        // mChatFriend is null means that we are not in the chat room now
+        if (mChatFriend == null) {
             return;
         }
+
         Log.i(TAG, "onLoadFinished");
         int position = messageList.size();
-        data.moveToPosition(position-1);
         while (data.moveToNext()) {
             Message message = DatabaseUtils.buildMessageFromCursor(data);
             Log.i(TAG, message.getFrom() + " : " + message.getContent());
             messageList.add(message);
         }
-        //mAdapter.notifyItemInserted(0);
-        //mAdapter.notifyItemChanged(position);
+
         int end = messageList.size();
         mAdapter.notifyItemRangeChanged(position, end-position);
         mChat.scrollToPosition(end-1);
 
-        //mAdapter.notifyDataSetChanged();
+        // when queried, it means that messages from chat friend are read, so they should be removed from the database.
+        // but do not delete messages that I sent to this friend.
+        // delete will not invoke data change, hence recycle view will keep the messages as long as staying in the chatting room
+        Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_FROM_USER.buildUpon().appendEncodedPath(mChatFriend).build();
+        getContext().getContentResolver().delete(chatMessageWithUserUri, null, null);
+        // notify these message's sender that I have read them
+        Message message = buildMessage(Message.RND, "Read");
+        Log.i(TAG, "from: " + message.getFrom());
+        Log.i(TAG, "to: " + message.getTo());
+        Log.i(TAG, "content: " + message.getContent());
+        Log.i(TAG, "type: " + message.getType());
+
+        sendMessage(message);
     }
 
     @Override
@@ -202,13 +222,23 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void enterChatRoom() {
         messageList.clear();
+        Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_TO_USER.buildUpon().appendEncodedPath(mChatFriend).build();
+        Cursor c = getContext().getContentResolver().query(chatMessageWithUserUri, null, null, null, null);
+        while (c.moveToNext()) {
+            Message message = DatabaseUtils.buildMessageFromCursor(c);
+            Log.i(TAG, message.getFrom() + " : " + message.getContent());
+            messageList.add(message);
+        }
         mAdapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(CHATROOMFRAGMENT_LOADER, null, this);
     }
 
     public void leaveChatRoot() {
-        Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI.buildUpon().appendEncodedPath(mChatFriend).build();
-        getContext().getContentResolver().delete(chatMessageWithUserUri, null, null);
+        // moved to onLoadFinished when messages are queried
+        // TODO: remove this method
+        // Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI.buildUpon().appendEncodedPath(mChatFriend).build();
+        // getContext().getContentResolver().delete(chatMessageWithUserUri, null, null);
+        mChatFriend = null;
     }
 
 
@@ -230,6 +260,10 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
                 case EditorInfo.IME_ACTION_DONE:
                     String msg = v.getText().toString();
                     Message message = buildMessage(msg);
+                    Log.i(TAG, "from: " + message.getFrom());
+                    Log.i(TAG, "to: " + message.getTo());
+                    Log.i(TAG, "content: " + message.getContent());
+                    Log.i(TAG, "type: " + message.getType());
                     if (sendMessage(message)) {
                         messageList.add(message);
                         mAdapter.notifyDataSetChanged();

@@ -170,6 +170,7 @@ public class DatabaseUtils {
     public static ContentValues buildChatMessage(Map<String, String> data) {
         Message message = new Message();
         message.setFrom(data.get("fromUsername"));
+        message.setTo(data.get("toUser"));
         message.setType(data.get("type"));
         message.setContent(data.get("message"));
 
@@ -177,7 +178,8 @@ public class DatabaseUtils {
     }
     public static ContentValues buildChatMessage(Message message) {
         ContentValues values = new ContentValues();
-        values.put(ChatMessage.USERNAME, message.getFrom());
+        values.put(ChatMessage.FROM, message.getFrom());
+        values.put(ChatMessage.TO, message.getTo());
         values.put(ChatMessage.MESSAGE, message.getContent());
         values.put(ChatMessage.TYPE, message.getType());
         values.put(ChatMessage.STATUS, 0);
@@ -188,7 +190,7 @@ public class DatabaseUtils {
 
     public static Message buildMessageFromCursor(Cursor cursor) {
         Message message = new Message();
-        message.setFrom(cursor.getString(cursor.getColumnIndex(ChatMessage.USERNAME)));
+        message.setFrom(cursor.getString(cursor.getColumnIndex(ChatMessage.FROM)));
         message.setType(cursor.getString(cursor.getColumnIndex(ChatMessage.TYPE)));
         message.setContent(cursor.getString(cursor.getColumnIndex(ChatMessage.MESSAGE)));
         // status

@@ -1,7 +1,7 @@
 package com.unimelb.feelinglucky.snapsheet.NetworkService;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
-import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.Bean.ReturnSendMessage;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -13,5 +13,5 @@ import retrofit2.http.POST;
 
 public interface SendMessageService {
     @POST("/messages/send")
-    Call<ReturnMessage> sendMessage(@Body Message message);
+    Call<ReturnSendMessage> sendMessage(@Body Message message);
 }

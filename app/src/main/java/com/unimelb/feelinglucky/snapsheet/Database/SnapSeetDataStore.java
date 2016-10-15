@@ -28,15 +28,22 @@ public interface SnapSeetDataStore {
     interface ChatMessage extends BaseColumns {
         String TABLE_NAME = "chat_message";
         String CONTENT_PATH = TABLE_NAME;
+        String FROM_USER = "from_user";
+        String TO_USER = "to_user";
+        String USER = "user"; // from or to user
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        Uri CONTENT_URI_FROM_USER = Uri.withAppendedPath(CONTENT_URI, FROM_USER);
+        Uri CONTENT_URI_TO_USER = Uri.withAppendedPath(CONTENT_URI, TO_USER);
+        Uri CONTENT_URI_USER = Uri.withAppendedPath(CONTENT_URI, USER);
 
-        String USERNAME = "username";
+        String FROM = "fromUser";
+        String TO = "toUser";
         String MESSAGE = "message";
         String TYPE = "type";
         String EXPIRE_TIME = "expire_time";
         String STATUS = "status";  // read or unread
 
-        String [] COLUMNS = {_ID, USERNAME, MESSAGE, TYPE, EXPIRE_TIME, STATUS};
-        String [] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_INT};
+        String [] COLUMNS = {_ID, FROM, TO, MESSAGE, TYPE, EXPIRE_TIME, STATUS};
+        String [] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_INT};
     }
 }

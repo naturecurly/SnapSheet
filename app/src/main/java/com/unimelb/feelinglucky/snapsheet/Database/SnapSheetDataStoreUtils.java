@@ -13,11 +13,15 @@ public class SnapSheetDataStoreUtils {
     static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     public static final int TABLE_ID_CHATMESSAGE = 10;
-    public static final int TABLE_ID_CHATMESSAGE_WITH_USERNAME = 11;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_FROM_USER = 11;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_TO_USER = 12;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_USER = 13;
 
     static {
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH, TABLE_ID_CHATMESSAGE);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/*", TABLE_ID_CHATMESSAGE_WITH_USERNAME);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.FROM_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_FROM_USER);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TO_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_TO_USER);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.USER + "/*", TABLE_ID_CHATMESSAGE_WITH_USER);
     }
 
     /**
@@ -33,7 +37,9 @@ public class SnapSheetDataStoreUtils {
     public static String getTableNameById(final int id) {
         switch (id) {
             case TABLE_ID_CHATMESSAGE:
-            case TABLE_ID_CHATMESSAGE_WITH_USERNAME:
+            case TABLE_ID_CHATMESSAGE_WITH_FROM_USER:
+            case TABLE_ID_CHATMESSAGE_WITH_TO_USER:
+            case TABLE_ID_CHATMESSAGE_WITH_USER:
                 return ChatMessage.TABLE_NAME;
             default:
                 return null;
