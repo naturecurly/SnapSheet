@@ -64,6 +64,7 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + ImgDbSchema.ImgTable.NAME + "(" +
                 ImgDbSchema.ImgTable.Cols.IMGRTEXT + " TEXT," +
+                ImgDbSchema.ImgTable.Cols.ISLOCKED + " BOOLEAN," +
                 ImgDbSchema.ImgTable.Cols.IMG + " BLOB);");
     }
 

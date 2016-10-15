@@ -12,6 +12,7 @@ public class ImgDbSchema {
             public static final String ID = "_id";
             public static final String IMG = "img_name";
             public static final String IMGRTEXT = "img_txt";
+            public static final String ISLOCKED = "lock";
 
         }
     }

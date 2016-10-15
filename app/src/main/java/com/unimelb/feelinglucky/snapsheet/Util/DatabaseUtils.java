@@ -148,6 +148,22 @@ public class DatabaseUtils {
                 FriendDbSchema.FriendTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
 
         return cursor.moveToNext();
+    }
 
+    public static boolean isImgLocked(SQLiteDatabase database) {
+        Cursor cursor = database.query(ImgDbSchema.ImgTable.NAME,
+                new String[]{ImgDbSchema.ImgTable.Cols.ISLOCKED},
+                ImgDbSchema.ImgTable.Cols.ISLOCKED + "=?", new String[]{}, null, null, null);
+        int columnIndex = cursor.getColumnIndex(ImgDbSchema.ImgTable.Cols.ISLOCKED);
+        if (cursor.moveToNext()) {
+            Integer lock = cursor.getInt(columnIndex);
+            if (lock == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
