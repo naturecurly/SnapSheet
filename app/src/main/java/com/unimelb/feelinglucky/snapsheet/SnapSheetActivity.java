@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
-import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -259,27 +258,6 @@ public class SnapSheetActivity extends AppCompatActivity {
                 return fragments.size();
             }
         });
-//        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-//            @Override
-//            public Object instantiateItem(ViewGroup container, int position) {
-//                if (fragments.get(position) instanceof StoriesFragment) {
-//                    StoriesFragment storiesFragment = (StoriesFragment) fragments.get(position);
-//                    storiesFragment.setStories(SimulateStory.simulateStories());
-//                }
-//
-//                return super.instantiateItem(container, position);
-//            }
-//
-//            @Override
-//            public Fragment getItem(int position) {
-//                return fragments.get(position);
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return fragments.size();
-//            }
-//        });
         mViewPager.setCurrentItem(2);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

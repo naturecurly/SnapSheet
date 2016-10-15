@@ -33,9 +33,17 @@ public class DatabaseUtils {
         return values;
     }
 
-    public static ContentValues getFriendContentValues(String username) {
+    public static ContentValues getFriendContentValues(User friend) {
         ContentValues values = new ContentValues();
-        values.put(FriendTable.Cols.USERNAME, username);
+        values.put(FriendTable.Cols.USERNAME, friend.getUsername());
+        values.put(FriendTable.Cols.MOBILE, friend.getMobile());
+        values.put(FriendTable.Cols.EMAIL, friend.getEmail());
+        return values;
+    }
+
+    public static ContentValues getFriendChatContentValues(String username) {
+        ContentValues values = new ContentValues();
+        values.put(FriendChatDbSchema.FriendChatTable.NAME, username);
         return values;
     }
 
@@ -47,12 +55,13 @@ public class DatabaseUtils {
         }
     }
 
-    public static void refreshFriendDb(SQLiteDatabase database, String[] friends) {
+    public static void refreshFriendDb(SQLiteDatabase database, User[] friends) {
         database.delete(FriendTable.NAME, null, null);
         for (int i = 0; i < friends.length; ++i) {
             ContentValues values = getFriendContentValues(friends[i]);
             database.insert(FriendTable.NAME, null, values);
 
+            updateFriendChatDb(database, friends[i].getUsername());
         }
     }
 
@@ -62,7 +71,7 @@ public class DatabaseUtils {
                 new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
                 FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
         if (!cursor.moveToNext()) {
-            ContentValues values = getFriendContentValues(username);
+            ContentValues values = getFriendChatContentValues(username);
             database.insert(FriendChatDbSchema.FriendChatTable.NAME, null, values);
         }
 
@@ -94,7 +103,7 @@ public class DatabaseUtils {
         return friendList;
     }
 
-    public static void insertFriendDb(SQLiteDatabase database, String friend) {
+    public static void insertFriendDb(SQLiteDatabase database, User friend) {
         ContentValues value = getFriendContentValues(friend);
         database.insert(FriendTable.NAME, null, value);
     }

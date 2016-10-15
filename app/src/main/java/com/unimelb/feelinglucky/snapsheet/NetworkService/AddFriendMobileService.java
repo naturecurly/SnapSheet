@@ -1,6 +1,7 @@
 package com.unimelb.feelinglucky.snapsheet.NetworkService;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.Bean.User;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -12,5 +13,5 @@ import retrofit2.http.Query;
 
 public interface AddFriendMobileService {
     @GET("/users/addmobile")
-    Call<ReturnMessage> addFriendMobile(@Query("username") String username, @Query("mobile") String mobile);
+    Call<User> addFriendMobile(@Query("username") String username, @Query("mobile") String mobile);
 }

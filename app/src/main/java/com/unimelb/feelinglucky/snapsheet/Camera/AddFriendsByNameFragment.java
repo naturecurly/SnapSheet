@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.CheckUsernameService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
@@ -32,6 +33,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.R.id.message;
 
 /**
  * Created by leveyleonhardt on 9/8/16.
@@ -117,10 +120,11 @@ public class AddFriendsByNameFragment extends Fragment {
                     @Override
                     public void onResponse(Call call, Response response) {
                         if (response.isSuccessful()) {
-                            ReturnMessage message = (ReturnMessage) response.body();
-                            if (message.isSuccess()) {
-                                DatabaseUtils.insertFriendDb(DatabaseInstance.database, usernameText.getText().toString());
+                            User friend = (User) response.body();
+                            if (friend != null) {
+                                DatabaseUtils.insertFriendDb(DatabaseInstance.database, friend);
                                 addButton.setText("Added");
+
                             } else {
                                 Toast.makeText(getActivity(), "Add failed", Toast.LENGTH_SHORT).show();
                             }
