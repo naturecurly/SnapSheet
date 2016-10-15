@@ -46,4 +46,17 @@ public interface SnapSeetDataStore {
         String [] COLUMNS = {_ID, FROM, TO, MESSAGE, TYPE, EXPIRE_TIME, STATUS};
         String [] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_INT};
     }
+
+    interface ChatFriendList extends BaseColumns {
+        String TABLE_NAME = "friend_chat";
+        String CONTENT_PATH = TABLE_NAME;
+
+        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        String USERNAME = "username";
+        String CHAT_PRIORITY = "chat_priority";
+
+
+        String [] COLUMNS = {_ID, USERNAME, CHAT_PRIORITY};
+        String [] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_INT};
+    }
 }

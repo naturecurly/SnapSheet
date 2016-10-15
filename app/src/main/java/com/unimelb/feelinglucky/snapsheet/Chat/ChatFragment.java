@@ -1,11 +1,16 @@
 package com.unimelb.feelinglucky.snapsheet.Chat;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -24,6 +29,8 @@ import android.widget.TextView;
 
 import com.unimelb.feelinglucky.snapsheet.Chat.Search.SearchFriendActivity;
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendInfoAdapter;
+import com.unimelb.feelinglucky.snapsheet.Database.FriendChatDbSchema;
+import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.SnapSheetActivity;
@@ -35,7 +42,10 @@ import java.util.List;
 /**
  * Created by leveyleonhardt on 8/11/16.
  */
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+
+    private static final int CHATFRAGMENT_LOADER = 0;
+    public static final String LOG_TAG = ChatFragment.class.getSimpleName();
 
     private static final int RESULTID = 1;
     private final String TAG = ChatFragment.class.getSimpleName();
@@ -205,5 +215,49 @@ public class ChatFragment extends Fragment {
     public void onStop() {
         super.onStop();
         Log.i(TAG, "stop");
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.i(LOG_TAG, "onCreateLoader");
+        Uri chatFriendListUri = SnapSeetDataStore.ChatFriendList.CONTENT_URI.buildUpon().build();
+        return new CursorLoader(getActivity(),
+                chatFriendListUri,
+                null,
+                null,
+                null,
+                FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + " DESC");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.i(LOG_TAG, "onLoadFinished");
+        List<String> friendlist = new ArrayList<>();
+        while(data.moveToNext()) {
+            String username = data.getString(data.getColumnIndex(SnapSeetDataStore.ChatFriendList.USERNAME));
+//            data.getString(data.getColumnIndex())
+            friendlist.add(username);
+        }
+
+        String[] datalist = new String[friendlist.size()];
+        mAdapter = new FriendInfoAdapter(getContext(),friendlist.toArray(datalist));
+        for (String str :friendlist.toArray(datalist)) {
+            Log.i(LOG_TAG, str);
+        }
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        getLoaderManager().initLoader(CHATFRAGMENT_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
     }
 }

@@ -61,6 +61,20 @@ public class SnapSheetProvider extends ContentProvider {
 
                     return c;
                 }
+
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATFRIENDLIST: {
+                final Cursor c = mOpenHelper.getReadableDatabase().query(
+                        table,
+                        projection,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+                setNotificationUri(c, uri);
+                return c;
+            }
         }
         if (table == null) return null;
         final Cursor c = mOpenHelper.getReadableDatabase().query(table, projection, selection,

@@ -59,12 +59,16 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
                 FriendTable.Cols.MOBILE +
                 ")"
         );
-        db.execSQL("create table " + FriendChatDbSchema.FriendChatTable.NAME + "(" +
-                " _id integer primary key autoincrement, " +
-                FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "," +
-                FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + " INTEGER DEFAULT 0" +
-                ")"
-        );
+//        db.execSQL("create table " + FriendChatDbSchema.FriendChatTable.NAME + "(" +
+//                " _id integer primary key autoincrement, " +
+//                FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "," +
+//                FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + " INTEGER DEFAULT 0" +
+//                ")"
+//        );
+        db.execSQL(SnapSheetDataStoreUtils.createTable(
+                ChatFriendList.TABLE_NAME,
+                ChatFriendList.COLUMNS,
+                ChatFriendList.TYPES));
 
 
         db.execSQL("CREATE TABLE " + ImgDbSchema.ImgTable.NAME + "(" +

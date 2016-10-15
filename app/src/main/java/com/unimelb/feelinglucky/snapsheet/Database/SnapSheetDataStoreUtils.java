@@ -17,11 +17,15 @@ public class SnapSheetDataStoreUtils {
     public static final int TABLE_ID_CHATMESSAGE_WITH_TO_USER = 12;
     public static final int TABLE_ID_CHATMESSAGE_WITH_USER = 13;
 
+    public static final int TABLE_ID_CHATFRIENDLIST = 20;
+
     static {
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH, TABLE_ID_CHATMESSAGE);
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.FROM_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_FROM_USER);
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TO_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_TO_USER);
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.USER + "/*", TABLE_ID_CHATMESSAGE_WITH_USER);
+
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatFriendList.CONTENT_PATH, TABLE_ID_CHATFRIENDLIST);
     }
 
     /**
@@ -41,6 +45,11 @@ public class SnapSheetDataStoreUtils {
             case TABLE_ID_CHATMESSAGE_WITH_TO_USER:
             case TABLE_ID_CHATMESSAGE_WITH_USER:
                 return ChatMessage.TABLE_NAME;
+
+
+            case TABLE_ID_CHATFRIENDLIST:
+                return ChatFriendList.TABLE_NAME;
+
             default:
                 return null;
         }

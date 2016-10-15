@@ -8,11 +8,10 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore;
-import com.unimelb.feelinglucky.snapsheet.Database.SnapSheetDataStoreUtils;
+import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,6 +58,9 @@ public class SnapMessagingService extends FirebaseMessagingService {
         Uri chatMessageUri = SnapSeetDataStore.ChatMessage.CONTENT_URI.buildUpon().build();
         ContentValues values = DatabaseUtils.buildChatMessage(data);
         getContentResolver().insert(chatMessageUri, values);
+
+        String fromUser = data.get("fromUsername");
+        DatabaseUtils.updateFriendChatDb(getApplicationContext(), DatabaseInstance.database, fromUser);
 
     }
 }

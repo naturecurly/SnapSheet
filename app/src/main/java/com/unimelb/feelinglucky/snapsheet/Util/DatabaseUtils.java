@@ -1,10 +1,12 @@
 package com.unimelb.feelinglucky.snapsheet.Util;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
@@ -12,6 +14,8 @@ import com.unimelb.feelinglucky.snapsheet.Database.FriendChatDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
 import com.unimelb.feelinglucky.snapsheet.Database.ImgDbSchema;
+import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore;
+import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore.ChatMessage;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 
 import java.io.ByteArrayOutputStream;
@@ -19,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore.ChatMessage;
+import static com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance.database;
 
 /**
  * Created by leveyleonhardt on 9/9/16.
@@ -51,6 +55,22 @@ public class DatabaseUtils {
         return values;
     }
 
+    public static ContentValues getFriendChatContentValuesMax(String username) {
+        String search = "MAX(" + FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY + ")";
+        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME, new String[]{search}, null, null, null, null, null);
+        Integer max = 0;
+        if (cursor.moveToNext()) {
+            // Zero means the index of the column.
+            max = cursor.getInt(0);
+        }
+
+
+        ContentValues values = new ContentValues();
+        values.put(FriendChatDbSchema.FriendChatTable.Cols.USERNAME, username);
+        values.put(FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY, max + 1);
+        return values;
+    }
+
     public static void refreshUserDb(SQLiteDatabase database, User user) {
         ContentValues values = getUserContentValues(user);
         if (database != null) {
@@ -78,7 +98,26 @@ public class DatabaseUtils {
             ContentValues values = getFriendChatContentValues(username);
             database.insert(FriendChatDbSchema.FriendChatTable.NAME, null, values);
         }
+    }
 
+    public static void updateFriendChatDb(Context context, SQLiteDatabase database, String username) {
+        Cursor cursor = database.query(FriendChatDbSchema.FriendChatTable.NAME,
+                new String[]{FriendChatDbSchema.FriendChatTable.Cols.USERNAME},
+                FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{username}, null, null, null);
+        if (!cursor.moveToNext()) {
+            ContentValues values = getFriendChatContentValuesMax(username);
+            Uri chatFriendListUri = SnapSeetDataStore.ChatFriendList.CONTENT_URI.buildUpon().build();
+            context.getContentResolver().insert(
+                    chatFriendListUri, values);
+
+
+            //database.insert(FriendChatDbSchema.FriendChatTable.NAME, null, values);
+//            updateChatPriority(database, username);
+
+
+            //context.getContentResolver().notifyChange(chatFriendListUri, null);
+
+        }
     }
 
     public static void updateChatPriority(SQLiteDatabase database, String userName) {
@@ -128,6 +167,8 @@ public class DatabaseUtils {
         result = userList.toArray(result);
         return result;
     }
+
+
 
     public static Bitmap getImg(SQLiteDatabase database) {
         Cursor cursor = database.query(ImgDbSchema.ImgTable.NAME,

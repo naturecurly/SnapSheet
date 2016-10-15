@@ -4,6 +4,8 @@ package com.unimelb.feelinglucky.snapsheet.Database;
  * Created by leveyleonhardt on 9/9/16.
  */
 public class FriendChatDbSchema {
+
+
     public static final class FriendChatTable {
         public static final String NAME = "friend_chat";
 
