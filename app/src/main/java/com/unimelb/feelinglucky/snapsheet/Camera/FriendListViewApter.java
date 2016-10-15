@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
@@ -93,10 +93,9 @@ public class FriendListViewApter extends BaseAdapter {
                         @Override
                         public void onResponse(Call call, Response response) {
                             if (response.isSuccessful()) {
-                                ReturnMessage message = (ReturnMessage) response.body();
-                                if (message.isSuccess()) {
-                                    DatabaseUtils.insertFriendDb(DatabaseInstance.database, friendName);
-                                    Toast.makeText(mContext,"successful",Toast.LENGTH_LONG).show();
+                                User friend = (User) response.body();
+                                if (friend != null) {
+                                    DatabaseUtils.insertFriendDb(DatabaseInstance.database, friend);
                                 } else {
                                     Toast.makeText(mContext,"oop",Toast.LENGTH_LONG).show();
                                 }

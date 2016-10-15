@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Contact;
-import com.unimelb.feelinglucky.snapsheet.Bean.ReturnMessage;
+import com.unimelb.feelinglucky.snapsheet.Bean.User;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.AddFriendMobileService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.R;
@@ -70,36 +70,14 @@ public class PhotoContactsAdapter extends BaseAdapter {
             viewHolder = (PhotoContactsAdapter.ViewHolder) convertView.getTag();
         }
         viewHolder.name.setText(mContacts.get(position).getUsername());
-        if (DatabaseUtils.isFriend(DatabaseInstance.database, mContacts.get(position).getUsername())) {
+
+        if (DatabaseUtils.isFriendByMobile(DatabaseInstance.database, mContacts.get(position).getMobile())) {
             viewHolder.add.setText("Added");
         } else {
             viewHolder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
-                    AddFriendMobileService addFriendService = retrofit.create(AddFriendMobileService.class);
-                    Call call = addFriendService.addFriendMobile(SharedPreferencesUtils.getSharedPreferences(mContext).getString("username", null), mContacts.get(position).getMobile());
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onResponse(Call call, Response response) {
-                            if (response.isSuccessful()) {
-                                User friend = (User) response.body();
-                                if (friend != null) {
-                                    Toast.makeText(mContext, "Send", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(mContext, "Add failed", Toast.LENGTH_SHORT).show();
-
-                                }
-                            } else {
-                                Toast.makeText(mContext, "Add failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call call, Throwable t) {
-
-                        }
-                    });
+                    addFriend(position);
                 }
             });
         }
@@ -108,6 +86,32 @@ public class PhotoContactsAdapter extends BaseAdapter {
         return convertView;
     }
 
+    private void addFriend(int position) {
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
+        AddFriendMobileService addFriendService = retrofit.create(AddFriendMobileService.class);
+        Call call = addFriendService.addFriendMobile(SharedPreferencesUtils.getSharedPreferences(mContext).getString("username", null), mContacts.get(position).getMobile());
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful()) {
+                    User friend = (User) response.body();
+                    if (friend != null) {
+                        Toast.makeText(mContext, friend.getMobile(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "Add failed", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    Toast.makeText(mContext, "Add failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
+    }
     private class ViewHolder {
         TextView name;
         TextView mobile;

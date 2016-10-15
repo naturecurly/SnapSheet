@@ -43,7 +43,7 @@ public class DatabaseUtils {
 
     public static ContentValues getFriendChatContentValues(String username) {
         ContentValues values = new ContentValues();
-        values.put(FriendChatDbSchema.FriendChatTable.NAME, username);
+        values.put(FriendChatDbSchema.FriendChatTable.Cols.USERNAME, username);
         return values;
     }
 
@@ -61,7 +61,7 @@ public class DatabaseUtils {
             ContentValues values = getFriendContentValues(friends[i]);
             database.insert(FriendTable.NAME, null, values);
 
-            updateFriendChatDb(database, friends[i].getUsername());
+//            updateFriendChatDb(database, friends[i].getUsername());
         }
     }
 
@@ -158,6 +158,16 @@ public class DatabaseUtils {
 
         return cursor.moveToNext();
     }
+
+    public static boolean isFriendByMobile(SQLiteDatabase database, String mobile) {
+
+        Cursor cursor = database.query(FriendDbSchema.FriendTable.NAME,
+                new String[]{FriendTable.Cols.MOBILE},
+                FriendDbSchema.FriendTable.Cols.MOBILE + "=?", new String[]{mobile}, null, null, null);
+
+        return cursor.moveToNext();
+    }
+
 
     public static boolean isImgLocked(SQLiteDatabase database) {
         Cursor cursor = database.query(ImgDbSchema.ImgTable.NAME,
