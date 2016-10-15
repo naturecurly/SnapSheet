@@ -55,6 +55,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
 
     private DrawerLayout mDrawer;
     private Button mDrawerToggle;
+    private Button mGoBack;
     private TextView mChatName;
     private RecyclerView mChat;
 
@@ -80,6 +81,14 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void onClick(View v) {
                 mDrawer.openDrawer(GravityCompat.START);
+            }
+        });
+
+        mGoBack = (Button) view.findViewById(R.id.chat_back);
+        mGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SnapSheetActivity) getActivity()).setViewPagerItem(1);
             }
         });
 
