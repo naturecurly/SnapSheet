@@ -12,6 +12,7 @@ public class Message {
 
     public final static String MSG = "msg";
     public final static String IMG = "img";
+    public final static String RND = "read";
 
     public String getFrom() {
         return from;

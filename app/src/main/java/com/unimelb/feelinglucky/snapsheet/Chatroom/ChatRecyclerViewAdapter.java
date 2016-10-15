@@ -7,10 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Chat.widget.FriendInfoAdapter;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.View.SlideableItem;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -20,9 +24,11 @@ import java.util.List;
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<String> mChatMessages;
+    private List<Message> mChatMessages;
+    private final static DateFormat df = new SimpleDateFormat("HH:mm");
 
-    public ChatRecyclerViewAdapter(Context context, List<String> mChatMessages) {
+
+    public ChatRecyclerViewAdapter(Context context, List<Message> mChatMessages) {
         this.mContext = context;
         this.mChatMessages = mChatMessages;
     }
@@ -38,8 +44,11 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.d("messageAdapter", mChatMessages.get(position));
-        holder.mItem.setMessage(mChatMessages.get(position));
+        Log.d("messageAdapter", mChatMessages.get(position).getContent());
+        holder.mItem.setId(mChatMessages.get(position).getFrom());
+        String time = df.format(Calendar.getInstance().getTime());
+        holder.mItem.setTimeStamp(time);
+        holder.mItem.setMessage(mChatMessages.get(position).getContent());
 
     }
 
