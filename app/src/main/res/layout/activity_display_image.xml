@@ -15,11 +15,11 @@
         android:layout_height="50dp"
         android:layout_width="50dp"
         android:id="@+id/donut_progress"
-        custom:donut_finished_color="@color/primary_material_light"
+        custom:donut_finished_color="#00000000"
         custom:donut_finished_stroke_width="3dp"
-        android:backgroundTint="@color/primary_material_light"
+        android:backgroundTint="#00000000"
         android:backgroundTintMode="add"
-        custom:donut_unfinished_color="#0066FF"
+        custom:donut_unfinished_color="@color/white"
         custom:donut_unfinished_stroke_width="3dp"
         />
 

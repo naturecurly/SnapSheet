@@ -10,6 +10,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.FileDownloadService;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.ServiceGenerator;
 import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
@@ -104,19 +105,25 @@ public class SnapMessagingService extends FirebaseMessagingService {
 
     private void handleIMGTypeMessage(Map<String, String> data) {
         String image = data.get("message");  // get the image path from message content
+        String imagePath = NetworkSettings.baseUrl + image;
+
+        Uri uri = Uri.parse(image);
+        image = uri.getLastPathSegment().toString();
+        Log.i(LOG_TAG, "image-name: " + image);
 
 
         // download Image, move to SnapSheetMessagingService
         //Retrofit retrofit = new Retrofit.Builder().baseUrl("https://c.hime.io/").build();
         FileDownloadService fileDownloadService = ServiceGenerator.createService(FileDownloadService.class);
-        Call<ResponseBody> call = fileDownloadService.downloadFileWithDynamicUrlSync(image);
+        Call<ResponseBody> call = fileDownloadService.downloadFileWithDynamicUrlSync(imagePath);
+        String finalImage = image;
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.d(LOG_TAG, "server contacted and has file");
 
                 // TODO: change the test.png name with a dynamic name
-                boolean writtenToDisk = writeResponseBodyToDisk(response.body(), getApplicationContext(), "test.png");
+                boolean writtenToDisk = writeResponseBodyToDisk(response.body(), getApplicationContext(), finalImage);
 
                 Log.d(LOG_TAG, "file download was a success? " + writtenToDisk);
 
@@ -124,7 +131,7 @@ public class SnapMessagingService extends FirebaseMessagingService {
                     // store into database by replacing the content with local image file path
                     // this message is for me
                     // TODO: change the test.png name with a dynamic name
-                    data.put("message", "test.png");
+                    data.put("message", finalImage);
                     // add a status
                     data.put("status", "1");
                     // if there is not a living time for this image, set a default 5 sec

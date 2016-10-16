@@ -62,7 +62,7 @@ public class DisplayImageActivity extends AppCompatActivity {
                         if (a) {
                             donutProgress.setMax(expire_time);
                             ObjectAnimator anim = ObjectAnimator.ofInt(donutProgress, "progress", 0, expire_time);
-                            anim.setInterpolator(new DecelerateInterpolator());
+                            //anim.setInterpolator();
                             anim.setDuration(expire_time*1000);
                             anim.start();
                             anim.addListener(new Animator.AnimatorListener() {

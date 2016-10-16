@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
