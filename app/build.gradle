@@ -60,7 +60,7 @@ dependencies {
     compile 'com.adobe.creativesdk:image:4.6.3'
     compile 'com.localytics.android:library:3.8.0'
 
-
+    compile 'com.github.lzyzsd:circleprogress:v1.2.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

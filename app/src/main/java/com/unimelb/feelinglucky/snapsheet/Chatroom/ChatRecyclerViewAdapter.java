@@ -1,6 +1,8 @@
 package com.unimelb.feelinglucky.snapsheet.Chatroom;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -119,7 +121,6 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                 String time = df.format(Calendar.getInstance().getTime());
                 holder.mItem.setTimeStamp(time);
                 holder.mItem.setMessage(Message.FST_TEXT);
-                String image  = message.getContent();
 
                 holder.mItem.setOnPullToLimitListener(new MessageSlideableItem.PullToLimitListener() {
                     @Override
@@ -127,6 +128,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                         Log.i(LOG_TAG, Message.FST + " Clicked");
 
                         Toast.makeText(mContext, LOG_TAG + ": " + Message.FST + " Clicked", Toast.LENGTH_SHORT).show();
+                        dispalyImage(message);
 
                     }
 
@@ -155,22 +157,24 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                         Log.i(LOG_TAG, Message.SND + " Clicked");
 
                         Toast.makeText(mContext, LOG_TAG + ": " + Message.SND + " Clicked", Toast.LENGTH_SHORT).show();
+                        dispalyImage(message);
                     }
                 });
 
-                /*holder.mItem.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        // start an Activity to view the image
-                        Toast.makeText(mContext, LOG_TAG + ": " + Message.SND + " Clicked", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                });*/
                 break;
 
             default:
 
         }
+    }
+
+    private void dispalyImage(Message message) {
+        Intent intent = new Intent(mContext, DisplayImageActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("expire_time", Integer.parseInt(message.getLive_time()));
+        bundle.putString("image", message.getContent());
+        intent.putExtras(bundle);
+        mContext.startActivity(intent);
     }
 
 

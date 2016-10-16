@@ -11,7 +11,7 @@ import retrofit2.http.Url;
  */
 
 public interface FileDownloadService {
-    @GET("/images/W7Kv.png")
+    @GET("/public/")
     Call<ResponseBody> downloadFileWithFixedUrl();
 
 

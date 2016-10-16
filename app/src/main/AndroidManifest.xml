@@ -36,6 +36,7 @@
         </activity>
         <activity android:name=".Chat.Search.SearchFriendActivity" />
         <activity android:name=".ImageSendActivity" />
+        <activity android:name=".Chatroom.DisplayImageActivity" />
 
         <provider
             android:name=".Database.SnapSheetProvider"

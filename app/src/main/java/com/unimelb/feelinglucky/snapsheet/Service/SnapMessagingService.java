@@ -109,7 +109,7 @@ public class SnapMessagingService extends FirebaseMessagingService {
         // download Image, move to SnapSheetMessagingService
         //Retrofit retrofit = new Retrofit.Builder().baseUrl("https://c.hime.io/").build();
         FileDownloadService fileDownloadService = ServiceGenerator.createService(FileDownloadService.class);
-        Call<ResponseBody> call = fileDownloadService.downloadFileWithFixedUrl();
+        Call<ResponseBody> call = fileDownloadService.downloadFileWithDynamicUrlSync(image);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
