@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 23
@@ -58,7 +59,8 @@ dependencies {
     compile 'com.adobe.creativesdk.foundation:auth:0.9.1062'
     compile 'com.adobe.creativesdk:image:4.6.3'
     compile 'com.localytics.android:library:3.8.0'
-
+    compile 'org.greenrobot:greendao:3.1.0'
+    compile 'org.greenrobot:greendao-generator:3.0.0'
     compile 'com.github.lzyzsd:circleprogress:v1.2.0'
 
 }
