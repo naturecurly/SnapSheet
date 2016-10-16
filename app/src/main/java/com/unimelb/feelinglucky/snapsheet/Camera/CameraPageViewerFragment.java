@@ -4,13 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.unimelb.feelinglucky.snapsheet.Memory.MemoryFragment;
+import com.unimelb.feelinglucky.snapsheet.Memory.MemoryContainerFragment;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 import com.unimelb.feelinglucky.snapsheet.View.CustomizedViewPager;
@@ -44,7 +43,7 @@ public class CameraPageViewerFragment extends Fragment {
 
         fragmentList.add(new ProfileContainerFragment());
         fragmentList.add(new CameraMaskFragment());
-        fragmentList.add(new MemoryFragment());
+        fragmentList.add(new MemoryContainerFragment());
         viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
             public Fragment getItem(int position) {

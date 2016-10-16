@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.util.Log;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
@@ -181,6 +180,17 @@ public class DatabaseUtils {
             mBitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
         }
         return mBitmap;
+    }
+
+    public static byte[] getImgSteam(SQLiteDatabase database) {
+        Cursor cursor = database.query(ImgDbSchema.ImgTable.NAME,
+                new String[]{ImgDbSchema.ImgTable.Cols.IMG}, null, null, null, null, null);
+        int columnIndex = cursor.getColumnIndex(ImgDbSchema.ImgTable.Cols.IMG);
+        byte[] image = new byte[0];
+        while (cursor.moveToNext()) {
+            image = cursor.getBlob(columnIndex);
+        }
+        return image;
     }
 
     public static void storeImg(SQLiteDatabase database, Bitmap mBitmap) {

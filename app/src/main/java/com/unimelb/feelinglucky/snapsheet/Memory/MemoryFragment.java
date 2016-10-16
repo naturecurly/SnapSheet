@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
+import com.unimelb.feelinglucky.snapsheet.Camera.SendImageFriendListFragment;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
@@ -73,6 +75,12 @@ public class MemoryFragment extends Fragment implements View.OnClickListener{
         } else if (v.getId() == mDelete.getId()) {
             mDialog.show();
 
+        } else if(v.getId() == mSend.getId()) {
+            byte[] image = DatabaseUtils.getImgSteam(DatabaseInstance.database);
+            if (image.length > 0) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragment_memory_container, SendImageFriendListFragment.newInstance(image, 3)).addToBackStack(null).commit();
+            }
         }
     }
 
