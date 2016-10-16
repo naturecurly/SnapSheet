@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -24,6 +25,8 @@ import com.unimelb.feelinglucky.snapsheet.View.SlideableItem;
  */
 
 public class MessageSlideableItem extends FrameLayout {
+    public static final String LOG_TAG = MessageSlideableItem.class.getSimpleName();
+
     LinearLayout mLinearLayoutH; // horizontal
     LinearLayout mLinearLayoutVL; // vertical layout on the left hand side
     LinearLayout mLinearLayoutVR; // vertical layout on the right hand side
@@ -34,13 +37,15 @@ public class MessageSlideableItem extends FrameLayout {
     private String message;
 
     private final int pullLimit = DensityUtil.dip2px(getContext(), 65);
-    private SlideableItem.PullToLimitListener mListener;
+    private PullToLimitListener mListener;
     private CustomizedViewPager pager;
     private PointF origin;
     private PointF last;
     private PointF current;
     private boolean flag;
     private boolean skip;
+    private boolean isTap;
+    private boolean isLongTap;
 
     public MessageSlideableItem(Context context) {
         super(context);
@@ -119,8 +124,12 @@ public class MessageSlideableItem extends FrameLayout {
                 pager.requestDisallowInterceptTouchEvent(true);
                 pager.beginFakeDrag();
                 skip = false;
+                isTap = true;
+                isLongTap = false;
+                Log.i(LOG_TAG, "down");
                 break;
             case MotionEvent.ACTION_MOVE:
+                isTap = false;
                 float distance = current.x - origin.x;
                 float distanceY = current.y - origin.y;
                 if (distance - 20 > 0 && Math.abs(distance) > Math.abs(distanceY)) {
@@ -133,10 +142,15 @@ public class MessageSlideableItem extends FrameLayout {
                         if (!flag) {
                             params.setMargins((int) distance, 0, 0, 0);
                             requestLayout();
+                            Log.i("aaa", "aaa1");
+
                             if (pullLimit - distance < 30) {
                                 flag = true;
+                                Log.i("aaa", "aaa2");
                                 if (mListener != null) {
-                                    mListener.openChat();
+                                    Log.i("aaa", "aaa3");
+
+                                    //mListener.openMessage();
                                 }
                                 break;
                             }
@@ -148,8 +162,15 @@ public class MessageSlideableItem extends FrameLayout {
                 } else if (distance + 20 < 0 && Math.abs(distance) > Math.abs(distanceY)) {
                     pager.fakeDragBy(current.x - last.x);
                     getParent().requestDisallowInterceptTouchEvent(true);
+                    isTap = false;
+                }/* else if (Math.abs(distance) < 5) {
+                    isTap = true;
+                    if ((event.getEventTime() - event.getDownTime()) > 2000) {
+                        isLongTap = true;
+                    }
 
-                }
+                    break;
+                }*/
                 last = current;
 
                 break;
@@ -157,6 +178,27 @@ public class MessageSlideableItem extends FrameLayout {
                 pager.endFakeDrag();
                 flag = false;
                 fingerUpEvent();
+                Log.i(LOG_TAG, Long.toString(event.getEventTime()));
+                Log.i(LOG_TAG, Long.toString(event.getDownTime()));
+                if (isTap && (event.getEventTime() - event.getDownTime()) > 500) {
+                    isLongTap = true;
+                }
+                if (isLongTap) {
+                    if (mListener != null) {
+                        Log.i(LOG_TAG, "longTap");
+
+                        mListener.openMessageByLongPress();
+                    }
+                    break;
+                }
+                if (isTap) {
+                    if (mListener != null) {
+                        Log.i(LOG_TAG, "tap");
+
+                        mListener.openMessage();
+                    }
+                }
+
                 break;
             case MotionEvent.ACTION_CANCEL:
                 pager.endFakeDrag();
@@ -188,6 +230,16 @@ public class MessageSlideableItem extends FrameLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
+    }
+
+    public void setOnPullToLimitListener(PullToLimitListener listener) {
+        mListener = listener;
+    }
+
+
+    public interface PullToLimitListener {
+        void openMessage();
+        void openMessageByLongPress();
     }
 
 }

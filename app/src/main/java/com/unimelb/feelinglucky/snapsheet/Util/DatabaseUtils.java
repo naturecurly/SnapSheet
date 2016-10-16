@@ -238,6 +238,8 @@ public class DatabaseUtils {
         message.setTo(data.get("toUser"));
         message.setType(data.get("type"));
         message.setContent(data.get("message"));
+        message.setLive_time(data.get("live_time"));
+        message.setStatus(data.get("status"));
 
         return buildChatMessage(message);
     }
@@ -247,8 +249,8 @@ public class DatabaseUtils {
         values.put(ChatMessage.TO, message.getTo());
         values.put(ChatMessage.MESSAGE, message.getContent());
         values.put(ChatMessage.TYPE, message.getType());
-        values.put(ChatMessage.STATUS, 0);
-        values.put(ChatMessage.EXPIRE_TIME, 5);
+        values.put(ChatMessage.STATUS, Integer.parseInt(message.getStatus()));
+        values.put(ChatMessage.EXPIRE_TIME, Integer.parseInt(message.getLive_time()));
 
         return values;
     }
@@ -258,8 +260,11 @@ public class DatabaseUtils {
         message.setFrom(cursor.getString(cursor.getColumnIndex(ChatMessage.FROM)));
         message.setType(cursor.getString(cursor.getColumnIndex(ChatMessage.TYPE)));
         message.setContent(cursor.getString(cursor.getColumnIndex(ChatMessage.MESSAGE)));
+        message.setTo(cursor.getString(cursor.getColumnIndex(ChatMessage.TO)));
         // status
+        message.setStatus(Integer.toString(cursor.getInt(cursor.getColumnIndex(ChatMessage.STATUS))));
         // expiration time
+        message.setLive_time(Integer.toString(cursor.getInt(cursor.getColumnIndex(ChatMessage.EXPIRE_TIME))));
         return message;
     }
 }
