@@ -93,6 +93,8 @@ public class SnapMessagingService extends FirebaseMessagingService {
 
         // this message is for me
         data.put("toUser", username);
+        // add a status
+        data.put("status", "0");
         Uri chatMessageUri = SnapSeetDataStore.ChatMessage.CONTENT_URI.buildUpon().build();
         ContentValues values = DatabaseUtils.buildChatMessage(data);
         getContentResolver().insert(chatMessageUri, values);
@@ -132,8 +134,7 @@ public class SnapMessagingService extends FirebaseMessagingService {
                     // this message is for me
                     // TODO: change the test.png name with a dynamic name
                     data.put("message", finalImage);
-                    // add a status
-                    data.put("status", "1");
+
                     // if there is not a living time for this image, set a default 5 sec
                     if (!data.containsKey("live_time")) {
                         data.put("live_time", "5");

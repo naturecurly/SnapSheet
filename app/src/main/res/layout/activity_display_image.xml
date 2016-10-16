@@ -19,6 +19,7 @@
         custom:donut_finished_stroke_width="3dp"
         android:backgroundTint="#00000000"
         android:backgroundTintMode="add"
+        custom:donut_suffix_text=""
         custom:donut_unfinished_color="@color/white"
         custom:donut_unfinished_stroke_width="3dp"
         />

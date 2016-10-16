@@ -113,6 +113,10 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
         // type: msg, img, read
         message.setType(type);
         message.setContent(msg);
+
+        // add the dummy data
+        message.setStatus("0");
+        message.setLive_time("3");
         return message;
     }
 
