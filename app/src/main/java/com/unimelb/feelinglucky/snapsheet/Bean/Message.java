@@ -5,6 +5,8 @@ package com.unimelb.feelinglucky.snapsheet.Bean;
  */
 
 public class Message {
+    private int localId;
+
     private String from;
     private String to;
     private String type;
@@ -24,6 +26,8 @@ public class Message {
     public static final String FST_OPENED_TEXT = "Opened";
     public static final String SND_TEXT = "Press and hold to replay";
     public static final String SND_OPENED_TEXT = "Replayed!";
+    public static final String RND_IMG = "2";
+    public static final String RND_IMG_TEXT = "Opened";
 
 
     public String getFrom() {
@@ -72,6 +76,14 @@ public class Message {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(int localId) {
+        this.localId = localId;
     }
 
 }

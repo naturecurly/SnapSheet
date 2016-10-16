@@ -268,6 +268,7 @@ public class DatabaseUtils {
 
     public static Message buildMessageFromCursor(Cursor cursor) {
         Message message = new Message();
+        message.setLocalId(cursor.getInt(cursor.getColumnIndex(ChatMessage._ID)));
         message.setFrom(cursor.getString(cursor.getColumnIndex(ChatMessage.FROM)));
         message.setType(cursor.getString(cursor.getColumnIndex(ChatMessage.TYPE)));
         message.setContent(cursor.getString(cursor.getColumnIndex(ChatMessage.MESSAGE)));

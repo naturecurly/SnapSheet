@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.unimelb.feelinglucky.snapsheet.Bean.Message;
+
 /**
  * Created by Xuhui Chen (yorkfine) on 14/10/2016.
  */
@@ -110,19 +112,50 @@ public class SnapSheetProvider extends ContentProvider {
         final int tableId = SnapSheetDataStoreUtils.getTableId(uri);
         final String table = SnapSheetDataStoreUtils.getTableNameById(tableId);
         switch (tableId) {
-            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_FROM_USER: {
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_FROM_USER_MSG: {
                 String username = uri.getLastPathSegment();
-                Log.i(LOG_TAG, "delete messages from " + username);
-                selection = SnapSeetDataStore.ChatMessage.FROM + "= ?";
-                selectionArgs = new String[]{username};
+                Log.i(LOG_TAG, "delete msg type messages from " + username);
+                selection = SnapSeetDataStore.ChatMessage.FROM + "= ? and " +
+                SnapSeetDataStore.ChatMessage.TYPE + " = ?";
+                selectionArgs = new String[]{username, SnapSeetDataStore.ChatMessage.TYPE_MSG};
 
                 break;
             }
-            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_TO_USER: {
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_TO_USER_MSG: {
                 String username = uri.getLastPathSegment();
-                Log.i(LOG_TAG, "delete message to " + username);
-                selection = SnapSeetDataStore.ChatMessage.TO + " = ?";
-                selectionArgs = new String[] {username};
+                Log.i(LOG_TAG, "delete msg type message to " + username);
+                selection = SnapSeetDataStore.ChatMessage.TO + " = ? and " +
+                        SnapSeetDataStore.ChatMessage.TYPE + " = ?";
+                selectionArgs = new String[] {username, SnapSeetDataStore.ChatMessage.TYPE_MSG};
+                break;
+            }
+
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_FROM_USER_IMG: {
+                String username = uri.getLastPathSegment();
+                Log.i(LOG_TAG, "delete img type messages from " + username);
+                selection = SnapSeetDataStore.ChatMessage.FROM + "= ? and " +
+                        SnapSeetDataStore.ChatMessage.TYPE + " = ? ";
+                selectionArgs = new String[]{username, SnapSeetDataStore.ChatMessage.TYPE_IMG};
+
+                break;
+            }
+
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_TO_USER_IMG: {
+                String username = uri.getLastPathSegment();
+                Log.i(LOG_TAG, "delete img messages from " + username);
+                selection = SnapSeetDataStore.ChatMessage.FROM + "= ? and " +
+                        SnapSeetDataStore.ChatMessage.TYPE + " = ?";
+                selectionArgs = new String[]{username, SnapSeetDataStore.ChatMessage.TYPE_IMG};
+
+                break;
+            }
+
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_IMG_ID: {
+                String id = uri.getLastPathSegment();
+                Log.i(LOG_TAG, "delete img messages from " + id);
+                selection = SnapSeetDataStore.ChatMessage._ID + "= ?";
+                selectionArgs = new String[]{id};
+
                 break;
             }
 

@@ -30,10 +30,22 @@ public interface SnapSeetDataStore {
         String CONTENT_PATH = TABLE_NAME;
         String FROM_USER = "from_user";
         String TO_USER = "to_user";
+        String IMG_ID = "img_id";
+        String TYPE_ANY = "any";
+        String TYPE_MSG = "msg";
+        String TYPE_IMG = "img";
         String USER = "user"; // from or to user
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        Uri CONTENT_URI_FROM_USER = Uri.withAppendedPath(CONTENT_URI, FROM_USER);
-        Uri CONTENT_URI_TO_USER = Uri.withAppendedPath(CONTENT_URI, TO_USER);
+        Uri CONTENT_URI_TYPE_ANY = Uri.withAppendedPath(CONTENT_URI, TYPE_ANY);
+        Uri CONTENT_URI_FROM_USER = Uri.withAppendedPath(CONTENT_URI_TYPE_ANY, FROM_USER);
+        Uri CONTENT_URI_TO_USER = Uri.withAppendedPath(CONTENT_URI_TYPE_ANY, TO_USER);
+        Uri CONTENT_URI_TYPE_MSG = Uri.withAppendedPath(CONTENT_URI, TYPE_MSG);
+        Uri CONTENT_URI_FROM_USER_MSG = Uri.withAppendedPath(CONTENT_URI_TYPE_MSG, FROM_USER);
+        Uri CONTENT_URI_TO_USER_MSG = Uri.withAppendedPath(CONTENT_URI_TYPE_MSG, TO_USER);
+        Uri CONTENT_URI_TYPE_IMG = Uri.withAppendedPath(CONTENT_URI, TYPE_IMG);
+        Uri CONTENT_URI_FROM_USER_IMG = Uri.withAppendedPath(CONTENT_URI_TYPE_IMG, FROM_USER);
+        Uri CONTENT_URI_IMG_ID = Uri.withAppendedPath(CONTENT_URI_TYPE_IMG, IMG_ID);
+        Uri CONTENT_URI_TO_USER_IMG = Uri.withAppendedPath(CONTENT_URI_TYPE_IMG, TO_USER);
         Uri CONTENT_URI_USER = Uri.withAppendedPath(CONTENT_URI, USER);
 
         String FROM = "fromUser";

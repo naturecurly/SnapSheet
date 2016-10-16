@@ -2,6 +2,7 @@ package com.unimelb.feelinglucky.snapsheet.Chatroom;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
+import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore;
 import com.unimelb.feelinglucky.snapsheet.R;
 
 import java.text.DateFormat;
@@ -127,8 +129,14 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                     public void openMessage() {
                         Log.i(LOG_TAG, Message.FST + " Clicked");
 
-                        Toast.makeText(mContext, LOG_TAG + ": " + Message.FST + " Clicked", Toast.LENGTH_SHORT).show();
                         dispalyImage(message);
+                        message.setStatus(Message.SND);
+                        notifyItemChanged(position);
+
+                        // delete image message from database. Since delete will not notify dataset change,
+                        // it is safe for image message on the screen
+                        Uri uri = SnapSeetDataStore.ChatMessage.CONTENT_URI_IMG_ID.buildUpon().appendEncodedPath(Integer.toString(message.getLocalId())).build();
+                        mContext.getContentResolver().delete(uri, null, null);
 
                     }
 
@@ -146,7 +154,6 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                 String time1 = df.format(Calendar.getInstance().getTime());
                 holder.mItem.setTimeStamp(time1);
                 holder.mItem.setMessage(Message.SND_TEXT);
-                String image1  = message.getContent();
                 holder.mItem.setOnPullToLimitListener(new MessageSlideableItem.PullToLimitListener() {
                     @Override
                     public void openMessage() {
@@ -156,13 +163,21 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                     public void openMessageByLongPress() {
                         Log.i(LOG_TAG, Message.SND + " Clicked");
 
-                        Toast.makeText(mContext, LOG_TAG + ": " + Message.SND + " Clicked", Toast.LENGTH_SHORT).show();
                         dispalyImage(message);
+                        message.setStatus(Message.RND_IMG);
+                        notifyItemChanged(position);
+
                     }
                 });
 
                 break;
 
+            case Message.RND_IMG:
+                holder.mItem.setId(mChatMessages.get(position).getFrom());
+                String time2 = df.format(Calendar.getInstance().getTime());
+                holder.mItem.setTimeStamp(time2);
+                holder.mItem.setMessage(Message.RND_IMG_TEXT);
+                holder.mItem.setOnPullToLimitListener(null);
             default:
 
         }

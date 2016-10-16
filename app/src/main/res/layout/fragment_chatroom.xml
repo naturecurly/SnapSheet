@@ -78,7 +78,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:id="@+id/chat_menu"
-            android:layout_alignParentBottom="true"
+            android:layout_above="@+id/chatroom_bottom_padding"
             android:layout_height="50dp"
             android:rowCount="1"
             android:columnCount="5"
@@ -138,12 +138,12 @@
 
         </GridLayout>
 
-        <!--<View
+        <View
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:id="@+id/chatroom_bottom_padding"
             android:layout_alignParentBottom="true"
-            />-->
+            />
 
     </RelativeLayout>
 

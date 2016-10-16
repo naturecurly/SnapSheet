@@ -75,7 +75,7 @@ public class SnapMessagingService extends FirebaseMessagingService {
 
             String toUser = data.get("fromUsername"); // delete all the message I sent to this `from` user
             if (toUser != null) {
-                Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_TO_USER.buildUpon().appendEncodedPath(toUser).build();
+                Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_TO_USER_MSG.buildUpon().appendEncodedPath(toUser).build();
                 getContentResolver().delete(chatMessageWithUserUri, null, null);
             }
             return;

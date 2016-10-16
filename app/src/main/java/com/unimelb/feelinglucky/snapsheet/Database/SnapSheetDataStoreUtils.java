@@ -16,14 +16,25 @@ public class SnapSheetDataStoreUtils {
     public static final int TABLE_ID_CHATMESSAGE_WITH_FROM_USER = 11;
     public static final int TABLE_ID_CHATMESSAGE_WITH_TO_USER = 12;
     public static final int TABLE_ID_CHATMESSAGE_WITH_USER = 13;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_FROM_USER_MSG = 14;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_TO_USER_MSG = 15;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_FROM_USER_IMG = 16;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_TO_USER_IMG = 17;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_IMG_ID = 18;
 
     public static final int TABLE_ID_CHATFRIENDLIST = 20;
 
     static {
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH, TABLE_ID_CHATMESSAGE);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.FROM_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_FROM_USER);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TO_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_TO_USER);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_ANY + "/" + ChatMessage.FROM_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_FROM_USER);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_ANY + "/" + ChatMessage.TO_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_TO_USER);
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.USER + "/*", TABLE_ID_CHATMESSAGE_WITH_USER);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_MSG + "/" + ChatMessage.FROM_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_FROM_USER_MSG);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_MSG + "/" + ChatMessage.TO_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_TO_USER_MSG);
+
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_IMG + "/" + ChatMessage.FROM_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_FROM_USER_IMG);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_IMG + "/" + ChatMessage.TO_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_TO_USER_IMG);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_IMG + "/" + ChatMessage.IMG_ID + "/*", TABLE_ID_CHATMESSAGE_WITH_IMG_ID);
 
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatFriendList.CONTENT_PATH, TABLE_ID_CHATFRIENDLIST);
     }
@@ -43,7 +54,12 @@ public class SnapSheetDataStoreUtils {
             case TABLE_ID_CHATMESSAGE:
             case TABLE_ID_CHATMESSAGE_WITH_FROM_USER:
             case TABLE_ID_CHATMESSAGE_WITH_TO_USER:
+            case TABLE_ID_CHATMESSAGE_WITH_FROM_USER_MSG:
+            case TABLE_ID_CHATMESSAGE_WITH_TO_USER_MSG:
+            case TABLE_ID_CHATMESSAGE_WITH_FROM_USER_IMG:
+            case TABLE_ID_CHATMESSAGE_WITH_TO_USER_IMG:
             case TABLE_ID_CHATMESSAGE_WITH_USER:
+            case TABLE_ID_CHATMESSAGE_WITH_IMG_ID:
                 return ChatMessage.TABLE_NAME;
 
 

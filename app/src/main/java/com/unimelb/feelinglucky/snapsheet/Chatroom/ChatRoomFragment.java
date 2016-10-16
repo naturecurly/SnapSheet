@@ -37,7 +37,9 @@ import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +58,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
     private DrawerLayout mDrawer;
     private Button mDrawerToggle;
     private Button mGoBack;
+    private Button btShutter;
     private TextView mChatName;
     private RecyclerView mChat;
 
@@ -64,6 +67,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private List<Message> messageList;
+    private Set<Integer> messageIdSet;
 
     @Nullable
     @Override
@@ -92,12 +96,21 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
+        btShutter = (Button) view.findViewById(R.id.chat_camera);
+        btShutter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SnapSheetActivity) getActivity()).setViewPagerItem(2);
+            }
+        });
+
         mChat = (RecyclerView) view.findViewById(R.id.chat_room_body);
         messageList = new ArrayList<>();
         mAdapter = new ChatRecyclerViewAdapter(getContext(), messageList);
         mChat.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mChat.setAdapter(mAdapter);
+        messageIdSet = new HashSet<>();
 
 
         tvSendMsg = (EditText) view.findViewById(R.id.chat_input);
@@ -201,14 +214,19 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
         int position = messageList.size();
         while (data.moveToNext()) {
             Message message = DatabaseUtils.buildMessageFromCursor(data);
-            Log.i(TAG, "from: " + message.getFrom());
-            Log.i(TAG, "to: " + message.getTo());
-            Log.i(TAG, "content: " + message.getContent());
-            Log.i(TAG, "type: " + message.getType());
-            Log.i(TAG, "live_time: " + message.getLive_time());
-            Log.i(TAG, "status: " + message.getStatus());
+            // only msg type message will be added because they will be cleared after queried and won't be duplicated
+            // however, we should add new img type message too.
+            int id = data.getInt(data.getColumnIndex(SnapSeetDataStore.ChatMessage._ID));
+            if (!messageIdSet.contains(id)) {
+                Log.i(TAG, "from: " + message.getFrom());
+                Log.i(TAG, "to: " + message.getTo());
+                Log.i(TAG, "content: " + message.getContent());
+                Log.i(TAG, "type: " + message.getType());
+                Log.i(TAG, "live_time: " + message.getLive_time());
+                Log.i(TAG, "status: " + message.getStatus());
 
-            messageList.add(message);
+                messageList.add(message);
+            }
         }
 
         int end = messageList.size();
@@ -218,7 +236,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
         // when queried, it means that messages from chat friend are read, so they should be removed from the database.
         // but do not delete messages that I sent to this friend.
         // delete will not invoke data change, hence recycle view will keep the messages as long as staying in the chatting room
-        Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_FROM_USER.buildUpon().appendEncodedPath(mChatFriend).build();
+        Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_FROM_USER_MSG.buildUpon().appendEncodedPath(mChatFriend).build();
         getContext().getContentResolver().delete(chatMessageWithUserUri, null, null);
         // notify these message's sender that I have read them
         Message message = buildMessage(Message.RND, "Read");
@@ -240,11 +258,24 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void enterChatRoom() {
         messageList.clear();
-        Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_TO_USER.buildUpon().appendEncodedPath(mChatFriend).build();
-        Cursor c = getContext().getContentResolver().query(chatMessageWithUserUri, null, null, null, null);
+
+        // get all the message between me and my friends
+
+        Uri uriTo = SnapSeetDataStore.ChatMessage.CONTENT_URI_TO_USER.buildUpon().appendEncodedPath(mChatFriend).build();
+        Cursor c = getContext().getContentResolver().query(uriTo, null, null, null, null);
         while (c.moveToNext()) {
             Message message = DatabaseUtils.buildMessageFromCursor(c);
             Log.i(TAG, message.getFrom() + " : " + message.getContent());
+            messageIdSet.add(c.getInt(c.getColumnIndex(SnapSeetDataStore.ChatMessage._ID)));
+            messageList.add(message);
+        }
+
+        Uri uriFrom = SnapSeetDataStore.ChatMessage.CONTENT_URI_FROM_USER.buildUpon().appendEncodedPath(mChatFriend).build();
+        Cursor c1 = getContext().getContentResolver().query(uriFrom, null, null, null, null);
+        while (c1.moveToNext()) {
+            Message message = DatabaseUtils.buildMessageFromCursor(c1);
+            Log.i(TAG, message.getFrom() + " : " + message.getContent());
+            messageIdSet.add(c1.getInt(c1.getColumnIndex(SnapSeetDataStore.ChatMessage._ID)));
             messageList.add(message);
         }
         mAdapter.notifyDataSetChanged();
@@ -253,6 +284,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void leaveChatRoot() {
         mChatFriend = null;
+        messageIdSet.clear();
     }
 
 
