@@ -71,13 +71,26 @@ public class SnapMessagingService extends FirebaseMessagingService {
     private void handleRNDTypeMessage(Map<String, String> data ) {
         // first, handle the `read` message
         if (data.containsKey("type") && data.get("type").equalsIgnoreCase(Message.RND)) {
-            // delete all the message sent to this user
 
-            String toUser = data.get("fromUsername"); // delete all the message I sent to this `from` user
-            if (toUser != null) {
-                Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_TO_USER_MSG.buildUpon().appendEncodedPath(toUser).build();
-                getContentResolver().delete(chatMessageWithUserUri, null, null);
+            // no remoteId means it is read type message for img type local message
+            if (data.get("remoteId") == null) {
+                // delete all the message sent to this user
+
+                String toUser = data.get("fromUsername"); // delete all the message I sent to this `from` user
+                if (toUser != null) {
+                    Uri chatMessageWithUserUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_TO_USER_MSG.buildUpon().appendEncodedPath(toUser).build();
+                    getContentResolver().delete(chatMessageWithUserUri, null, null);
+                }
+            } else {
+                // update
+                Log.i(LOG_TAG, "toUser: " + data.get("to"));
+                data.put("type", Message.IMG1);
+                Uri uri = SnapSeetDataStore.ChatMessage.CONTENT_URI_IMG_ID.buildUpon().appendEncodedPath(data.get("remoteId")).build();
+                ContentValues values = DatabaseUtils.buildChatMessage(data);
+                Log.i(LOG_TAG, "toUser: " + values.getAsString("toUser"));
+                getContentResolver().update(uri, values, null, null);
             }
+
             return;
         }
     }

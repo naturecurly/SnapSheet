@@ -82,7 +82,7 @@ public class SendImageFriendListFragment extends Fragment {
                     public void onResponse(Call call, Response response) {
                         if (response.isSuccessful()) {
                             ReturnMessage returnMessage = (ReturnMessage) response.body();
-                            SendMessageUtils.sendImageMessage(SharedPreferencesUtils.getSharedPreferences(getActivity()).getString(SharedPreferencesUtils.USERNAME, ""), item, Integer.toString(mTime), returnMessage.getMessage());
+                            SendMessageUtils.sendImageMessage(getContext(), SharedPreferencesUtils.getSharedPreferences(getActivity()).getString(SharedPreferencesUtils.USERNAME, ""), item, Integer.toString(mTime), returnMessage.getMessage());
                             Log.i("sendImage", returnMessage.getMessage());
 
                         }

@@ -21,6 +21,8 @@ public class SnapSheetDataStoreUtils {
     public static final int TABLE_ID_CHATMESSAGE_WITH_FROM_USER_IMG = 16;
     public static final int TABLE_ID_CHATMESSAGE_WITH_TO_USER_IMG = 17;
     public static final int TABLE_ID_CHATMESSAGE_WITH_IMG_ID = 18;
+    public static final int TABLE_ID_CHATMESSAGE_WITH_IMG_RND = 19;
+
 
     public static final int TABLE_ID_CHATFRIENDLIST = 20;
 
@@ -35,6 +37,7 @@ public class SnapSheetDataStoreUtils {
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_IMG + "/" + ChatMessage.FROM_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_FROM_USER_IMG);
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_IMG + "/" + ChatMessage.TO_USER + "/*", TABLE_ID_CHATMESSAGE_WITH_TO_USER_IMG);
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_IMG + "/" + ChatMessage.IMG_ID + "/*", TABLE_ID_CHATMESSAGE_WITH_IMG_ID);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatMessage.CONTENT_PATH + "/" + ChatMessage.TYPE_IMG + "/" + ChatMessage.IMG_RND, TABLE_ID_CHATMESSAGE_WITH_IMG_RND);
 
         CONTENT_PROVIDER_URI_MATCHER.addURI(SnapSeetDataStore.AUTHORITY, ChatFriendList.CONTENT_PATH, TABLE_ID_CHATFRIENDLIST);
     }
@@ -60,6 +63,7 @@ public class SnapSheetDataStoreUtils {
             case TABLE_ID_CHATMESSAGE_WITH_TO_USER_IMG:
             case TABLE_ID_CHATMESSAGE_WITH_USER:
             case TABLE_ID_CHATMESSAGE_WITH_IMG_ID:
+            case TABLE_ID_CHATMESSAGE_WITH_IMG_RND:
                 return ChatMessage.TABLE_NAME;
 
 
