@@ -31,11 +31,16 @@ public class DiscoverFragment extends Fragment {
     }
 
     private void init(){
-        mainPageView.setOnClickImage(urls -> {
+        mainPageView.setOnClickImage((itemInterface, urls) -> {
+            DiscoverItem item = (DiscoverItem) itemInterface;
+            item.clickCount += 1;
+            item.update();
+
             imgBrowserView.setVisibility(View.VISIBLE);
             imgBrowserView.setUrls(urls);
             imgBrowserView.bringToFront();
-
+            mainPageView.refresh();
+            
             if (imgBrowserView.getY() == imgBrowserView.getHeight()){
                 imgBrowserView.animate()
                         .translationY(0)

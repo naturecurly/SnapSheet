@@ -64,4 +64,9 @@ dependencies {
     compile 'com.github.lzyzsd:circleprogress:v1.2.0'
 
 }
+
+greendao {
+    schemaVersion 10
+}
+
 apply plugin: 'com.google.gms.google-services'

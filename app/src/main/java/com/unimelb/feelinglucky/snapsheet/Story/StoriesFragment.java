@@ -47,11 +47,42 @@ public class StoriesFragment extends Fragment {
 
     private OnRefreshListener onRefreshListener;
 
+    public void initDB(){
+        ArrayList<Story> stories = new ArrayList<>();
+        for (int i = 0; i < 1; i++) {
+            Story story = new Story();
+            story.setText("1");
+            List<String> urls = new ArrayList<>();
+            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
+            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
+//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+//            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
+//            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
+//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+//            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
+//            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
+//            for (int j = 0; j < 4; j++) {
+//            }
+            story.setImgUrls(urls);
+            story.setTimePassedText("Not yet");
+            story.setProfileUrl("http://esczx.baixing.com/uploadfile/2016/0427/20160427112336847.jpg");
+            stories.add(story);
+        }
+        DBManager.getInstance(context).insertStoryList(stories);
+    }
+
+    public List<Story> loadDB(){
+        return DBManager.getInstance(context).getAllStories();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stories, container, false);
         context = getContext();
+//        initDB();
         this.container = (RelativeLayout) view.findViewById(R.id.container);
         this.mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         this.mListView = (ListView) view.findViewById(R.id.listview);
@@ -153,8 +184,9 @@ public class StoriesFragment extends Fragment {
 
         @Override
         protected ArrayList<Story> doInBackground(String... params) {
-            newStories = (ArrayList<Story>) SimulateStory.simulateStories();
-
+//            newStories = (ArrayList<Story>) SimulateStory.simulateStories();
+//            initDB();
+            newStories = (ArrayList<Story>) loadDB();
             return newStories;
         }
 

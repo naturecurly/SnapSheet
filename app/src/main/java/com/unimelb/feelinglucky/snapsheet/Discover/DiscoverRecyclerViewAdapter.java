@@ -81,7 +81,7 @@ public class DiscoverRecyclerViewAdapter extends  RecyclerView.Adapter<DiscoverR
                 public void onAnimationEnd(Animation animation) {
                     if (onClickImage != null){
                         if (contentURLs.get(selectedPst).getContentURLs() != null){
-                            onClickImage.onClickImage(contentURLs.get(selectedPst).getContentURLs());
+                            onClickImage.onClickImage(contentURLs.get(selectedPst) ,contentURLs.get(selectedPst).getContentURLs());
                         }else{
                             Log.i(TAG, "url null: ");
                         }
