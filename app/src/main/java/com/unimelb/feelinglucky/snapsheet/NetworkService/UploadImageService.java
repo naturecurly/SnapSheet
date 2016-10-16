@@ -16,5 +16,5 @@ import retrofit2.http.Part;
 public interface UploadImageService {
     @Multipart
     @POST("images/upload")
-    Call<ReturnMessage> uploadImage(@Part("image") MultipartBody.Part image, @Part("description") RequestBody description);
+    Call<ReturnMessage> uploadImage(@Part MultipartBody.Part image);
 }

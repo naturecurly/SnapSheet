@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import com.adobe.creativesdk.aviary.AdobeImageIntent;
 import com.unimelb.feelinglucky.snapsheet.ImageSendActivity;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.Thread.ImageSaver;
+import com.unimelb.feelinglucky.snapsheet.Util.DrawableToBytesUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 
 import java.io.File;
@@ -42,7 +44,7 @@ public class ImageViewFragment extends Fragment {
     private String imagePath;
     private Button editButton;
     private Button timerButton;
-    private int timer;
+    private int timer = 3;
     private Button saveImageButton;
 
     public static ImageViewFragment newInstance(String imagePath) {
@@ -89,8 +91,9 @@ public class ImageViewFragment extends Fragment {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                byte[] image = DrawableToBytesUtils.drawableToBytes(imageView.getDrawable());
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.activity_image_send_container, new SendImageFriendListFragment()).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().replace(R.id.activity_image_send_container, SendImageFriendListFragment.newInstance(image, timer)).addToBackStack(null).commit();
             }
         });
         try {

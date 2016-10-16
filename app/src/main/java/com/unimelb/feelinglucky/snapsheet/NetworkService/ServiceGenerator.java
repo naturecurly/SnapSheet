@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    public static final String API_BASE_URL = "https://c.hime.io/";
+    public static final String API_BASE_URL = NetworkSettings.baseUrl;
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
