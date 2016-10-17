@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PhotoPicker</string>
+
+    <string name="camera_done_num">DONE (%1$d/%2$d)</string>
+    <string name="camera_done">DONE</string>
+    <string name="photos_num">%1$d photos</string>
+    <string name="msg_no_camera">no camera found</string>
+    <string name="msg_maxi_capacity">Reach maximum choose capacity</string>
+
+    <string name="commit">Done</string>
+    <string name="commit_num">Done(%1$d/%2$d)</string>
+    <string name="all_photos">All photos</string>
+</resources>

@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import com.unimelb.feelinglucky.snapsheet.Discover.DensityUtil;
 import com.unimelb.feelinglucky.snapsheet.R;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -220,7 +221,15 @@ public class StoryView extends RelativeLayout {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 0);
         params.gravity = Gravity.CENTER_VERTICAL;
         imgView.setLayoutParams(params);
-        Picasso.with(context).load(url).placeholder(R.drawable.img_placeholder).resize(500, 500).centerCrop().into(imgView);
+        Log.i(TAG, "url: " + url);
+        if (url.contains("http")){
+            Picasso.with(context).load(url).placeholder(R.drawable.img_placeholder).resize(500, 500).centerCrop().into(imgView);
+            Log.i(TAG, "normal one: ");
+        }else{
+            File f = new File(url);
+            Picasso.with(context).load(f).placeholder(R.drawable.img_placeholder).resize(500, 500).centerCrop().into(imgView);
+            Log.i(TAG, "unnormal one: ");
+        }
 
         return imgView;
     }

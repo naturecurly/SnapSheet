@@ -1,10 +1,12 @@
 package com.unimelb.feelinglucky.snapsheet.Story;
 
 import android.content.Context;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -20,6 +23,7 @@ import com.unimelb.feelinglucky.snapsheet.Discover.ImgBrowserView;
 import com.unimelb.feelinglucky.snapsheet.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,25 +51,27 @@ public class StoriesFragment extends Fragment {
 
     private OnRefreshListener onRefreshListener;
 
+    private ImageButton addBtn;
+
+    private StoriesFragment self = this;
+
     public void initDB(){
         ArrayList<Story> stories = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             Story story = new Story();
-            story.setText("1");
+            story.setText("Today is a big day!");
             List<String> urls = new ArrayList<>();
             urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
             urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
-//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
-//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
-//            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
-//            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
-//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
-//            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
-//            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
-//            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
-//            for (int j = 0; j < 4; j++) {
-//            }
-            story.setImgUrls(urls);
+            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
+            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
+            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+            urls.add("http://img.ixiumei.com/uploadfile/2016/0819/20160819105642918.png");
+            urls.add("https://pmcdeadline2.files.wordpress.com/2016/06/angelababy.jpg?w=970");
+            urls.add("http://img.zybus.com/uploads/allimg/131213/1-131213111353.jpg");
+            story.setImgUrls(urls.subList(0,i < urls.size() ? i : (urls.size() -1)));
             story.setTimePassedText("Not yet");
             story.setProfileUrl("http://esczx.baixing.com/uploadfile/2016/0427/20160427112336847.jpg");
             stories.add(story);
@@ -87,8 +93,20 @@ public class StoriesFragment extends Fragment {
         this.mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         this.mListView = (ListView) view.findViewById(R.id.listview);
         this.browserView = new ImgBrowserView(getContext());
+        this.addBtn = (ImageButton) view.findViewById(R.id.add_moment);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         this.browserView.setLayoutParams(params);
+
+
+        this.addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddStoryFragment addStoryFragment = new AddStoryFragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+//                getActivity().getSupportFragmentManager().beginTransaction().replace(self.getId(), addStoryFragment).commit();
+                transaction.add(R.id.fragment_container, addStoryFragment).commit();//(ViewGroup)getView().getParent()).getId()
+            }
+        });
 
         return view;
     }
@@ -185,8 +203,9 @@ public class StoriesFragment extends Fragment {
         @Override
         protected ArrayList<Story> doInBackground(String... params) {
 //            newStories = (ArrayList<Story>) SimulateStory.simulateStories();
-            initDB();
+//            initDB();
             newStories = (ArrayList<Story>) loadDB();
+            Collections.reverse(newStories);
             return newStories;
         }
 
