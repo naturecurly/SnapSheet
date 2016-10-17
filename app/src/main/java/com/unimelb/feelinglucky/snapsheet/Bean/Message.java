@@ -6,6 +6,7 @@ package com.unimelb.feelinglucky.snapsheet.Bean;
 
 public class Message {
     private int localId;
+    private String remoteId;
 
     private String from;
     private String to;
@@ -16,18 +17,24 @@ public class Message {
 
 
     public final static String MSG = "msg";
-    public final static String IMG = "img";
+    public final static String IMG = "img";    // received image
+    public static final String IMG1 = "img1"; // sent image
     public final static String RND = "read";
 
     // Image message status
     public static final String FST = "0";  // the first time
     public static final String SND = "1"; // the second time
     public static final String FST_TEXT = "Tap to View";
+    public static final String FST_TEXT1 = "Delivered";
     public static final String FST_OPENED_TEXT = "Opened";
     public static final String SND_TEXT = "Press and hold to replay";
+    public static final String SND_TEXT1 = "Opened";
+
     public static final String SND_OPENED_TEXT = "Replayed!";
     public static final String RND_IMG = "2";
     public static final String RND_IMG_TEXT = "Opened";
+    public static final String RND_IMG_TEXT1 = "Replayed!";
+
 
 
     public String getFrom() {
@@ -84,6 +91,14 @@ public class Message {
 
     public void setLocalId(int localId) {
         this.localId = localId;
+    }
+
+    public String getRemoteId() {
+        return remoteId;
+    }
+
+    public void setRemoteId(String remoteId) {
+        this.remoteId = remoteId;
     }
 
 }

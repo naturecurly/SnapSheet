@@ -1,5 +1,6 @@
 package com.unimelb.feelinglucky.snapsheet.Chatroom;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,13 +13,24 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
+import com.unimelb.feelinglucky.snapsheet.Bean.ReturnSendMessage;
 import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
+import com.unimelb.feelinglucky.snapsheet.NetworkService.SendMessageService;
 import com.unimelb.feelinglucky.snapsheet.R;
+import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by asahui on 10/10/2016.
@@ -34,6 +46,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
     public static final int MSG_VIEW_TYPE = 1;
     public static final int IMG_VIEW_TYPE = 2;
+    public static final int IMG1_VIEW_TYPE = 3;
 
 
     public ChatRecyclerViewAdapter(Context context, List<Message> mChatMessages) {
@@ -55,6 +68,13 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
             }
 
             case IMG_VIEW_TYPE: {
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.message_item, parent, false);
+                vh = new ViewHolder(v);
+                break;
+            }
+
+            case IMG1_VIEW_TYPE: {
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.message_item, parent, false);
                 vh = new ViewHolder(v);
@@ -83,6 +103,11 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                 Log.d("messageAdapter", mChatMessages.get(position).getType() + " : " + mChatMessages.get(position).getContent());
                 handleImageMessage(holder, position);
                 break;
+
+            case IMG1_VIEW_TYPE:
+                Log.d("messageAdapter", mChatMessages.get(position).getType() + " : " + mChatMessages.get(position).getContent());
+                handleSentImageMessage(holder, position);
+                break;
         }
 
 
@@ -105,6 +130,8 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                     return MSG_VIEW_TYPE;
                 case Message.IMG:
                     return IMG_VIEW_TYPE;
+                case Message.IMG1:
+                    return IMG1_VIEW_TYPE;
                 default:
                     return MSG_VIEW_TYPE;
             }
@@ -138,6 +165,39 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                         Uri uri = SnapSeetDataStore.ChatMessage.CONTENT_URI_IMG_ID.buildUpon().appendEncodedPath(Integer.toString(message.getLocalId())).build();
                         mContext.getContentResolver().delete(uri, null, null);
 
+                        // notify this img are read
+                        Message m = new Message();
+                        String username = SharedPreferencesUtils.getSharedPreferences(mContext).getString(SharedPreferencesUtils.USERNAME, "");
+                        m.setFrom(username);
+                        Log.i(LOG_TAG, "message.getFrom: " + message.getFrom());
+
+                        m.setTo(message.getFrom());
+                        m.setType(Message.RND);
+                        m.setStatus(Message.SND);
+                        m.setContent(Message.SND);
+                        Log.i(LOG_TAG, "message.getRemoteId: " + message.getRemoteId());
+
+                        m.setRemoteId(message.getRemoteId());
+                        // add the dummy data
+                        m.setLive_time("3");
+                        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
+                        final SendMessageService sendMessageService = retrofit.create(SendMessageService.class);
+
+                        Call<ReturnSendMessage> call = sendMessageService.sendMessage(m);
+                        call.enqueue(new Callback<ReturnSendMessage>() {
+                            @Override
+                            public void onResponse(Call<ReturnSendMessage> call, Response<ReturnSendMessage> response) {
+                                Log.i(LOG_TAG, "success");
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<ReturnSendMessage> call, Throwable t) {
+                                Log.e(LOG_TAG, "send message failed");
+                            }
+                        });
+
+
                     }
 
                     @Override
@@ -167,6 +227,34 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                         message.setStatus(Message.RND_IMG);
                         notifyItemChanged(position);
 
+
+                        // notify this img are replayed
+                        Message m = new Message();
+                        String username = SharedPreferencesUtils.getSharedPreferences(mContext).getString(SharedPreferencesUtils.USERNAME, "");
+                        m.setFrom(username);
+                        m.setTo(message.getFrom());
+                        m.setType(Message.RND);
+                        m.setStatus(Message.RND_IMG);
+                        m.setContent(Message.RND_IMG);
+                        m.setRemoteId(message.getRemoteId());
+                        m.setLive_time("5");
+                        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(NetworkSettings.baseUrl).build();
+                        final SendMessageService sendMessageService = retrofit.create(SendMessageService.class);
+
+                        Call<ReturnSendMessage> call = sendMessageService.sendMessage(m);
+                        call.enqueue(new Callback<ReturnSendMessage>() {
+                            @Override
+                            public void onResponse(Call<ReturnSendMessage> call, Response<ReturnSendMessage> response) {
+                                Log.i(LOG_TAG, "success");
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<ReturnSendMessage> call, Throwable t) {
+                                Log.e(LOG_TAG, "send message failed");
+                            }
+                        });
+
                     }
                 });
 
@@ -180,6 +268,35 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                 holder.mItem.setOnPullToLimitListener(null);
             default:
 
+        }
+    }
+
+    private void handleSentImageMessage(ViewHolder holder, int position) {
+        Message message = mChatMessages.get(position);
+        String status = message.getStatus();
+        switch (status) {
+            case Message.FST:
+                holder.mItem.setId(mChatMessages.get(position).getFrom());
+                String time = df.format(Calendar.getInstance().getTime());
+                holder.mItem.setTimeStamp(time);
+                holder.mItem.setMessage(Message.FST_TEXT1);
+                break;
+
+            case Message.SND:
+                holder.mItem.setId(mChatMessages.get(position).getFrom());
+                String time1 = df.format(Calendar.getInstance().getTime());
+                holder.mItem.setTimeStamp(time1);
+                holder.mItem.setMessage(Message.SND_TEXT1);
+                break;
+
+            case Message.RND_IMG:
+                holder.mItem.setId(mChatMessages.get(position).getFrom());
+                String time2 = df.format(Calendar.getInstance().getTime());
+                holder.mItem.setTimeStamp(time2);
+                holder.mItem.setMessage(Message.RND_IMG_TEXT1);
+                break;
+
+            default:
         }
     }
 

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.transition.ChangeTransform;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Bean.User;
@@ -251,6 +252,9 @@ public class DatabaseUtils {
         message.setContent(data.get("message"));
         message.setLive_time(data.get("live_time"));
         message.setStatus(data.get("status"));
+        if (data.containsKey("remoteId")) {
+            message.setRemoteId(data.get("remoteId"));
+        }
 
         return buildChatMessage(message);
     }
@@ -262,6 +266,7 @@ public class DatabaseUtils {
         values.put(ChatMessage.TYPE, message.getType());
         values.put(ChatMessage.STATUS, Integer.parseInt(message.getStatus()));
         values.put(ChatMessage.EXPIRE_TIME, Integer.parseInt(message.getLive_time()));
+        values.put(ChatMessage.REMOTE_ID, message.getRemoteId());  // maybe null
 
         return values;
     }
@@ -277,6 +282,8 @@ public class DatabaseUtils {
         message.setStatus(Integer.toString(cursor.getInt(cursor.getColumnIndex(ChatMessage.STATUS))));
         // expiration time
         message.setLive_time(Integer.toString(cursor.getInt(cursor.getColumnIndex(ChatMessage.EXPIRE_TIME))));
+
+        message.setRemoteId(cursor.getString(cursor.getColumnIndex(ChatMessage.REMOTE_ID)));
         return message;
     }
 }

@@ -24,6 +24,7 @@ import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SendMessageUtils;
 import com.unimelb.feelinglucky.snapsheet.Util.SharedPreferencesUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.UsernameSortUtils;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -67,7 +68,7 @@ public class SendImageFriendListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.framgent_send_image_friend_list, container, false);
         listView = (ListView) view.findViewById(R.id.fragment_send_image_friend_listview);
-        listView.setAdapter(new FriendAdapter(getActivity(), DatabaseUtils.fetchFriends(DatabaseInstance.database)));
+        listView.setAdapter(new FriendAdapter(getActivity(), UsernameSortUtils.sortUsername(DatabaseUtils.fetchFriends(DatabaseInstance.database))));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -82,7 +83,7 @@ public class SendImageFriendListFragment extends Fragment {
                     public void onResponse(Call call, Response response) {
                         if (response.isSuccessful()) {
                             ReturnMessage returnMessage = (ReturnMessage) response.body();
-                            SendMessageUtils.sendImageMessage(SharedPreferencesUtils.getSharedPreferences(getActivity()).getString(SharedPreferencesUtils.USERNAME, ""), item, Integer.toString(mTime), returnMessage.getMessage());
+                            SendMessageUtils.sendImageMessage(getContext(), SharedPreferencesUtils.getSharedPreferences(getActivity()).getString(SharedPreferencesUtils.USERNAME, ""), item, Integer.toString(mTime), returnMessage.getMessage());
                             Log.i("sendImage", returnMessage.getMessage());
 
                         }

@@ -159,17 +159,41 @@ public class SnapSheetProvider extends ContentProvider {
                 break;
             }
 
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_IMG_RND: {
+                Log.i(LOG_TAG, "delete img messages where status > 0 ");
+                selection = SnapSeetDataStore.ChatMessage.STATUS + "> 0";
+                break;
+            }
+
         }
         if (table == null) return 0;
         int deleted = mOpenHelper.getWritableDatabase().delete(table, selection, selectionArgs);
 
-        // do not notify change when deleted
+        // do not notify change when deletedad
         return deleted;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        final int tableId = SnapSheetDataStoreUtils.getTableId(uri);
+        final String table = SnapSheetDataStoreUtils.getTableNameById(tableId);
+        switch (tableId) {
+            case SnapSheetDataStoreUtils.TABLE_ID_CHATMESSAGE_WITH_IMG_ID: {
+                String id = uri.getLastPathSegment();
+                Log.i(LOG_TAG, "update img messages where id =  " + id);
+                selection = SnapSeetDataStore.ChatMessage._ID + "= ?";
+                selectionArgs = new String[]{id};
+
+                break;
+            }
+
+        }
+        if (table == null) return 0;
+        int updated = mOpenHelper.getWritableDatabase().update(table, values, selection, selectionArgs);
+        // how to notify change
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return updated;
     }
 
     private void setNotificationUri(final Cursor c, final Uri uri) {

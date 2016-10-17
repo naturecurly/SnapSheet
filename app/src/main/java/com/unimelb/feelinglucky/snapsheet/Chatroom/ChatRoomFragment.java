@@ -285,6 +285,10 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
     public void leaveChatRoot() {
         mChatFriend = null;
         messageIdSet.clear();
+
+        // delete all status are read or replayed img type local message
+        Uri uri = SnapSeetDataStore.ChatMessage.CONTENT_URI_IMG_RND.buildUpon().build();
+        getContext().getContentResolver().delete(uri, null, null);
     }
 
 

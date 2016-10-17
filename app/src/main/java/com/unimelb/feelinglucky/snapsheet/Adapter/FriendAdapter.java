@@ -50,21 +50,19 @@ public class FriendAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         String username = (String) getItem(position);
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
-            convertView = layoutInflater.inflate(R.layout.item_friend_list, null);
-            viewHolder.catalog = (TextView) convertView.findViewById(R.id.item_friend_list_catalog);
-            viewHolder.username = (TextView) convertView.findViewById(R.id.item_friend_list_textview);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
+        viewHolder = new ViewHolder();
+        convertView = layoutInflater.inflate(R.layout.item_friend_list, null);
+        viewHolder.catalog = (TextView) convertView.findViewById(R.id.item_friend_list_catalog);
+        viewHolder.username = (TextView) convertView.findViewById(R.id.item_friend_list_textview);
+        convertView.setTag(viewHolder);
         if (showCatagory(position)) {
             viewHolder.catalog.setVisibility(View.VISIBLE);
             viewHolder.catalog.setText(friendList.get(position).substring(0, 1).toUpperCase());
             viewHolder.username.setText(friendList.get(position));
         } else {
             viewHolder.catalog.setVisibility(View.GONE);
+            viewHolder.username.setText(friendList.get(position));
+
         }
         return convertView;
     }

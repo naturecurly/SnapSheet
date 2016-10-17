@@ -31,6 +31,8 @@ public interface SnapSeetDataStore {
         String FROM_USER = "from_user";
         String TO_USER = "to_user";
         String IMG_ID = "img_id";
+        String IMG_RND = "img_rnd";
+
         String TYPE_ANY = "any";
         String TYPE_MSG = "msg";
         String TYPE_IMG = "img";
@@ -45,6 +47,8 @@ public interface SnapSeetDataStore {
         Uri CONTENT_URI_TYPE_IMG = Uri.withAppendedPath(CONTENT_URI, TYPE_IMG);
         Uri CONTENT_URI_FROM_USER_IMG = Uri.withAppendedPath(CONTENT_URI_TYPE_IMG, FROM_USER);
         Uri CONTENT_URI_IMG_ID = Uri.withAppendedPath(CONTENT_URI_TYPE_IMG, IMG_ID);
+        Uri CONTENT_URI_IMG_RND = Uri.withAppendedPath(CONTENT_URI_TYPE_IMG, IMG_RND);
+
         Uri CONTENT_URI_TO_USER_IMG = Uri.withAppendedPath(CONTENT_URI_TYPE_IMG, TO_USER);
         Uri CONTENT_URI_USER = Uri.withAppendedPath(CONTENT_URI, USER);
 
@@ -54,9 +58,10 @@ public interface SnapSeetDataStore {
         String TYPE = "type";
         String EXPIRE_TIME = "expire_time";
         String STATUS = "status";  // read or unread
+        String REMOTE_ID = "remote_id";
 
-        String [] COLUMNS = {_ID, FROM, TO, MESSAGE, TYPE, EXPIRE_TIME, STATUS};
-        String [] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_INT};
+        String [] COLUMNS = {_ID, FROM, TO, MESSAGE, TYPE, EXPIRE_TIME, STATUS, REMOTE_ID};
+        String [] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_INT, TYPE_TEXT};
     }
 
     interface ChatFriendList extends BaseColumns {

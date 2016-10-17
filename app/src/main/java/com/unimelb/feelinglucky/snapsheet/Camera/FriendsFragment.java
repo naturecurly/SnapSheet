@@ -10,11 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.unimelb.feelinglucky.snapsheet.Adapter.FriendAdapter;
 import com.unimelb.feelinglucky.snapsheet.R;
 import com.unimelb.feelinglucky.snapsheet.SingleInstance.DatabaseInstance;
 import com.unimelb.feelinglucky.snapsheet.Util.DatabaseUtils;
+import com.unimelb.feelinglucky.snapsheet.Util.UsernameSortUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,7 @@ import java.util.List;
 
 public class FriendsFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    private ListView listView;
     private SQLiteDatabase mDatabase;
     private List<String> friendData = new ArrayList<>();
 
@@ -39,44 +42,9 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_friend_list_recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new myAdapter(friendData));
+        listView = (ListView) view.findViewById(R.id.fragment_friend_list_view);
+        listView.setAdapter(new FriendAdapter(getActivity(), UsernameSortUtils.sortUsername(DatabaseUtils.fetchFriends(DatabaseInstance.database))));
         return view;
     }
 
-    private class myAdapter extends RecyclerView.Adapter<myViewHolder> {
-        private List<String> data;
-
-        public myAdapter(List<String> data) {
-            this.data = data;
-        }
-
-        @Override
-        public myViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(getActivity()).inflate(R.layout.item_friend_list, parent, false);
-            myViewHolder mViewHolder = new myViewHolder(v);
-            return mViewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(myViewHolder holder, int position) {
-            holder.textView.setText(data.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return data.size();
-        }
-    }
-
-
-    private class myViewHolder extends RecyclerView.ViewHolder {
-        private TextView textView;
-
-        public myViewHolder(View itemView) {
-            super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.item_friend_list_textview);
-        }
-    }
 }
