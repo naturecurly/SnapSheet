@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.unimelb.feelinglucky.snapsheet.Bean.Message;
 import com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore;
+import com.unimelb.feelinglucky.snapsheet.ImageSendActivity;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.NetworkSettings;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.SendMessageService;
 import com.unimelb.feelinglucky.snapsheet.NetworkService.ServiceGenerator;
@@ -47,7 +48,7 @@ public class SendMessageUtils {
             @Override
             public void onResponse(Call call, Response response) {
                 Log.i("sendImageMessage", "send success");
-
+                ((ImageSendActivity) context).finish();
             }
 
             @Override

@@ -11,6 +11,7 @@ import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.adobe.creativesdk.aviary.AdobeImageIntent;
 import com.unimelb.feelinglucky.snapsheet.ImageSendActivity;
@@ -33,6 +35,10 @@ import com.unimelb.feelinglucky.snapsheet.Util.StatusBarUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static android.os.Environment.DIRECTORY_PICTURES;
 
 /**
  * Created by leveyleonhardt on 10/7/16.
@@ -46,6 +52,7 @@ public class ImageViewFragment extends Fragment {
     private Button timerButton;
     private int timer = 3;
     private Button saveImageButton;
+    private File mImgFolder;
 
     public static ImageViewFragment newInstance(String imagePath) {
 
@@ -54,6 +61,33 @@ public class ImageViewFragment extends Fragment {
         ImageViewFragment fragment = new ImageViewFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        createImgFolder();
+    }
+
+    private void createImgFolder() {
+
+        File imageFolder = Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES);
+        mImgFolder = new File(imageFolder, "SnapSheet");
+        if (!mImgFolder.exists()) {
+            mImgFolder.mkdir();
+        }
+    }
+
+    private String createImgFile() {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String prepend = "IMG_" + timestamp + "_";
+        File videoFile = null;
+        try {
+            videoFile = File.createTempFile(prepend, ".jpg", mImgFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return videoFile.getAbsolutePath();
     }
 
     @Nullable
@@ -68,6 +102,12 @@ public class ImageViewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //save image
+
+                ImageSaver imageSaver = new ImageSaver(DrawableToBytesUtils.drawableToBytes(imageView.getDrawable()), createImgFile(), getActivity());
+                Thread imageSaverThread = new Thread(imageSaver);
+                imageSaverThread.start();
+                Toast.makeText(getActivity(), "Image has been saved.", Toast.LENGTH_SHORT).show();
+
             }
         });
         timerButton = (Button) view.findViewById(R.id.set_timer_button);

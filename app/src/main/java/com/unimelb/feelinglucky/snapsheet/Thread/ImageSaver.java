@@ -17,12 +17,12 @@ import java.nio.ByteBuffer;
  */
 
 public class ImageSaver implements Runnable {
-    private final Image mImage;
+    private final byte[] mImage;
     private final String mImageFilename;
     private Context context;
 
 
-    public ImageSaver(Image mImage, String filename, Context mContext) {
+    public ImageSaver(byte[] mImage, String filename, Context mContext) {
         this.mImageFilename = filename;
         this.mImage = mImage;
         this.context = mContext;
@@ -30,20 +30,20 @@ public class ImageSaver implements Runnable {
 
     @Override
     public void run() {
-        ByteBuffer byteBuffer = mImage.getPlanes()[0].getBuffer();
-        byte[] bytes = new byte[byteBuffer.remaining()];
-        byteBuffer.get(bytes);
+//        ByteBuffer byteBuffer = mImage.getPlanes()[0].getBuffer();
+//        byte[] bytes = new byte[byteBuffer.remaining()];
+//        byteBuffer.get(bytes);
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(mImageFilename);
-            fileOutputStream.write(bytes);
+            fileOutputStream.write(mImage);
             Log.i("local", "image saved");
             jumpToImageView(context, mImageFilename);
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            mImage.close();
+//            mImage.close();
             if (fileOutputStream != null) {
                 try {
                     fileOutputStream.close();

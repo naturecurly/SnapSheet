@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-   <!-- This LinearLayout represents the contents of the screen  -->
+    <!-- This LinearLayout represents the contents of the screen  -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -78,7 +78,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:id="@+id/chat_menu"
-            android:layout_above="@+id/chatroom_bottom_padding"
+            android:layout_alignParentBottom="true"
             android:layout_height="50dp"
             android:rowCount="1"
             android:columnCount="5"
@@ -138,26 +138,26 @@
 
         </GridLayout>
 
-        <View
+        <!--<View
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:id="@+id/chatroom_bottom_padding"
             android:layout_alignParentBottom="true"
-            />
+            />-->
 
     </RelativeLayout>
 
     <!-- The navigation drawer that comes from the left -->
-   <!-- Note that `android:layout_gravity` needs to be set to 'start' -->
+    <!-- Note that `android:layout_gravity` needs to be set to 'start' -->
 
     <android.support.design.widget.NavigationView
-       android:id="@+id/chatroom_nvView"
-       android:layout_width="wrap_content"
-       android:layout_height="match_parent"
-       android:layout_gravity="start"
-       android:background="@android:color/white"
-       app:headerLayout="@layout/fragment_chatroom_drawer_header"
-       app:menu="@menu/menu_chatroom_profile" >
+        android:id="@+id/chatroom_nvView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:headerLayout="@layout/fragment_chatroom_drawer_header"
+        app:menu="@menu/menu_chatroom_profile" >
 
-   </android.support.design.widget.NavigationView>
+    </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

@@ -129,7 +129,7 @@ public class MessageSlideableItem extends FrameLayout {
                 Log.i(LOG_TAG, "down");
                 break;
             case MotionEvent.ACTION_MOVE:
-                isTap = false;
+                //isTap = false;
                 float distance = current.x - origin.x;
                 float distanceY = current.y - origin.y;
                 if (distance - 20 > 0 && Math.abs(distance) > Math.abs(distanceY)) {
