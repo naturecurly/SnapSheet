@@ -54,7 +54,7 @@ public class DiscoverRecyclerViewAdapter extends  RecyclerView.Adapter<DiscoverR
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.coverImageView.setTag(position);
-        Picasso.with(context).load(contentURLs.get(position).getCoverURL()).placeholder(R.drawable.invitee_selected_default_picture).resize(2000,2000).centerCrop().into(holder.coverImageView);
+        Picasso.with(context).load(contentURLs.get(position).getCoverURL()).placeholder(R.drawable.invitee_selected_default_picture).resize(700,700).centerCrop().into(holder.coverImageView);
     }
 
     @Override

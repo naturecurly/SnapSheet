@@ -40,7 +40,7 @@ public class DiscoverFragment extends Fragment {
             imgBrowserView.setUrls(urls);
             imgBrowserView.bringToFront();
             mainPageView.refresh();
-            
+
             if (imgBrowserView.getY() == imgBrowserView.getHeight()){
                 imgBrowserView.animate()
                         .translationY(0)

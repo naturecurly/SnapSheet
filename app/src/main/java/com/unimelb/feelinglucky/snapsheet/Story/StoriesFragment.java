@@ -185,7 +185,7 @@ public class StoriesFragment extends Fragment {
         @Override
         protected ArrayList<Story> doInBackground(String... params) {
 //            newStories = (ArrayList<Story>) SimulateStory.simulateStories();
-//            initDB();
+            initDB();
             newStories = (ArrayList<Story>) loadDB();
             return newStories;
         }
