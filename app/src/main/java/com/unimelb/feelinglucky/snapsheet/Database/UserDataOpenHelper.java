@@ -8,6 +8,7 @@ import android.util.Log;
 import com.unimelb.feelinglucky.snapsheet.Database.FriendDbSchema.FriendTable;
 import com.unimelb.feelinglucky.snapsheet.Database.UserDbSchema.UserTable;
 
+import static com.unimelb.feelinglucky.snapsheet.Database.ImgDbSchema.*;
 import static com.unimelb.feelinglucky.snapsheet.Database.SnapSeetDataStore.*;
 
 /**
@@ -36,7 +37,11 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
     }
 
     private void dropDB(SQLiteDatabase db) {
-        db.execSQL("drop table if exists " + DATABASE_NAME);
+        db.execSQL("drop table if exists " + UserTable.NAME);
+        db.execSQL("drop table if exists " + FriendTable.NAME);
+        db.execSQL("drop table if exists " + ImgTable.NAME);
+        db.execSQL("drop table if exists " + ChatFriendList.TABLE_NAME);
+        db.execSQL("drop table if exists " + ChatMessage.TABLE_NAME);
     }
 
     private void createDB(SQLiteDatabase db) {
@@ -71,10 +76,10 @@ public class UserDataOpenHelper extends SQLiteOpenHelper {
                 ChatFriendList.TYPES));
 
 
-        db.execSQL("CREATE TABLE " + ImgDbSchema.ImgTable.NAME + "(" +
-                ImgDbSchema.ImgTable.Cols.IMGRTEXT + " TEXT," +
-                ImgDbSchema.ImgTable.Cols.ISLOCKED + " BOOLEAN," +
-                ImgDbSchema.ImgTable.Cols.IMG + " BLOB);");
+        db.execSQL("CREATE TABLE " + ImgTable.NAME + "(" +
+                ImgTable.Cols.IMGRTEXT + " TEXT," +
+                ImgTable.Cols.ISLOCKED + " BOOLEAN," +
+                ImgTable.Cols.IMG + " BLOB);");
 
         db.execSQL(SnapSheetDataStoreUtils.createTable(
                 ChatMessage.TABLE_NAME,
