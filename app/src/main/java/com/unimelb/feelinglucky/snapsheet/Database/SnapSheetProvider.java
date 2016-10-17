@@ -169,7 +169,7 @@ public class SnapSheetProvider extends ContentProvider {
         if (table == null) return 0;
         int deleted = mOpenHelper.getWritableDatabase().delete(table, selection, selectionArgs);
 
-        // do not notify change when deleted
+        // do not notify change when deletedad
         return deleted;
     }
 

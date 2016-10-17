@@ -89,6 +89,11 @@ public class SnapMessagingService extends FirebaseMessagingService {
                 ContentValues values = DatabaseUtils.buildChatMessage(data);
                 Log.i(LOG_TAG, "toUser: " + values.getAsString("toUser"));
                 getContentResolver().update(uri, values, null, null);
+                // notify loader to refresh the updated message
+                // note: the uri bind to loader differ from this update database uri
+                // tricky here, toUser is `fromUser` in the chatroom
+                Uri loaderUri = SnapSeetDataStore.ChatMessage.CONTENT_URI_FROM_USER.buildUpon().appendEncodedPath(data.get("toUser")).build();
+                getContentResolver().notifyChange(loaderUri, null);
             }
 
             return;
