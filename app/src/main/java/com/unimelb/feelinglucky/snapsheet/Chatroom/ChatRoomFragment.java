@@ -69,6 +69,8 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
     private List<Message> messageList;
     private Set<Integer> messageIdSet;
 
+    private Cursor mCursor;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -205,6 +207,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCursor = data;
         // mChatFriend is null means that we are not in the chat room now
         if (mChatFriend == null) {
             return;
@@ -269,8 +272,6 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
         Log.i(TAG, "type: " + message.getType());
 
         sendMessage(message);
-
-        data.close();
     }
 
     @Override
@@ -280,6 +281,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
         // longer using it.
         // mAdapter.swapCursor(null);
         Log.i(TAG, "onLoaderReset");
+        mCursor = null;
     }
 
     public void enterChatRoom() {
