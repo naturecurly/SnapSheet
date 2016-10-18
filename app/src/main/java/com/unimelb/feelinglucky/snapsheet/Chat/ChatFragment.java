@@ -58,6 +58,7 @@ public class ChatFragment extends Fragment implements LoaderManager.LoaderCallba
     private Button mImageButton;
     private TextView mTitle;
     private String[] myDataset;
+    private Cursor mCursor;
 
     @Nullable
     @Override
@@ -232,6 +233,7 @@ public class ChatFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCursor = data;
         Log.i(LOG_TAG, "onLoadFinished");
         List<String> friendlist = new ArrayList<>();
         while(data.moveToNext()) {
@@ -252,7 +254,7 @@ public class ChatFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        mCursor = null;
     }
 
     @Override
