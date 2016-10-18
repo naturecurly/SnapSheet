@@ -269,6 +269,8 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
         Log.i(TAG, "type: " + message.getType());
 
         sendMessage(message);
+
+        data.close();
     }
 
     @Override
@@ -293,7 +295,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
             messageIdSet.add(c.getInt(c.getColumnIndex(SnapSeetDataStore.ChatMessage._ID)));
             messageList.add(message);
         }
-
+        c.close();
         Uri uriFrom = SnapSeetDataStore.ChatMessage.CONTENT_URI_FROM_USER.buildUpon().appendEncodedPath(mChatFriend).build();
         Cursor c1 = getContext().getContentResolver().query(uriFrom, null, null, null, null);
         while (c1.moveToNext()) {
@@ -302,6 +304,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
             messageIdSet.add(c1.getInt(c1.getColumnIndex(SnapSeetDataStore.ChatMessage._ID)));
             messageList.add(message);
         }
+        c1.close();
         mAdapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(CHATROOMFRAGMENT_LOADER, null, this);
     }

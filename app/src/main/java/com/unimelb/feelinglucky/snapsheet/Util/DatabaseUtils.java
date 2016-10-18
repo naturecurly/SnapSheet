@@ -69,6 +69,9 @@ public class DatabaseUtils {
         ContentValues values = new ContentValues();
         values.put(FriendChatDbSchema.FriendChatTable.Cols.USERNAME, username);
         values.put(FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY, max + 1);
+        if (cursor != null) {
+            cursor.close();
+        }
         return values;
     }
 
@@ -99,6 +102,9 @@ public class DatabaseUtils {
             ContentValues values = getFriendChatContentValues(username);
             database.insert(FriendChatDbSchema.FriendChatTable.NAME, null, values);
         }
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 
     public static void updateFriendChatDb(Context context, SQLiteDatabase database, String username) {
@@ -119,6 +125,9 @@ public class DatabaseUtils {
             //context.getContentResolver().notifyChange(chatFriendListUri, null);
 
         }
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 
     public static void updateChatPriority(SQLiteDatabase database, String userName) {
@@ -134,6 +143,9 @@ public class DatabaseUtils {
         ContentValues values = new ContentValues();
         values.put(FriendChatDbSchema.FriendChatTable.Cols.CHAT_PRIORITY, max + 1);
         database.update(FriendChatDbSchema.FriendChatTable.NAME, values, FriendChatDbSchema.FriendChatTable.Cols.USERNAME + "=?", new String[]{userName});
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 
     public static List<String> fetchFriends(SQLiteDatabase database) {
@@ -143,6 +155,9 @@ public class DatabaseUtils {
         List<String> friendList = new ArrayList<>();
         while (cursor.moveToNext()) {
             friendList.add(cursor.getString(columnIndex));
+        }
+        if (cursor != null) {
+            cursor.close();
         }
         return friendList;
     }
@@ -166,6 +181,9 @@ public class DatabaseUtils {
 
         String[] result = new String[userList.size()];
         result = userList.toArray(result);
+        if (cursor != null) {
+            cursor.close();
+        }
         return result;
     }
 
@@ -180,6 +198,9 @@ public class DatabaseUtils {
             byte[] image = cursor.getBlob(columnIndex);
             mBitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
         }
+        if (cursor != null) {
+            cursor.close();
+        }
         return mBitmap;
     }
 
@@ -190,6 +211,9 @@ public class DatabaseUtils {
         byte[] image = new byte[0];
         while (cursor.moveToNext()) {
             image = cursor.getBlob(columnIndex);
+        }
+        if (cursor != null) {
+            cursor.close();
         }
         return image;
     }
@@ -222,7 +246,11 @@ public class DatabaseUtils {
                 new String[]{FriendTable.Cols.MOBILE},
                 FriendDbSchema.FriendTable.Cols.MOBILE + "=?", new String[]{mobile}, null, null, null);
 
-        return cursor.moveToNext();
+        boolean hasNext = cursor.moveToNext();
+        if (cursor != null) {
+            cursor.close();
+        }
+        return hasNext;
     }
 
 
@@ -231,16 +259,21 @@ public class DatabaseUtils {
                 new String[]{ImgDbSchema.ImgTable.Cols.ISLOCKED},
                 ImgDbSchema.ImgTable.Cols.ISLOCKED + "=?", new String[]{}, null, null, null);
         int columnIndex = cursor.getColumnIndex(ImgDbSchema.ImgTable.Cols.ISLOCKED);
+        boolean result;
         if (cursor.moveToNext()) {
             Integer lock = cursor.getInt(columnIndex);
             if (lock == 1) {
-                return true;
+                result = true;
             } else {
-                return false;
+                result = false;
             }
         } else {
-            return false;
+            result = false;
         }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return result;
     }
 
 
