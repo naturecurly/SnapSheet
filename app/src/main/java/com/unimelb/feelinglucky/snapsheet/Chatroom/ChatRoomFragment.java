@@ -217,6 +217,10 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
             // only msg type message will be added because they will be cleared after queried and won't be duplicated
             // however, we should add new img type message too.
             int id = data.getInt(data.getColumnIndex(SnapSeetDataStore.ChatMessage._ID));
+            Log.i(TAG, "messageId: " + id);
+            Log.i(TAG, "message type: " + message.getType());
+
+
             if (!messageIdSet.contains(id)) {
                 Log.i(TAG, "from: " + message.getFrom());
                 Log.i(TAG, "to: " + message.getTo());
@@ -226,6 +230,25 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
                 Log.i(TAG, "status: " + message.getStatus());
 
                 messageList.add(message);
+            }
+
+            // special case for updated message in the database
+            if (messageIdSet.contains(id) && message.getType().equalsIgnoreCase(Message.IMG1)) {
+                // TODO: it is not a good to iterate the whole list to update just one item every time
+                String status = message.getStatus();
+                Log.i(TAG, "message status: " + message.getStatus());
+                int pos = 0;
+                for (Message m : messageList) {
+                    Log.i(TAG, "m id: " + m.getLocalId());
+                    if (m.getLocalId() == id && !m.getStatus().equalsIgnoreCase(status)) {
+                        Log.i(TAG, "m status before: " + m.getStatus());
+
+                        m.setStatus(status);
+                        Log.i(TAG, "m status after: " + m.getStatus());
+                        mAdapter.notifyItemChanged(pos);
+                    }
+                    pos++;
+                }
             }
         }
 
@@ -254,6 +277,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
         // above is about to be closed.  We need to make sure we are no
         // longer using it.
         // mAdapter.swapCursor(null);
+        Log.i(TAG, "onLoaderReset");
     }
 
     public void enterChatRoom() {

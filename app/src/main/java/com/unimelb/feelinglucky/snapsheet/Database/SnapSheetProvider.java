@@ -183,7 +183,7 @@ public class SnapSheetProvider extends ContentProvider {
                 Log.i(LOG_TAG, "update img messages where id =  " + id);
                 selection = SnapSeetDataStore.ChatMessage._ID + "= ?";
                 selectionArgs = new String[]{id};
-
+                uri = SnapSeetDataStore.ChatMessage.CONTENT_URI;  // notify a new uri
                 break;
             }
 
