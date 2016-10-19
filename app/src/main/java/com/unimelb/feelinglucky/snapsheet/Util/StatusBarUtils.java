@@ -18,17 +18,22 @@ public class StatusBarUtils {
 //                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 //                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        );
+        );
         ((AppCompatActivity) (context)).getWindow().setNavigationBarColor(Color.TRANSPARENT);
         ((AppCompatActivity) (context)).getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar_color));
     }
 
     public static void setStatusBarInvisable(Context context) {
-        ((AppCompatActivity) (context)).getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        ((AppCompatActivity) (context)).getWindow().getDecorView().setSystemUiVisibility(
+// View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                View.SYSTEM_UI_FLAG_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        );
         ((AppCompatActivity) (context)).getWindow().setNavigationBarColor(Color.TRANSPARENT);
         ((AppCompatActivity) (context)).getWindow().setStatusBarColor(Color.TRANSPARENT);
     }
