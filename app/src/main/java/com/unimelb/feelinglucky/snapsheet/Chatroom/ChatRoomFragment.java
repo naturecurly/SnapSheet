@@ -233,6 +233,7 @@ public class ChatRoomFragment extends Fragment implements LoaderManager.LoaderCa
                 Log.i(TAG, "status: " + message.getStatus());
 
                 messageList.add(message);
+                messageIdSet.add(id);
             }
 
             // special case for updated message in the database
